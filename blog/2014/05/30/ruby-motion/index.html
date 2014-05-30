@@ -1,0 +1,478 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RubyMotionを業務でのアプリ開発に使ってみた感想 - The Wacul Blog</title>
+  <meta name="author" content="wacul">
+
+  
+  <meta name="description" content="こんにちわ。いまワカルでは、美容院向けのiPadアプリ &ldquo;clulu&rdquo; を開発中です。
+テストも一旦終了し、最初のバージョンをApp Storeに申請したところです。 美容院では、お客様の予約管理を紙で行っているところがほとんどです。cluluは、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="RubyMotionを業務でのアプリ開発に使ってみた感想 - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="こんにちわ。いまワカルでは、美容院向けのiPadアプリ &ldquo;clulu&rdquo; を開発中です。
+テストも一旦終了し、最初のバージョンをApp Storeに申請したところです。 美容院では、お客様の予約管理を紙で行っているところがほとんどです。cluluは、 &hellip;" />
+  <meta property="og:url" content="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion/" />
+  
+  <meta property="og:image" content="http://wcl48.github.io/tech-blog-deploy/images/2014-05-30-ruby-motion/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@tutuming">
+  
+
+  <meta name="twitter:title" content="RubyMotionを業務でのアプリ開発に使ってみた感想 - The Wacul Blog" />
+  <meta name="twitter:description" content="こんにちわ。いまワカルでは、美容院向けのiPadアプリ &ldquo;clulu&rdquo; を開発中です。
+テストも一旦終了し、最初のバージョンをApp Storeに申請したところです。 美容院では、お客様の予約管理を紙で行っているところがほとんどです。cluluは、 &hellip;" />
+
+  <meta name="twitter:image" content="http://wcl48.github.io/tech-blog-deploy/images/2014-05-30-ruby-motion/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RubyMotionを業務でのアプリ開発に使ってみた感想</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-30T13:00:00+09:00" pubdate data-updated="true">May 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>こんにちわ。いまワカルでは、美容院向けのiPadアプリ &ldquo;clulu&rdquo; を開発中です。<br/>
+テストも一旦終了し、最初のバージョンをApp Storeに申請したところです。</p>
+
+<p>美容院では、お客様の予約管理を紙で行っているところがほとんどです。cluluは、そんな紙での管理方法から極力インターフェースを変えることなく、予約管理をiPadで行えるシステムです。また管理された情報を元に、リアルタイムに空き枠を検索・予約できるフォームを自分の美容院のホームページに設置できます。</p>
+
+<p><img src="/images/2014-05-30-ruby-motion/clulu-ss.png" alt="clulu-ss" /></p>
+
+<p>サービスの詳細については、リリース後詳しくお伝えするとして、今回はiPad版開発で使った、
+<a href="http://www.rubymotion.com/" target="_blank">RubyMotion</a> について書きたいと思います。</p>
+
+<h2>なぜ RubyMotion を選んだか</h2>
+
+<p>iOSアプリ開発環境にはおおまかに</p>
+
+<ul>
+<li>ObjectiveC(Xcode)</li>
+<li>RubyMotion</li>
+<li>Titanium, PhoneGap等、HTML,JSベースのもの</li>
+</ul>
+
+
+<p>があります。</p>
+
+<p>まず、cluluは予約表の操作感を最適化したかったため、画面のアニメーション等パフォーマンス調整の難しいHTMLベースのものは、候補からはずしました。</p>
+
+<p>僕自身は、2,3年前にiOSのアプリの開発経験があり、ひと通りObjectiveCとiOSのSDKについては理解している状態でした。</p>
+
+<p>過去のiOS開発から、ObjectiveCコードを書くことへの気の重さのようなことを感じていました。
+Webの開発では、僕はEmacs,弊社の他のエンジニアもSublime Textなど、好みのエディタで開発している状態で、Xcodeの操作に慣れるというのもひとつの障壁です。</p>
+
+<p>RubyMotionを選択するにあたって、情報不足や、予期せぬ不具合への対応などが不安でしたが、2013年末ごろにはかなりコミュニティも盛り上がってきていました。
+また、基本的にCocoaのAPIをそのまま使う形なので、RubyMotion特有の不具合は少なそうというのも後押しとなり、RubyMotionで実装することに決めました。</p>
+
+<p>まとめると、RubyMotionを選んだ理由は次の３つです。</p>
+
+<ul>
+<li>iOSのSDKをそのまま使える (パフォーマンスの劣化が最小限、情報源が豊富)</li>
+<li>ObjectiveCを書かなくてよい、 慣れたエディタで開発できる</li>
+<li>コミュニティの盛り上がり (困ったときに参照する情報が十分にある)</li>
+</ul>
+
+
+<h2>実際に使ってみてよかった点</h2>
+
+<h3>RubyのAPIの使いやすさ</h3>
+
+<p>RubyMotionは、Rubyの基本的な型のAPIがそのまま使えるようになっているため、Array#each,map などのコレクション系の操作がRubyライクに書けます。
+もちろんブロックも使えるので、データの加工のコードなどが短く書けます</p>
+
+<h3>BubbleWrap, sugarcube便利</h3>
+
+<p>2つとも、CocoaのAPIをラップして使いやすくしてくれるライブラリです。
+両者は似たような機能を提供している部分が多いですが、sugarcubeはBubbleWrapより、UIKitのクラス自身を拡張しにいっている感じになっています。</p>
+
+<p>それぞれ、使いどころによって便利なほうを使って実装しました。
+自然にかけるので、どちらかというとsugarcubeのほうが利用頻度高めでした。</p>
+
+<p>特に便利だったものたち</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">### sugarcube</span>
+</span><span class='line'><span class="c1"># RGB HexからUIColor</span>
+</span><span class='line'><span class="s1">&#39;#FBFBFB&#39;</span><span class="o">.</span><span class="n">uicolor</span>
+</span><span class='line'><span class="c1"># ImageNamed のかわり</span>
+</span><span class='line'><span class="s1">&#39;hogehogeimage&#39;</span><span class="o">.</span><span class="n">uiimage</span>
+</span><span class='line'><span class="c1"># タイマー</span>
+</span><span class='line'><span class="mi">30</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">every</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">refresh</span><span class="p">()</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="c1"># 日付の始まりの日</span>
+</span><span class='line'><span class="n">dateTime</span><span class="o">.</span><span class="n">start_of_day</span>
+</span><span class='line'><span class="c1"># NotificationCenter</span>
+</span><span class='line'><span class="s2">&quot;SomeNotificationName&quot;</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="ss">:&quot;onNotif:&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Mix-in便利</h3>
+
+<p>Rubyならではの便利さとして最も大きかったのが、Mix-inの活用です。</p>
+
+<p>例えばよくあるDelegateを取るクラスを作るためのMix-inとして以下のようなものを作りました</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Clulu</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Delegation</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">delegate</span>
+</span><span class='line'>      <span class="vi">@delegate</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">delegate</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@delegate</span> <span class="o">=</span> <span class="no">WeakRef</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1"># delegateが設定されていたら指定されたメソッドを呼び出す</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">delegateCall</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">if</span> <span class="vi">@delegate</span> <span class="ow">and</span> <span class="vi">@delegate</span><span class="o">.</span><span class="n">weakref_alive?</span> <span class="ow">and</span> <span class="vi">@delegate</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@delegate</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Delegateを実装したいクラスは、 <code>include Clulu::Delegation</code> するだけです。</p>
+
+<p>他にも、ローディングやエラー処理など、共通の挙動をViewControllerに付けたい場合などに使いました。
+実装を注入できるのは便利です。</p>
+
+<h2>逆に大変だった点</h2>
+
+<h3>サードパーティライブラリとの相性</h3>
+
+<p>基本的にCocoaPodsに登録されているライブラリ群はそのまま使えました。
+一部、ObjectiveCのプロパティ定義を利用しているライブラリなど、そのままでは使えないものもあったので
+薄いラッパを作って使いました。</p>
+
+<h3>メモリ管理</h3>
+
+<p>基本的にRubyMotionがメモリを自動で管理してくれるのですが、循環参照に関しては開放してくれないので、
+適宜弱参照( <code>WeakRef.new(hoge)</code> )などを使って、循環参照が起きない用配慮する必要があります。
+また、Rubyのブロックを使うと、外側のスコープの変数を束縛したままになるため、注意が必要でした。</p>
+
+<h3>コンパイル速度とタイプミス問題</h3>
+
+<p>一般的にコンパイル言語は型チェックや静的な解析をしてくれるので、早めにタイプミスなどが見つけやすい構造になっています。
+しかしRubyMotionの場合は、コンパイルと起動にそれなりの時間がかかる一方、実行時まで定義されていない変数や、型の間違いがわからないため、タイプミスするとわーってなります。
+僕はEmacsを使っているので、motion-mode と ac-dict を使ってある程度補完が効くようにはしていたのですが、
+それでもCocoaの長いメソッド名とか、思わぬタイプミスでわーってなっていました。
+ここらへんは宿命でしょうが、なかなかストレスでした。</p>
+
+<h2>まとめ</h2>
+
+<p>今回アプリ開発に携わったのは、僕(
+<a href="http://twitter.com/tutuming" target="_blank">tutuming</a>
+)と、<a href="http://twitter.com/kyoh86" target="_blank">kyoh</a>
+の2名です。
+kyoh君はiOSの開発自体が初めてだったのですが、苦労しつつも1ヶ月もしたら慣れたようでした。</p>
+
+<p>個人的には特にRubyMotionだったから大変だったということはなかったです。
+それ以上にiOSのSDKの使い方とか、実装面での苦労のほうが多いです。</p>
+
+<p>1度ObjectiveCでアプリを書いたことがあり、RubyやPython,JavaScriptなど、Webっぽい言語も経験がある程度ある人であれば、スムーズに移行でき、少しだけ効率も上がる感じじゃないかなと思います。</p>
+
+<p>RubyMotion3.0 (今年後半リリース予定)では、Androidにも対応する(同じくネイティブのラッパ)みたいなので、どんどん広がっていけばいいですね！</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://www.rubymotion.com/" target="_blank">RubyMotion公式サイト</a></li>
+<li><a href="http://tosik.github.io/blog/2012/09/13/about-rubymotion/" target="_blank">RubyMotion について感想 &ndash; tosik blog</a></li>
+<li><a href="http://d.hatena.ne.jp/naoya/20131205/1386237472" target="_blank">RubyMotion を1年以上使い続けてみての雑感 &ndash; naoyaのはてなダイアリー</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion/" data-via="" data-counturl="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/tutuming.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと tutuming</h1>
+    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <h1 class="wacul-title"></h1>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp/contact/">お問い合わせフォーム</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/21/angular-cors-postmessage/" title="Previous Post: AngularJSでのCORSな通信をpostMessageに置き換える">&laquo; AngularJSでのCORSな通信をpostMessageに置き換える</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/30/ruby-motion/">RubyMotionを業務でのアプリ開発に使ってみた感想</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/21/angular-cors-postmessage/">AngularJSでのCORSな通信をpostMessageに置き換える</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/14/nodejs-library/">waculで使用しているnode.jsのライブラリ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/07/nslayoutconstraint/">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/30/bacon-js/">Canvasのお絵かきに bacon.js を使ってみた</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - wacul
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

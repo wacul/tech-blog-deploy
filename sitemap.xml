@@ -1,39 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/2014/03/08/first-post/</loc>
-        <lastmod>2014-04-30T19:18:25+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/2014/03/08/first-post/</loc>
+        <lastmod>2014-05-01T17:06:46+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/2014/03/10/mamp_wimax/</loc>
-        <lastmod>2014-04-30T19:18:25+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/2014/03/10/mamp_wimax/</loc>
+        <lastmod>2014-04-30T16:23:20+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/2014/04/30/bacon-js/</loc>
-        <lastmod>2014-04-30T19:18:25+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/2014/04/30/bacon-js/</loc>
+        <lastmod>2014-04-30T16:23:21+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/2014/05/07/nslayoutconstraint/</loc>
-        <lastmod>2014-05-30T12:57:06+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/07/nslayoutconstraint/</loc>
+        <lastmod>2014-05-14T11:35:01+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/2014/05/14/nodejs-library/</loc>
-        <lastmod>2014-05-30T12:57:06+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/14/nodejs-library/</loc>
+        <lastmod>2014-05-14T11:37:31+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/2014/05/21/angular-cors-postmessage/</loc>
-        <lastmod>2014-05-30T12:57:06+09:00</lastmod>
+        <loc>
+            http://wcl48.github.io/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage/
+        </loc>
+        <lastmod>2014-05-21T08:03:06+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//blog/archives/</loc>
-        <lastmod>2014-05-30T12:57:06+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion/</loc>
+        <lastmod>2014-05-30T16:35:51+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//</loc>
-        <lastmod>2014-05-30T12:57:06+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/blog/archives/</loc>
+        <lastmod>2014-05-30T16:35:51+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp//robots.txt</loc>
-        <lastmod>2014-03-13T13:22:49+09:00</lastmod>
+        <loc>http://wcl48.github.io/tech-blog-deploy/</loc>
+        <lastmod>2014-05-30T16:35:51+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://wcl48.github.io/tech-blog-deploy/robots.txt</loc>
+        <lastmod>2014-03-13T11:16:28+09:00</lastmod>
     </url>
 </urlset>
