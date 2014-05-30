@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[The Wacul Blog]]></title>
-  <link href="http://wcl48.github.io/tech-blog-deploy/atom.xml" rel="self"/>
-  <link href="http://wcl48.github.io/tech-blog-deploy/"/>
-  <updated>2014-05-30T16:37:42+09:00</updated>
-  <id>http://wcl48.github.io/tech-blog-deploy/</id>
+  <link href="http://blog.wacul.co.jp//atom.xml" rel="self"/>
+  <link href="http://blog.wacul.co.jp//"/>
+  <updated>2014-05-30T16:42:39+09:00</updated>
+  <id>http://blog.wacul.co.jp//</id>
   <author>
     <name><![CDATA[wacul]]></name>
     
@@ -15,15 +15,15 @@
   
   <entry>
     <title type="html"><![CDATA[RubyMotionを業務でのアプリ開発に使ってみた感想]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/05/30/ruby-motion/"/>
     <updated>2014-05-30T13:00:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/30/ruby-motion</id>
+    <id>http://blog.wacul.co.jp//blog/2014/05/30/ruby-motion</id>
     <content type="html"><![CDATA[<p>こんにちわ。いまワカルでは、美容院向けのiPadアプリ &ldquo;clulu&rdquo; を開発中です。<br/>
 テストも一旦終了し、最初のバージョンをApp Storeに申請したところです。</p>
 
 <p>美容院では、お客様の予約管理を紙で行っているところがほとんどです。cluluは、そんな紙での管理方法から極力インターフェースを変えることなく、予約管理をiPadで行えるシステムです。また管理された情報を元に、リアルタイムに空き枠を検索・予約できるフォームを自分の美容院のホームページに設置できます。</p>
 
-<p><img src="http://wcl48.github.io/tech-blog-deploy/images/2014-05-30-ruby-motion/clulu-ss.png" alt="clulu-ss" /></p>
+<p><img src="http://blog.wacul.co.jp//images/2014-05-30-ruby-motion/clulu-ss.png" alt="clulu-ss" /></p>
 
 <p>サービスの詳細については、リリース後詳しくお伝えするとして、今回はiPad版開発で使った、
 <a href="http://www.rubymotion.com/" target="_blank">RubyMotion</a> について書きたいと思います。</p>
@@ -206,9 +206,9 @@ kyoh君はiOSの開発自体が初めてだったのですが、苦労しつつ�
   
   <entry>
     <title type="html"><![CDATA[AngularJSでのCORSな通信をpostMessageに置き換える]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/05/21/angular-cors-postmessage/"/>
     <updated>2014-05-21T13:50:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage</id>
+    <id>http://blog.wacul.co.jp//blog/2014/05/21/angular-cors-postmessage</id>
     <content type="html"><![CDATA[<p>あなたは突然AngularJSでCORSでxhrな通信を行いたくなりました。
 通信時に独自のヘッダーを付けたいのでpostMessageを使う必要がありましたが、
 すでに<code>$http</code>、<code>$resource</code>サービスを使った結構な量のソースコードがあります。
@@ -610,9 +610,9 @@ decoratorの略記法について</li>
   
   <entry>
     <title type="html"><![CDATA[waculで使用しているnode.jsのライブラリ]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/14/nodejs-library/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/05/14/nodejs-library/"/>
     <updated>2014-05-14T13:50:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/14/nodejs-library</id>
+    <id>http://blog.wacul.co.jp//blog/2014/05/14/nodejs-library</id>
     <content type="html"><![CDATA[<h2>node.jsでの開発</h2>
 
 <p>現在、waculで自社開発を行っているプロジェクトにおいて、サーバ側はnode.jsで構築しています。
@@ -696,9 +696,9 @@ CoffeeScriptにも対応しています。</p>
   
   <entry>
     <title type="html"><![CDATA[iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/05/07/nslayoutconstraint/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/05/07/nslayoutconstraint/"/>
     <updated>2014-05-07T17:00:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/05/07/nslayoutconstraint</id>
+    <id>http://blog.wacul.co.jp//blog/2014/05/07/nslayoutconstraint</id>
     <content type="html"><![CDATA[<p>はじめまして、プログラマチームの やまだ です。<br/>
 最近は津軽金山焼(<a href="https://www.youtube.com/watch?v=lITs5D8XW5M#t=20" target="_blank">PV:YouTube</a>)に惚れてます。</p>
 
@@ -790,7 +790,7 @@ CoffeeScriptにも対応しています。</p>
 
 <p>例）幅：高さ＝4:3のビュー</p>
 
-<p><img src="http://wcl48.github.io/tech-blog-deploy/images/2014-05-07-nslayoutconstraint/layout_fixed_ratio.png" alt="UIView @viewの中に、UIImageView @imageView が配置されていて、UIImageViewの幅：高さが4:3に固定される" /></p>
+<p><img src="http://blog.wacul.co.jp//images/2014-05-07-nslayoutconstraint/layout_fixed_ratio.png" alt="UIView @viewの中に、UIImageView @imageView が配置されていて、UIImageViewの幅：高さが4:3に固定される" /></p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -858,7 +858,7 @@ CoffeeScriptにも対応しています。</p>
 <h3>一定サイズ重なりあう様な制約</h3>
 
 <p>例）幅60、高さ40の領域が重なる @label と @imageView
-<img src="http://wcl48.github.io/tech-blog-deploy/images/2014-05-07-nslayoutconstraint/layout_layered_fields.png" alt="UIView @viewの中に、UILabel @label と UIImageView @imageView が配置されていて、@label の右下 60x40 の領域が下の @imageView に重なっている" /></p>
+<img src="http://blog.wacul.co.jp//images/2014-05-07-nslayoutconstraint/layout_layered_fields.png" alt="UIView @viewの中に、UILabel @label と UIImageView @imageView が配置されていて、@label の右下 60x40 の領域が下の @imageView に重なっている" /></p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -910,7 +910,7 @@ CoffeeScriptにも対応しています。</p>
 <h3>位置に対して multiplier を使う様な制約</h3>
 
 <p>例）View 全体の幅を等分するSubview
-<img src="http://wcl48.github.io/tech-blog-deploy/images/2014-05-07-nslayoutconstraint/layout_equal_spaces.png" alt="UIView @viewの中に、複数の subview があって、それぞれ均等な領域に割り当てられている。" /></p>
+<img src="http://blog.wacul.co.jp//images/2014-05-07-nslayoutconstraint/layout_equal_spaces.png" alt="UIView @viewの中に、複数の subview があって、それぞれ均等な領域に割り当てられている。" /></p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1092,9 +1092,9 @@ RubyMotion での開発向けに、<strong>レイアウトを数式の様に書�
   
   <entry>
     <title type="html"><![CDATA[Canvasのお絵かきに bacon.js を使ってみた]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/04/30/bacon-js/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/04/30/bacon-js/"/>
     <updated>2014-04-30T19:00:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/04/30/bacon-js</id>
+    <id>http://blog.wacul.co.jp//blog/2014/04/30/bacon-js</id>
     <content type="html"><![CDATA[<h3>イベント処理の憂鬱とbacon.js</h3>
 
 <p>業務でちょっとしたお絵かきツールをjsで作る機会がありました。<br/>
@@ -1396,9 +1396,9 @@ option の値を、太さは数値、色はrgb値の文字列に値を変換し�
   
   <entry>
     <title type="html"><![CDATA[WiMAX接続のMacのMAMP環境でメールが送信できない]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/03/10/mamp_wimax/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/03/10/mamp_wimax/"/>
     <updated>2014-03-10T13:50:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/03/10/mamp_wimax</id>
+    <id>http://blog.wacul.co.jp//blog/2014/03/10/mamp_wimax</id>
     <content type="html"><![CDATA[<h3>事件</h3>
 
 <p>WiMAXで接続し、MacでMAMPを立ち上げ、PHPからmb_send_mailを実行したところ、宛先にメールが届かない。
@@ -1453,9 +1453,9 @@ option の値を、太さは数値、色はrgb値の文字列に値を変換し�
   
   <entry>
     <title type="html"><![CDATA[ワカルプログラマチームのブログスタート]]></title>
-    <link href="http://wcl48.github.io/tech-blog-deploy/blog/2014/03/08/first-post/"/>
+    <link href="http://blog.wacul.co.jp//blog/2014/03/08/first-post/"/>
     <updated>2014-03-08T20:05:00+09:00</updated>
-    <id>http://wcl48.github.io/tech-blog-deploy/blog/2014/03/08/first-post</id>
+    <id>http://blog.wacul.co.jp//blog/2014/03/08/first-post</id>
     <content type="html"><![CDATA[<p>はじめまして、ワカルプログラマチームのtutumingといいます。<br/>
 パン作りが趣味です。</p>
 
