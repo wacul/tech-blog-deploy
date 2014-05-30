@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Canvasのお絵かきに bacon.js を使ってみた - The Wacul Blog</title>
+  <meta name="author" content="wacul">
+
+  
+  <meta name="description" content="イベント処理の憂鬱とbacon.js 業務でちょっとしたお絵かきツールをjsで作る機会がありました。
+マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/04/30/bacon-js">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="Canvasのお絵かきに bacon.js を使ってみた - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="イベント処理の憂鬱とbacon.js 業務でちょっとしたお絵かきツールをjsで作る機会がありました。
+マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/04/30/bacon-js/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/tech-blog-deploy/images/2014-04-30-bacon-js/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Canvasのお絵かきに bacon.js を使ってみた</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-30T19:00:00+09:00" pubdate data-updated="true">Apr 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>イベント処理の憂鬱とbacon.js</h3>
+
+<p>業務でちょっとしたお絵かきツールをjsで作る機会がありました。<br/>
+マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。</p>
+
+<p>これを綺麗に書く方法はないか、調べている中で、<a href="http://baconjs.github.io" target="_blank">bacon.js</a> というライブラリを見つけました。試してみたところなかなか良さそうだったのでご紹介します。</p>
+
+<p>bacon.js はFRP(Functional Reactive Programming) という概念をjsで実装したもので、僕なりの理解だと、</p>
+
+<ul>
+<li>変化するイベントや値 (EventStream, Property) をオブジェクトとして扱うことができる</li>
+<li>イベントや値の間に関係を持たせることができる 例: b = a + 1</li>
+<li>元の値が変わると、関係する値も自動的に更新される 例: a が 1 &ndash;> 2 に変化すると、bは 2 &ndash;> 3 に変化する (Reactive)</li>
+<li>値の変換を関数として記述できる (Functional)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//例: c は a + b </span>
+</span><span class='line'><span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">combine</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span> <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>といった特徴があります。<br/>
+FRPの概念については、そんなに深追いしてないのですが、FRPをiOS/OSXのCocoa APIの上に実装した
+<a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank">ReactiveCocoa</a>などのライブラリもあります。</p>
+
+<h3>お絵かきアプリを bacon.js で実装してみる</h3>
+
+<p>さて、今回はお絵かきアプリのサンプルをbacon.jsを使って書いてみました。</p>
+
+<p><a href="http://tutuming.github.io/bacon-sample/" target="_blank">動いているデモ</a><br/>
+<a href="https://github.com/tutuming/bacon-sample/blob/master/sample.js" target="_blank">ソースコード(github)</a></p>
+
+<p>機能としては以下を実装しています</p>
+
+<ul>
+<li>マウス、タッチイベント両方で描画できる</li>
+<li>色、太さを選択できる</li>
+</ul>
+
+
+<p>使っているライブラリは、jQuery, bacon.js, bacon.UI.JS（ jQueryのイベントをbacon.jsで扱うためのライブラリ）です。</p>
+
+<h4>マウス、タッチイベントから、描画に必要な座標の流れに変換する</h4>
+
+<p>描画に必要な情報は、描画に必要な座標の変化の流れです。
+時間にそって、x,yの組が変化していくストリームを抽象化し、そのストリームを描画する処理と切り離します。</p>
+
+<p>ここが少しどう実装するか迷ったポイントだったのですが、
+描画には開始と終了があるので、<strong> 一連のx,y座標のストリームを返すストリーム </strong> として実装するとうまくいくことがわかりました。</p>
+
+<p>sample.js:L9-21 エレメントに対するマウスのイベントからx,y 座標の組のストリームを生成するストリームを返す関数を定義しています</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'> <span class="c1">// マウスでの描画座標ストリーム生成</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">mouseDrawStreamSource</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;mousedown&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;mousemove&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">).</span><span class="nx">takeUntil</span><span class="p">(</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;mouseup&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">offset</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">x</span> <span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageX</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">y</span> <span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageY</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">top</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sample.js:L24-55 タッチイベントに関しても同じインターフェイスのストリームを返せるような関数を書きます</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// タッチでの描画座標ストリーム生成</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">touchDrawStreamSource</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touchstart&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">).</span><span class="nx">flatMap</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">fromArray</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">originalEvent</span><span class="p">.</span><span class="nx">changedTouches</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">touch</span><span class="p">){</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">filterEventContainesTouch</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">stream</span><span class="p">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span>
+</span><span class='line'>          <span class="s1">&#39;.originalEvent.changedTouches&#39;</span>
+</span><span class='line'>        <span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">touches</span><span class="p">){</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nx">_</span><span class="p">(</span><span class="nx">touches</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="nx">touch</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">endStream</span> <span class="o">=</span> <span class="nx">filterEventContainesTouch</span><span class="p">(</span><span class="nx">Bacon</span><span class="p">.</span><span class="nx">mergeAll</span><span class="p">([</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touchend&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">),</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touches&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">]));</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">filterEventContainesTouch</span><span class="p">(</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touchmove&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span>
+</span><span class='line'>          <span class="s1">&#39;.preventDefault&#39;</span>
+</span><span class='line'>        <span class="p">).</span><span class="nx">takeUntil</span><span class="p">(</span>
+</span><span class='line'>          <span class="nx">endStream</span>
+</span><span class='line'>        <span class="p">)</span>
+</span><span class='line'>      <span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">offset</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">x</span> <span class="o">:</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">pageX</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">y</span> <span class="o">:</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">pageY</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">top</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sample.js:L57-59 それぞれのストリームをcanvasから生成して、マウス、タッチの入力を両方とも受け付けられるように、２つのストリームを統合します</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">var</span> <span class="nx">mouseStreamSource</span> <span class="o">=</span> <span class="nx">mouseDrawStreamSource</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#canvas&#39;</span><span class="p">));</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">touchStreamSource</span> <span class="o">=</span> <span class="nx">touchDrawStreamSource</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#canvas&#39;</span><span class="p">));</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">strokeStreamSource</span> <span class="o">=</span> <span class="nx">mouseStreamSource</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">touchStreamSource</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>strokeStreamSource は、描画に必要な情報のみ提供していて、マウスとかタッチのことはうまく隠蔽されているのがわかると思います。</p>
+
+<h4>ペンの設定と描画処理</h4>
+
+<p>sample.js:L61-71 次に、色と太さをProperty(状態を持ったイベントストリーム) として定義します<br/>
+option の値を、太さは数値、色はrgb値の文字列に値を変換しています。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// 太さ</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">sizeProperty</span> <span class="o">=</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">optionValue</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;[name=size]&#39;</span><span class="p">),</span> <span class="s1">&#39;2&#39;</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// 色</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">colorProperty</span> <span class="o">=</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">optionValue</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;[name=color]&#39;</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">).</span><span class="nx">decode</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">red</span> <span class="o">:</span> <span class="s1">&#39;rgb(255, 0, 0)&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">green</span> <span class="o">:</span> <span class="s1">&#39;rgb(0, 255, 0)&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">blue</span><span class="o">:</span> <span class="s1">&#39;rgb(0, 0, 255)&#39;</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">combineTemplate</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">size</span> <span class="o">:</span> <span class="nx">sizeProperty</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">color</span> <span class="o">:</span> <span class="nx">colorProperty</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後に色、太さの設定情報とx,y座標のストリームを使って、描画処理を書きます。<br/>
+描画が発生したときに、設定の値を取得しています。</p>
+
+<p>L78-105</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// 描画</span>
+</span><span class='line'>  <span class="nx">options</span><span class="p">.</span><span class="nx">sampledBy</span><span class="p">(</span><span class="nx">strokeStreamSource</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">stream</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">{</span> <span class="nx">options</span> <span class="o">:</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">stream</span> <span class="o">:</span> <span class="nx">stream</span> <span class="p">};</span>
+</span><span class='line'>  <span class="p">}).</span><span class="nx">onValue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">stream</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 2点の組みで返すストリーム</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">pointSetStream</span> <span class="o">=</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">slidingWindow</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">points</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">points</span><span class="p">){</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">fromPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">toPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">(</span><span class="nx">fromPoint</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">&amp;&amp;</span> <span class="nx">fromPoint</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span> <span class="o">||</span>
+</span><span class='line'>        <span class="p">(</span><span class="nx">toPoint</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">&amp;&amp;</span> <span class="nx">toPoint</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">pointSetStream</span><span class="p">.</span><span class="nx">onValue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">points</span><span class="p">){</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">fromPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">toPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">color</span><span class="p">;</span>
+</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">size</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">fromPoint</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">fromPoint</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">toPoint</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">toPoint</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>サンプルコードのまとめ</h4>
+
+<p>イベントの流れを抽象化することで、様々な入力に容易に対応できるコードにすることができました。<br/>
+入力を増やすには、他のイベントから座標の流れのイベントに変換すれば良いので</p>
+
+<ul>
+<li>Webソケットを使ってリアルタイムにサーバーから送られてくる座標を描画</li>
+<li>保存されたお絵かきを再生</li>
+</ul>
+
+
+<p>なども描画処理を変えることなく実装できそうです。
+出力についても、描画した線をベジェ曲線に近似させる、といったことも入力とは独立して実装することができます。</p>
+
+<h3>bacon.js を使ってみて</h3>
+
+<p>今回は、簡単なお絵かきツールの実装に沿ってbacon.jsを使ってみましたが、なかなか良さそうです。</p>
+
+<p>イベントの捉え方を根本的に変えないといけないので、チーム開発でのメンテ性などを考えるとアプリ全体をbacon.jsを使って書くのはまだ厳しい気もします。<br/>
+パーツ単位で、特に今回のようなお絵かきやソケット通信などのイベントが主役の部分については、うまく抽象化できて可読性、メンテ性の高いコードが書けるなという印象をうけました。</p>
+
+<p>面白いので、みなさんもぜひ使ってみてください。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/04/30/bacon-js/" data-via="" data-counturl="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/04/30/bacon-js/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/tutuming.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと tutuming</h1>
+    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <h1 class="wacul-title"></h1>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp/contact/">お問い合わせフォーム</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/03/10/mamp_wimax/" title="Previous Post: WiMAX接続のMacのMAMP環境でメールが送信できない">&laquo; WiMAX接続のMacのMAMP環境でメールが送信できない</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/05/07/nslayoutconstraint/" title="Next Post: iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/21/angular-cors-postmessage/">AngularJSでのCORSな通信をpostMessageに置き換える</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/14/nodejs-library/">waculで使用しているnode.jsのライブラリ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/07/nslayoutconstraint/">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/30/bacon-js/">Canvasのお絵かきに bacon.js を使ってみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/10/mamp_wimax/">WiMAX接続のMacのMAMP環境でメールが送信できない</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - wacul
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

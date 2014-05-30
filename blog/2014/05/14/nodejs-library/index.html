@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>waculで使用しているnode.jsのライブラリ - The Wacul Blog</title>
+  <meta name="author" content="wacul">
+
+  
+  <meta name="description" content="node.jsでの開発 現在、waculで自社開発を行っているプロジェクトにおいて、サーバ側はnode.jsで構築しています。
+webフレームワークはExpressを、DBはmongoDBを採用しています。 今回は、我々が開発で利用しているJavaScriptのライブラリを紹介したいと思います。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/14/nodejs-library">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="waculで使用しているnode.jsのライブラリ - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="node.jsでの開発 現在、waculで自社開発を行っているプロジェクトにおいて、サーバ側はnode.jsで構築しています。
+webフレームワークはExpressを、DBはmongoDBを採用しています。 今回は、我々が開発で利用しているJavaScriptのライブラリを紹介したいと思います。 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/14/nodejs-library/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/tech-blog-deploy/images/2014-05-14-nodejs-library/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">waculで使用しているnode.jsのライブラリ</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-14T13:50:00+09:00" pubdate data-updated="true">May 14<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>node.jsでの開発</h2>
+
+<p>現在、waculで自社開発を行っているプロジェクトにおいて、サーバ側はnode.jsで構築しています。
+webフレームワークはExpressを、DBはmongoDBを採用しています。</p>
+
+<p>今回は、我々が開発で利用しているJavaScriptのライブラリを紹介したいと思います。</p>
+
+<h3><a href='http://coffeescript.org/' target='_blank'>CoffeeScript</a></h3>
+
+<p>CoffeeScript自体を紹介するまでもありませんが、綺麗に簡潔に書けるのは良いことです。</p>
+
+<h3><a href='https://github.com/remy/nodemon' target='_blank'>nodemon</a></h3>
+
+<p>ソースを変更したときに、node.jsのアプリケーションを起動しなおしてくれます。<br/>
+CoffeeScriptにも対応しています。</p>
+
+<h3><a href='http://mongoosejs.com/' target='_blank'>mongoose</a></h3>
+
+<p>node.jsからmongoDBにアクセスするためのライブラリです。</p>
+
+<h3><a href='https://www.npmjs.org/package/mpath' target='_blank'>mpath</a></h3>
+
+<p>mongoDBで使うパス指定でJavaSciptのオブジェクトにアクセスできます。</p>
+
+<h3><a href='http://aws.amazon.com/jp/sdkfornodejs/' target='_blank'>AWS SDK for JavaScript</a></h3>
+
+<p>プロジェクトではAWSのSQSやS3などを使用していますが、それらに簡単にアクセスするため、amazon謹製のnode.js用のライブラリを使用しています。</p>
+
+<h3><a href='https://github.com/lorenwest/node-config' target='_blank'>node-config</a></h3>
+
+<p>環境変数によって、ローカル、テストサーバ、本番など環境を分けるために使用しています。<br/>
+それぞれの環境ごとに設定値を変えられるので便利です。</p>
+
+<h3><a href='https://github.com/goodeggs/fibrous' target='_blank'>fibrous</a></h3>
+
+<p>jsの非同期処理を同期的に書けるようになります。これでコールバックのネストが深くなるのを防ぎ、可読性が良くなります。</p>
+
+<h3><a href='https://github.com/bruce/node-temp' target='_blank'>node-temp</a></h3>
+
+<p>テンポラリーなフォルダを作って、ファイルの読み書きができます。ダウンロードしたファイルを一時的に保存する用途に使用しています。</p>
+
+<h3><a href='https://github.com/rsms/node-imagemagick' target='_blank'>node-imagemagick</a></h3>
+
+<p>画像を扱うためのライブラリであるImageMagickをnode.jsから使えるようにするライブラリです。</p>
+
+<h3><a href='https://github.com/mikeal/request' target='_blank'>request</a></h3>
+
+<p>httpリクエストを簡単に行えるライブラリです。</p>
+
+<h3><a href='http://visionmedia.github.io/mocha/' target='_blank'>mocha</a></h3>
+
+<p>テストフレームワークです。</p>
+
+<h3><a href='https://github.com/chaijs/chai' target='_blank'>chai</a></h3>
+
+<p>テスト時の値比較に使用しているライブラリです。</p>
+
+<h3><a href='https://github.com/visionmedia/supertest' target='_blank'>SuperTest</a></h3>
+
+<p>テスト時にhttpリクエストするのに使用しています。名前がかっこいい。</p>
+
+<h3><a href='https://github.com/visionmedia/node-querystring' target='_blank'>node-querystring</a></h3>
+
+<p>オブジェクトをクエリパラメータにしてくれるライブラリです。</p>
+
+<h3><a href='https://github.com/tutuming/async-validator' target='_blank'>async-validator</a></h3>
+
+<p>弊社、包が作成したバリデーションライブラリです。ブラウザでも動きます。</p>
+
+<h3><a href='http://lodash.com/' target='_blank'>Lo-Dash</a></h3>
+
+<p>これも言わずもがな、便利なJavaScriptのライブラリです。オブジェクトや配列の操作がずっと簡単になります。</p>
+
+<h3><a href='http://momentjs.com/' target='_blank'>Moment.js</a></h3>
+
+<p>JavaScriptにおいて時間の計算を行うのには、これがないとつらいです。</p>
+
+<p>以上です！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/14/nodejs-library/" data-via="" data-counturl="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/14/nodejs-library/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/enokido.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと enokido</h1>
+    <p>榎戸です。趣味ではゲームを作っています。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <h1 class="wacul-title"></h1>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp/contact/">お問い合わせフォーム</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/07/nslayoutconstraint/" title="Previous Post: iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)">&laquo; iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/05/21/angular-cors-postmessage/" title="Next Post: AngularJSでのCORSな通信をpostMessageに置き換える">AngularJSでのCORSな通信をpostMessageに置き換える &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/21/angular-cors-postmessage/">AngularJSでのCORSな通信をpostMessageに置き換える</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/14/nodejs-library/">waculで使用しているnode.jsのライブラリ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/07/nslayoutconstraint/">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/30/bacon-js/">Canvasのお絵かきに bacon.js を使ってみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/10/mamp_wimax/">WiMAX接続のMacのMAMP環境でメールが送信できない</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - wacul
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

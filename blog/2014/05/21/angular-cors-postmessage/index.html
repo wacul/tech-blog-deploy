@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>AngularJSでのCORSな通信をpostMessageに置き換える - The Wacul Blog</title>
+  <meta name="author" content="wacul">
+
+  
+  <meta name="description" content="あなたは突然AngularJSでCORSでxhrな通信を行いたくなりました。
+通信時に独自のヘッダーを付けたいのでpostMessageを使う必要がありましたが、
+すでに$http、$resourceサービスを使った結構な量のソースコードがあります。
+これを修正するのは骨が折れそうな作業です。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="AngularJSでのCORSな通信をpostMessageに置き換える - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="あなたは突然AngularJSでCORSでxhrな通信を行いたくなりました。
+通信時に独自のヘッダーを付けたいのでpostMessageを使う必要がありましたが、
+すでに$http、$resourceサービスを使った結構な量のソースコードがあります。
+これを修正するのは骨が折れそうな作業です。 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/tech-blog-deploy/images/2014-05-21-angular-cors-postmessage/title.png" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">AngularJSでのCORSな通信をpostMessageに置き換える</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-21T13:50:00+09:00" pubdate data-updated="true">May 21<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>あなたは突然AngularJSでCORSでxhrな通信を行いたくなりました。
+通信時に独自のヘッダーを付けたいのでpostMessageを使う必要がありましたが、
+すでに<code>$http</code>、<code>$resource</code>サービスを使った結構な量のソースコードがあります。
+これを修正するのは骨が折れそうな作業です。</p>
+
+<p>しかし、心配は無用です。
+このような場合<code>$provide.decorator</code>が強力な武器となってくれます。
+<code>$provide.decorator</code>を使うことで、すでに書いたソースコードに触れることなく対象のサービスの挙動を変更することができます。</p>
+
+<p>本記事では、まず<code>$provide.decorator</code>の概要と簡単なチュートリアルについて説明し、
+次に<code>$httpBackend</code>を置き換えてpostMessageを使ったxhr通信を行う方法を紹介します。</p>
+
+<h2>$provide.decoratorの概要</h2>
+
+<p><a href="https://docs.angularjs.org/api/auto/object/$provide#decorator" target="_blank"><code>$provide.decorator</code></a>
+はすでに定義されているサービスの生成をフックして新しいサービスに置き換えます。</p>
+
+<h2>簡単なチュートリアル</h2>
+
+<p>と言ってもこれだけではなんのことかわからないので、まずは簡単な例を見てみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;fooMod&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// &#39;hello&#39;という文字列を返すだけのサービスを定義</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="s1">&#39;helloService&#39;</span><span class="p">,</span> <span class="s1">&#39;hello&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// &#39;hello world!&#39;という文字列を返すように修正</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$provide</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$provide</span><span class="p">.</span><span class="nx">decorator</span><span class="p">(</span><span class="s1">&#39;helloService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$delegate</span><span class="p">,</span> <span class="nx">$log</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;decorated!!&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">$delegate</span> <span class="o">+</span> <span class="s1">&#39; world!&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">helloService</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">hello</span> <span class="o">=</span> <span class="nx">helloService</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://embed.plnkr.co/89X79o/" target="_blank">デモ</a></p>
+
+<p>この例では以下のようなことを行っています。</p>
+
+<ul>
+<li><code>$provide</code>は<code>app</code>(AngularのModule)の<code>config</code>メソッドによってDI(dependency injection)される。</li>
+<li><code>$provide.decorator</code>メソッドの第一引数にフックしたいサービスの名前を登録する。</li>
+<li><code>$provide.decorator</code>メソッドの第二引数にサービスを置き換えるための関数を登録する。
+
+<ul>
+<li>この関数は<code>$provide.decorator</code>メソッドによってDIされる。</li>
+<li>特に<code>$delagate</code>引数は改変前の元々のサービスがDIされる。</li>
+</ul>
+</li>
+</ul>
+
+
+<p>ここでは、Angularのモジュールの<code>value</code>メソッドで定義されたサービスを置き換えましたが、
+もちろん<code>factory</code>や<code>provider</code>メソッドで定義されたサービスを置き換えることもできます。</p>
+
+<h2><code>$httpBackend</code>を置き換えてpostMessageを使ったxhr通信を行う</h2>
+
+<p><code>$httpBackend</code>サービスをフックして、xhrでの通信時にオリジンが違う場合、<code>postMessage</code>を使って通信するようにしてみましょう。
+ここでは別オリジンで管理しているサーバーにはproxy.htmlというファイルを置き、
+そこを経由してxhr通信を行うことを想定します。
+※サードパーティライブラリとしてjQueryとunderscoreを使用しています。</p>
+
+<p>クライアント側</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$provide</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">iframe</span><span class="p">,</span> <span class="nx">isReady</span><span class="p">,</span> <span class="nx">isSameOrigin</span><span class="p">,</span> <span class="nx">normalize</span><span class="p">,</span> <span class="nx">uniqueId</span><span class="p">,</span> <span class="nx">waitQueue</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">iframe</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">isReady</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">uniqueId</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">})(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">waitQueue</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>  <span class="nx">isReady</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">waitQueue</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// iframeの初期化</span>
+</span><span class='line'>  <span class="nx">iframe</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;iframe&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">iframe</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s2">&quot;http://foo.com/proxy.html&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">iframe</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">iframe</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// iframeの読み込み待ち。終わったら通信待ちのものを実行する</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="nx">iframe</span><span class="p">).</span><span class="nx">one</span><span class="p">(</span><span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">isReady</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">waitQueue</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">fn</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">isSameOrigin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">normalize</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="o">===</span> <span class="nx">normalize</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">normalize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^(https?:\/\/[^:\/]+)(:\d+).*?/</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">all</span><span class="p">,</span> <span class="nx">host</span><span class="p">,</span> <span class="nx">port</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nx">port</span> <span class="o">===</span> <span class="s1">&#39;:80&#39;</span> <span class="o">||</span> <span class="nx">port</span> <span class="o">===</span> <span class="s1">&#39;:443&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">host</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">host</span> <span class="o">+</span> <span class="nx">port</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">callbacks</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">callbacks</span><span class="p">[</span><span class="nx">data</span><span class="p">.</span><span class="nx">id</span><span class="p">](</span><span class="nx">data</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">statusText</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$provide</span><span class="p">.</span><span class="nx">decorator</span><span class="p">(</span><span class="s1">&#39;$httpBackend&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$delegate</span><span class="p">,</span> <span class="nx">$browser</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">post</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">timeout</span><span class="p">,</span> <span class="nx">withCredentials</span><span class="p">,</span> <span class="nx">responseType</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">exec</span><span class="p">,</span> <span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">// オリジン判定。同一オリジンの場合は元の$httpBackendを使う</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="sr">/^http/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="o">||</span> <span class="nx">isSameOrigin</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">$browser</span><span class="p">.</span><span class="nx">url</span><span class="p">()))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">$delegate</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nx">id</span> <span class="o">=</span> <span class="nx">uniqueId</span><span class="p">();</span>
+</span><span class='line'>      <span class="nx">callbacks</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">callback</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">// postMessageを使って通信を行います</span>
+</span><span class='line'>      <span class="nx">exec</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">iframe</span><span class="p">.</span><span class="nx">contentWindow</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">toJson</span><span class="p">({</span>
+</span><span class='line'>          <span class="nx">id</span><span class="o">:</span> <span class="nx">id</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">method</span><span class="o">:</span> <span class="nx">method</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">url</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">post</span><span class="o">:</span> <span class="nx">post</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">headers</span><span class="o">:</span> <span class="nx">headers</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">timeout</span><span class="o">:</span> <span class="nx">timeout</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">withCredentials</span><span class="o">:</span> <span class="nx">withCredentials</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">responseType</span><span class="o">:</span> <span class="nx">responseType</span>
+</span><span class='line'>        <span class="p">}),</span> <span class="s1">&#39;*&#39;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nx">isReady</span> <span class="o">?</span> <span class="nx">exec</span><span class="p">()</span> <span class="o">:</span> <span class="nx">waitQueue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">exec</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>proxy.html</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;!doctype html&gt;</span>
+</span><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;title&gt;</span>postMessage proxy<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span><span class='line'><span class="nt">&lt;body&gt;</span>
+</span><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nb">window</span><span class="p">.</span><span class="nx">on</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nb">window</span><span class="p">.</span><span class="nx">on</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nb">window</span><span class="p">.</span><span class="nx">attachEvent</span><span class="p">(</span><span class="s1">&#39;on&#39;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">fn</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">parent</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span> <span class="s1">&#39;*&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">window</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">origin</span> <span class="o">!==</span> <span class="s1">&#39;foo.com&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">//はじく処理</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">),</span>
+</span><span class='line'>      <span class="nx">headers</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">headers</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">// add headers</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">withCredentials</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">withCredentials</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">xhr</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">xhr</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">send</span><span class="p">({</span>
+</span><span class='line'>        <span class="nx">id</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">status</span><span class="o">:</span> <span class="nx">xhr</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">xhr</span><span class="p">.</span><span class="nx">responseText</span><span class="p">),</span>
+</span><span class='line'>        <span class="nx">headers</span><span class="o">:</span> <span class="nx">xhr</span><span class="p">.</span><span class="nx">getAllResponseHeaders</span><span class="p">(),</span>
+</span><span class='line'>        <span class="nx">statusText</span><span class="o">:</span> <span class="nx">xhr</span><span class="p">.</span><span class="nx">statusText</span>
+</span><span class='line'>      <span class="p">},</span> <span class="nx">e</span><span class="p">.</span><span class="nx">origin</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">post</span> <span class="o">||</span> <span class="kc">null</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'><span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>$httpBackend</code>サービスは<code>$provide.decorator</code>を使うのに最も適しているサービスの一つと言えます。
+AngularJSではインターフェース部分やクエリ文字列の生成等を<code>$http</code>や<code>$resource</code>、実際に通信を行う部分を<code>$httpBackend</code>に分離してるので
+<code>$httpBackend</code>の挙動を変えるだけで全ての通信をpostMessageで行うことができます。
+既存のサービスやコントローラー等で<code>$http</code>や<code>$resource</code>を使っている部分を書き換える必要はありません。</p>
+
+<h2>まとめ</h2>
+
+<p>本記事では<code>$provide.decorator</code>の概要や使用例を学びました。これは主に</p>
+
+<ul>
+<li>サービスのプロパティを変更・追加する。</li>
+<li>サービスの挙動を変える。</li>
+</ul>
+
+
+<p>のような目的で使用されます。</p>
+
+<ul>
+<li>元のサービスのソースコードを直接触らなくてもよい。</li>
+<li>サービスの使っている側のソースコードを変更することなくサービスの挙動を変える事ができる。</li>
+</ul>
+
+
+<p>といった利点があります。</p>
+
+<h2>参考URL</h2>
+
+<ul>
+<li><a href="https://docs.angularjs.org/api/auto/object/$provide#decorator" target="_blank">AngularJS: API: $provide.decorator</a>
+公式リファレンス</li>
+<li><a href="https://egghead.io/lessons/angularjs-provide-decorator" target="_blank">$provide.decorator &ndash; AngularJS Video Tutorial #free @eggheadio</a>
+<code>$provide.decorator</code>のチュートリアル動画</li>
+<li><a href="http://www.slideshare.net/damienklinnert/angular-decorate" target="_blank">Angular decorate</a>
+decoratorの略記法について</li>
+<li><a href="http://angular-tips.com/blog/2013/09/experiment-decorating-directives/" target="_blank">Experiment: decorating directives &ndash; Angular Tips</a></li>
+<li><a href="http://briantford.com/blog/angular-hacking-core" target="_blank">Brian Ford &ndash; Hacking Core Directives in AngularJS</a>
+ディレクティブ置き換え、AngularJSのコアに手を加える方法</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage/" data-via="" data-counturl="http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/kato.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと kato</h1>
+    <p>加藤です。JavaScriptに興味があります。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <h1 class="wacul-title"></h1>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp/contact/">お問い合わせフォーム</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/14/nodejs-library/" title="Previous Post: waculで使用しているnode.jsのライブラリ">&laquo; waculで使用しているnode.jsのライブラリ</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/21/angular-cors-postmessage/">AngularJSでのCORSな通信をpostMessageに置き換える</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/14/nodejs-library/">waculで使用しているnode.jsのライブラリ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/07/nslayoutconstraint/">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/30/bacon-js/">Canvasのお絵かきに bacon.js を使ってみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/10/mamp_wimax/">WiMAX接続のMacのMAMP環境でメールが送信できない</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - wacul
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
