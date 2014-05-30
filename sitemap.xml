@@ -1,41 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/03/08/first-post/</loc>
+        <loc>http://blog.wacul.co.jp//blog/2014/03/08/first-post/</loc>
         <lastmod>2014-04-30T19:18:25+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/03/10/mamp_wimax/</loc>
+        <loc>http://blog.wacul.co.jp//blog/2014/03/10/mamp_wimax/</loc>
         <lastmod>2014-04-30T19:18:25+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/04/30/bacon-js/</loc>
+        <loc>http://blog.wacul.co.jp//blog/2014/04/30/bacon-js/</loc>
         <lastmod>2014-04-30T19:18:25+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/07/nslayoutconstraint/</loc>
+        <loc>http://blog.wacul.co.jp//blog/2014/05/07/nslayoutconstraint/</loc>
         <lastmod>2014-05-30T12:57:06+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/14/nodejs-library/</loc>
+        <loc>http://blog.wacul.co.jp//blog/2014/05/14/nodejs-library/</loc>
         <lastmod>2014-05-30T12:57:06+09:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blog.wacul.co.jp/tech-blog-deploy/blog/2014/05/21/angular-cors-postmessage/
-        </loc>
+        <loc>http://blog.wacul.co.jp//blog/2014/05/21/angular-cors-postmessage/</loc>
         <lastmod>2014-05-30T12:57:06+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/blog/archives/</loc>
+        <loc>http://blog.wacul.co.jp//blog/archives/</loc>
         <lastmod>2014-05-30T12:57:06+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/</loc>
+        <loc>http://blog.wacul.co.jp//</loc>
         <lastmod>2014-05-30T12:57:06+09:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.wacul.co.jp/tech-blog-deploy/robots.txt</loc>
+        <loc>http://blog.wacul.co.jp//robots.txt</loc>
         <lastmod>2014-03-13T13:22:49+09:00</lastmod>
     </url>
 </urlset>
