@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp//atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp//"/>
-  <updated>2014-06-05T10:30:23+09:00</updated>
+  <updated>2014-06-05T14:03:55+09:00</updated>
   <id>http://blog.wacul.co.jp//</id>
   <author>
     <name><![CDATA[wacul]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[UITableViewの一番上に隙間が出来てしまう件]]></title>
+    <link href="http://blog.wacul.co.jp//blog/2014/06/05/tableview-upper-space/"/>
+    <updated>2014-06-05T19:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp//blog/2014/06/05/tableview-upper-space</id>
+    <content type="html"><![CDATA[<p>こんにちは、wacul開発メンバーの kyoh です。
+WWDC2014で<a href="https://developer.apple.com/swift/" target="_blank">Swift</a>が発表された時、
+恋に落ちる音を聞いた気がします。</p>
+
+<p>さて、今日は、最近iPadアプリの開発中に遭遇した不可解な事象と、その解決方法について書いてみようと思います。</p>
+
+<h2>UITableView の狭き門、険しい道</h2>
+
+<p>iOSアプリといえば凡そ避けることのできない「UITableView」ですが、一癖も二癖もあるそれに悩まされるのはiOS開発の登竜門となっているようです。
+今回私も、そんな登竜門の狭い門柱に引っかかって苦しめられました。</p>
+
+<h3>謎の隙間が発生する</h3>
+
+<p>UITableViewController ベースの画面を作り、UINavigationControll に push した時のことです。
+表示された画面には、ナビゲーションバーとセクションヘッダとの間に、意図しない隙間が表示されていました。</p>
+
+<p><img src="http://blog.wacul.co.jp//images/2014-06-05-tableview-upper-space/upper_space.png" alt="UITableView と UINavigationBar との間に、33pxの隙間が生じている" /></p>
+
+<h3>正体不明！</h3>
+
+<p><a href="http://revealapp.com/" target="_blank">REVEAL</a>というツールなども駆使して、この隙間は一体なんぞやと探ってみました。が・・・</p>
+
+<ul>
+<li>UINavigationBar にははみ出すようなビューは含まれていない。</li>
+<li>UITableViewController の tableView は、UINavigationBar と密着している。</li>
+<li>UITableViewDelegateProtocol の tableView:heightForHeaderInSection:は実装済で、適切な高さが返っている。</li>
+<li>同 Protocol の tableView:viewForHeaderInSection: も実装済で、同じ高さの view を返している。
+
+<ul>
+<li>返しているビューに、はみ出すような子孫ビューはない。</li>
+</ul>
+</li>
+</ul>
+
+
+<p>つまるところ、そこには何のビューもなければ何のマージンもない、「ただ開いている」隙間でした。</p>
+
+<h3>怪しいプロパティ</h3>
+
+<p>それとなく UITableView Class Reference を眺めていると、 tableHeaderView なる怪しげなプロパティを発見しました。</p>
+
+<blockquote><p><strong>tableHeaderView</strong>
+Returns an accessory view that is displayed above the table.
+@property(nonatomic, retain) UIView *tableHeaderView</p>
+
+<p><strong>Discussion</strong>
+The default value is nil. The table header view is different from a section header.</p></blockquote>
+
+<p>Tableの上に表示される何がしかのビューを設定できるようです。しかし調べてみても、説明にも書かれている通り、そこには nil が入っているだけでした。</p>
+
+<h2>解決方法</h2>
+
+<p>延々悩んだ結果、どうもその tableHeaderView が怪しいぞ、という結論にいたり、空のビューを設定すると見事に隙間が消えました。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">setTableHeaderView:</span><span class="p">[[</span><span class="n">UIView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)]]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://blog.wacul.co.jp//images/2014-06-05-tableview-upper-space/no_space.png" alt="UINavigationBar の直下に セクションヘッダが密着している" /></p>
+
+<h3>ちょっとした解説</h3>
+
+<p>UINavigationController に push した場合にのみ発生する事象の様です。
+また、UINavigationController の先頭にあるViewControllerの場合は発生しないみたい。</p>
+
+<p>ちなみに、sectionHeaderView に設定する空 view は、高さと幅に有意値（0ではない値）を設定しないと、
+この問題は解決しません。</p>
+
+<p>UITableView のセルやセクションヘッダの高さを 0 にしたい場合は、0.1 を設定するのがセオリーです。
+0を設定すると、基本的に「その他のプロパティ（例：sectionHeaderHeight）に従う大きさ」や「内容に従う大きさ」が設定される様です。</p>
+
+<h2>けつろん！</h2>
+
+<p>UITableView の上方に発生した謎の隙間に悩まされたら、置くだけ簡単 height=0.1 view!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyMotionを業務でのアプリ開発に使ってみた感想]]></title>
@@ -699,7 +782,7 @@ CoffeeScriptにも対応しています。</p>
     <link href="http://blog.wacul.co.jp//blog/2014/05/07/nslayoutconstraint/"/>
     <updated>2014-05-07T17:00:00+09:00</updated>
     <id>http://blog.wacul.co.jp//blog/2014/05/07/nslayoutconstraint</id>
-    <content type="html"><![CDATA[<p>はじめまして、プログラマチームの やまだ です。<br/>
+    <content type="html"><![CDATA[<p>はじめまして、プログラマチームの kyoh です。
 最近は津軽金山焼(<a href="https://www.youtube.com/watch?v=lITs5D8XW5M#t=20" target="_blank">PV:YouTube</a>)に惚れてます。</p>
 
 <h2>背景</h2>
