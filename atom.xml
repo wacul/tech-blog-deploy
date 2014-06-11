@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-06-11T18:43:40+09:00</updated>
+  <updated>2014-06-11T18:58:37+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,151 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js と MongoDB で n-gramを使って全文検索]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/06/11/mongo-ngram/"/>
+    <updated>2014-06-11T13:50:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/06/11/mongo-ngram</id>
+    <content type="html"><![CDATA[<h2>n-gram による検索</h2>
+
+<p>現在、自社開発を行っているプロジェクトではサーバサイドはnode.jsで開発しています。<br/>
+そして、DBはMongoDBを採用し、node.jsからMongoDBへのアクセスは <a href='http://mongoosejs.com/' target='_blank'>mongoose</a>を使用しています。</p>
+
+<p>今回、DBに保存されている「お客の名前」を検索したいという要求が生じました。<br/>
+検索条件として、名前の途中でもヒットするようにする必要があります。<br/>
+例えば「あい」で検索した場合、以下のような名前がヒットします。</p>
+
+<ul>
+<li>あいかわたろう</li>
+<li>あいだはなこ</li>
+<li>やまだあいこ</li>
+<li>おちあいじろう</li>
+</ul>
+
+
+<p>また、上記の例で「あいだ」で検索した場合は以下の名前がヒットします。</p>
+
+<ul>
+<li>あいだはなこ</li>
+</ul>
+
+
+<p>このような検索を実現するために、n-gramによる検索を実装しました。<br/>
+n-gramは文字列を nの長さで１文字ずつずらして切り出して保存します。</p>
+
+<ul>
+<li>n = 2 のとき 「あいかわたろう」という文字列<br/>
+「あい」「いか」「かわ」「わた」「たろ」「ろう」</li>
+</ul>
+
+
+<p>今回は、2文字以上の文字列で検索がヒットするようにしたいので、n = 2 の bi-gramを実装します。</p>
+
+<h2>mongoose での model 定義</h2>
+
+<p>bi-gramで分割した文字列を、array で保存します。
+mongooseの定義は以下のようになります。<br/>
+また、検索の高速化のため、indexを張っておきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">customerSchema</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Schema</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">name</span> <span class="o">:</span>  <span class="nb">String</span><span class="p">,</span>     <span class="c1">//名前を保存するフィールド</span>
+</span><span class='line'>  <span class="nx">bigram</span> <span class="o">:</span> <span class="p">{</span>          <span class="c1">//名前をbi-gramで分割した文字列を保存するフィールド</span>
+</span><span class='line'>    <span class="nx">type</span> <span class="o">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span>
+</span><span class='line'>    <span class="nx">index</span> <span class="o">:</span> <span class="kc">true</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>さらに保存時に自動的にngramを生成したいため、preの&#8217;save&#8217;をフックします。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">customerSchema</span><span class="p">.</span><span class="nx">pre</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isModified</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)){</span>
+</span><span class='line'>    <span class="c1">//変更があった時のみ生成する</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">bigram</span> <span class="o">=</span> <span class="nx">textToNgram</span><span class="p">(</span><span class="nx">searchWord</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// bi-gramで分割して配列にする</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm">* 文字列をn-gramで分割して返す</span>
+</span><span class='line'><span class="cm">* @param {string} text - 分割対象の文字列</span>
+</span><span class='line'><span class="cm">* @param {number} n - 分割数  bi-gramなら2</span>
+</span><span class='line'><span class="cm">* @return {array} 分割した文字列をarrayで返す</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="kd">function</span> <span class="nx">textToNgram</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="nx">ngram</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">ngram</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">n</span><span class="p">));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">ngram</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>検索をする</h2>
+
+<p>検索するときも、検索文字列をbi-gramで分割します。<br/>
+この分割した文字列をMongoDBのクエリにある
+<a href='http://docs.mongodb.org/manual/reference/operator/query/all/#op._S_all' target='_blank'>$all</a>
+を使うことによって、検索できます。<br/>
+$all は保存されているarrayフィールドに対して、クエリで渡したarrayの内容がすべて含まれているものを抽出できます。</p>
+
+<p>mongooseのスキーマに投げるクエリは以下のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">//検索対象の文字列をbi-gramで分割して、arrayに入れます。</span>
+</span><span class='line'><span class="nx">searchWordBigram</span> <span class="o">=</span> <span class="nx">textToNgram</span><span class="p">(</span><span class="nx">searchWord</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">query</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">bigram</span> <span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$all</span> <span class="o">:</span> <span class="nx">searchWordBigram</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>正しくない検索のケース</h2>
+
+<p>上記手法は検索文字列の順番を見ていないため、一部、正しくない検索結果が返る場合があります。<br/>
+例えば、 「あいう」 というワードで検索した場合、「あいおいう」というワードもヒットします。
+こういう特性があるので、使用する際は注意が必要です。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[UITableViewの一番上に隙間が出来てしまう件]]></title>
