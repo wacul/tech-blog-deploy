@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-06-11T18:58:37+09:00</updated>
+  <updated>2014-06-23T16:28:18+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,332 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJSで楽々、フォームを作ってみよう]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/06/23/angular-form/"/>
+    <updated>2014-06-23T16:30:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/06/23/angular-form</id>
+    <content type="html"><![CDATA[<p>AngularJSのformディレクティブは強力なバリデーション機能を提供します。
+以下は基本的な使用例です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form&quot;</span><span class="nt">&gt;</span><span class="c">&lt;!-- 1 --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;firstName&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;user.firstName&quot;</span> <span class="na">required</span><span class="nt">&gt;</span><span class="c">&lt;!-- 2 --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;span</span> <span class="na">ng-show=</span><span class="s">&quot;form.firstName.$error.required&quot;</span><span class="nt">&gt;</span>何も入力されていません。<span class="nt">&lt;/span&gt;</span><span class="c">&lt;!-- 3 --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;button</span> <span class="na">ng-disabled=</span><span class="s">&quot;foo.$invalid&quot;</span> <span class="na">ng-click=</span><span class="s">&quot;submit()&quot;</span><span class="nt">&gt;</span>submit<span class="nt">&lt;/button&gt;</span><span class="c">&lt;!-- 4 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>番号ごとに説明すると</p>
+
+<ol>
+<li>formのname属性を設定します。ここでは<code>name="form"</code>としています。
+<code>form</code>のプロパティからform全体のバリデーション情報を得ることができます。</li>
+<li>form以下のinputのname属性を設定します。ここでは<code>name="firstName"</code>としています。
+<code>firstName</code>のプロパティからこのinputのバリデーション情報を得ることができます。
+(バリデーションを有効にするためにはng-modelを設定する必要があります)</li>
+<li><code>foo.firstName.$error.required</code>からrequired属性のバリデーション情報を取得しています。
+エラー情報を表示したりするときに使用することができます。</li>
+<li><code>foo.$invalid</code>からフォームに誤りがあるかどうかを取得できます。
+ここでは誤りがある場合ボタンを無効化しています。</li>
+</ol>
+
+
+<h2>取得できる情報</h2>
+
+<p>formや各inputのname属性(上の例では<code>form</code>と<code>form.firstName</code>)のプロパティからは以下の表のようなバリデーションの情報を取得することができます。</p>
+
+<table>
+<thead>
+<tr>
+<th> プロパティ名 </th>
+<th> 詳細 </th>
+<th> 型 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> <code>$dirty</code> </td>
+<td> formに一回以上何かしらの入力を行った </td>
+<td> <code>boolean</code> </td>
+</tr>
+<tr>
+<td> <code>$pristine</code> </td>
+<td> formに全く入力を行っていない(<code>$dirty</code>の逆) </td>
+<td> <code>boolean</code> </td>
+</tr>
+<tr>
+<td> <code>$valid</code> </td>
+<td> formの値が正しい </td>
+<td> <code>boolean</code> </td>
+</tr>
+<tr>
+<td> <code>$invalid</code> </td>
+<td> formの値が誤っている </td>
+<td> <code>boolean</code> </td>
+</tr>
+<tr>
+<td> <code>$error</code> </td>
+<td> さらに詳細なエラー情報。上の例でいうところの<code>foo.firstName.$error.required</code>。この他に<code>email</code>や<code>maxlength</code>などがデフォルトで使えます。 </td>
+<td> <code>Object</code> </td>
+</tr>
+</tbody>
+</table>
+
+
+<h2>カスタムバリデーション</h2>
+
+<p>AngularJSではデフォルトで色々なバリデーションを行うことができますが、カスタムバリデーションを自作することもできます。
+以下の例では3と5の倍数であるときだけ値が正しいことにするfizzbuzzディレクティブを作成しています。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;num&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;num&quot;</span> <span class="na">fizzbuzz</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;span</span> <span class="na">ng-show=</span><span class="s">&quot;form.num.$error.fizzbuzz&quot;</span><span class="nt">&gt;</span>3と5の倍数でない。<span class="nt">&lt;/span&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;fizzbuzz&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">require</span><span class="o">:</span> <span class="s1">&#39;ngModel&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">,</span> <span class="nx">$attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// ngModelControllerの$parsesプロパティに検証用の関数を登録します。</span>
+</span><span class='line'>      <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$parsers</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">viewValue</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">viewValue</span> <span class="o">=</span> <span class="o">+</span><span class="nx">viewValue</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nx">viewValue</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">viewValue</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$setValidity</span><span class="p">(</span><span class="s1">&#39;fizzbuzz&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nx">viewValue</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$setValidity</span><span class="p">(</span><span class="s1">&#39;fizzbuzz&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://embed.plnkr.co/iCVJJ73Np1oHoT9nOMGC/" target="_blank">DEMO</a></p>
+
+<h2>Tips</h2>
+
+<p>実際に役立ちそうな(まぁ、実際に使ってますが)Tipsをいくつか紹介します。</p>
+
+<h3>ng-modelを省略する</h3>
+
+<p>inputに一々ng-modelを設定するのは面倒です。
+formのコンパイル時にinput(またはselect, textarea)のname属性からng-modelを補完するようなディレクティブを作成することで記述を減らすことができます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="c">&lt;!-- ng-model=&quot;input1&quot;として補完 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form1&quot;</span> <span class="na">auto-ng-model</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;input1&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  input1 = 
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;!-- ng-model=&quot;data.input2&quot;として補完 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form2&quot;</span> <span class="na">auto-ng-model=</span><span class="s">&quot;data&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;input2&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;select</span> <span class="na">name=</span><span class="s">&quot;select&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>1<span class="nt">&lt;/option&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>2<span class="nt">&lt;/option&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>3<span class="nt">&lt;/option&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/select&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;textarea</span> <span class="na">name=</span><span class="s">&quot;textarea&quot;</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;pre&gt;</span>data = <span class="nt">&lt;/pre&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;autoNgModel&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">compile</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// auto-ng-modelが設定されている要素以下のinput要素にng-modelを設定します。</span>
+</span><span class='line'>      <span class="kd">function</span> <span class="nx">setNgModel</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;ng-model&#39;</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">e</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;ng-model&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">autoNgModel</span> <span class="o">?</span> <span class="nx">attrs</span><span class="p">.</span><span class="nx">autoNgModel</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">),</span> <span class="nx">setNgModel</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">),</span> <span class="nx">setNgModel</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;textarea&#39;</span><span class="p">),</span> <span class="nx">setNgModel</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://embed.plnkr.co/4GsgZd4FiG7ThVCBnBnq/" target="_blank">DEMO</a></p>
+
+<h3>requiredのメッセージを出さないrequired</h3>
+
+<p>required属性はとても便利ですが、エラーメッセージを自分で用意しているときなどはポップアップが余計なことがあります。
+しかし、novalidate属性をつけるとバリデーション自体行われないので困ります。
+こういう場合は、AngularJSの枠組みだけでエラーを検出できるディレクティブを作成すると捗ります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;firstName&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;user.firstName&quot;</span> <span class="na">silent-required</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;span</span> <span class="na">ng-show=</span><span class="s">&quot;form.firstName.$error.required&quot;</span><span class="nt">&gt;</span>何も入力されていません。<span class="nt">&lt;/span&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">&quot;submit()&quot;</span><span class="nt">&gt;</span>submit<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// https://github.com/angular/angular.js/blob/d606e66f7ab893f8799991883fd02b0e66e3225e/src/ng/directive/input.js#L2094</span>
+</span><span class='line'><span class="c1">// のrequired判定する部分だけ拝借します。</span>
+</span><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;silentRequired&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">require</span><span class="o">:</span> <span class="s1">&#39;ngModel&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">,</span> <span class="nx">$attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">validator</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">$isEmpty</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$setValidity</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$setValidity</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>      <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$formatters</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">validator</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">ctrl</span><span class="p">.</span><span class="nx">$parsers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">validator</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://embed.plnkr.co/LU9Nds5lNb0r7FVkqdIY/" target="_blank">DEMO</a></p>
+
+<h3>debounce</h3>
+
+<p>バージョン1.3からですが、入力している途中はバリデーションを一旦止めてくれる機能があります。
+使い方は簡単で、<code>ng-model-options="{ debounce: num }"</code>をinput要素に設定するだけです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;email&quot;</span> <span class="na">name=</span><span class="s">&quot;firstName&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;user.firstName&quot;</span> <span class="na">ng-model-options=</span><span class="s">&quot;{ debounce: 300 }&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;span</span> <span class="na">ng-show=</span><span class="s">&quot;form.firstName.$error.email&quot;</span><span class="nt">&gt;</span>正しくないメールアドレスです。<span class="nt">&lt;/span&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://embed.plnkr.co/G5GH3nAqJA5DqxIxmMXG/" target="_blank">DEMO</a></p>
+
+<h2>まとめ</h2>
+
+<p>AngularJSのフォームバリデーションは強力で拡張性が高いので、これを使いこなすとhtmlが読みやすくなり、コントローラーに記述するコードを減らすことができるでしょう。
+みなさんもこれらの機能をどんどん使って楽々にフォームを作成してみて下さい。</p>
+
+<h2>参考URL</h2>
+
+<ul>
+<li><a href="https://docs.angularjs.org/guide/forms" target="_blank">AngularJS: Developer Guide: Forms</a></li>
+<li><a href="https://docs.angularjs.org/api/ng/type/form.FormController" target="_blank">AngularJS: API: form.FormController</a></li>
+</ul>
+
+
+<h2>トップ画像参照元</h2>
+
+<ul>
+<li><a href="https://www.flickr.com/photos/rapatski/4143069655/">OCR Computer Form by Tiemen Rapati</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Node.js と MongoDB で n-gramを使って全文検索]]></title>
