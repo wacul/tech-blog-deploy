@@ -57,6 +57,14 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
   
 
   
@@ -233,6 +241,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/26/wacul-tools/">ワカル社内で使っているツール・サービスのご紹介</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/23/angular-form/">AngularJSで楽々、フォームを作ってみよう</a>
       </li>
     
@@ -246,10 +258,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/30/ruby-motion/">RubyMotionを業務でのアプリ開発に使ってみた感想</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/21/angular-cors-postmessage/">AngularJSでのCORSな通信をpostMessageに置き換える</a>
       </li>
     
   </ul>
