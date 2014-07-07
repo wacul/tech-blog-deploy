@@ -55,6 +55,14 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
   
 
   
@@ -230,7 +238,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>日付を扱うのはなかなか骨が折れる作業なので、RRULEを扱えるこのようなライブラリが用意されているのは非常に助かります。</p>
+<p>日付の繰り返し処理を扱うのはなかなか骨が折れる作業なので、RRULEを扱えるこのようなライブラリが用意されているのは非常に助かります。</p>
 
 <p>ちなみにカレンダーアプリのようなものを実装する際はGoogleカレンダーのAPIを試してみると参考になります。<br/>
 <a href='https://developers.google.com/apis-explorer/#p/' target='_blank'>Google API Explorer</a>からCalendar API を選択し、
@@ -307,7 +315,7 @@ Googleカレンダーでは以下のURLにある「Recurring events」の項目�
 
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/23/angular-form/" title="Previous Post: AngularJSで楽々、フォームを作ってみよう">AngularJSで楽々、フォームを作ってみよう</a>
+        <a class="basic-alignment left" href="/blog/2014/06/26/wacul-tools/" title="Previous Post: ワカル社内で使っているツール・サービスのご紹介">ワカル社内で使っているツール・サービスのご紹介</a>
       
       
     </p>
@@ -327,6 +335,10 @@ Googleカレンダーでは以下のURLにある「Recurring events」の項目�
       </li>
     
       <li class="post">
+        <a href="/blog/2014/06/26/wacul-tools/">ワカル社内で使っているツール・サービスのご紹介</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/23/angular-form/">AngularJSで楽々、フォームを作ってみよう</a>
       </li>
     
@@ -336,10 +348,6 @@ Googleカレンダーでは以下のURLにある「Recurring events」の項目�
     
       <li class="post">
         <a href="/blog/2014/06/05/tableview-upper-space/">UITableViewの一番上に隙間が出来てしまう件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/30/ruby-motion/">RubyMotionを業務でのアプリ開発に使ってみた感想</a>
       </li>
     
   </ul>

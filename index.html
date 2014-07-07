@@ -50,6 +50,14 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
   
 
   
@@ -146,6 +154,52 @@ jakubroztocil/rrule を使うと簡単にできます(サーバサイドでも�
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/07/07/rrule/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
+    <a href="/blog/2014/06/26/wacul-tools/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-06-26-wacul-tools/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        26th.
+        
+        Jun. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/06/26/wacul-tools/">ワカル社内で使っているツール・サービスのご紹介</a></div>
+      <div class="post-content">こんにちわ、包です。
+
+今回はワカル社内で使っているサービスやツールたちをご紹介します。
+ソフトウェア系はMacOSXのアプリが中心です。
+
+1. コミュニケーション
+
+Skype
+
+ワカルでは創業当時はみなリモートで作業していたため、頻繁に音声やビデオ会議をする文化がありました。
+いまでも集中して実装したい時などには自宅作業をする人もいるので、そんなとき活躍しています。
+
+ただ、どうしてもP2Pなので、送ったと思っていたメッセージが送られていなかったり、検索性が弱かったり、モバイルアプリでの通信に時間がかかったりといった不満がでてきています。
+他のチャットサービスへの乗り換えを検討していますが、音声通話がシームレスで手軽なので、まだ移行できないでいます。
+
+Google Docs (Google Drive)
+
+共同編集が必要なドキュメント(スケジュール表や議事録など)はGoogle Docsで管理しています。
+
+みんなでいじるときのリアルタイム編集合戦感が好きです。
+
+Skitch
+
+画面のキャプチャに説明を付けたい時にはこちら。
+キャプチャして説明を書いて、 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/06/26/wacul-tools/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 
@@ -495,55 +549,6 @@ bacon.js はFRP(Functional Reactive Programming) という概念をjsで実装�
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/04/30/bacon-js/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/03/10/mamp_wimax/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-03-10-mamp_wimax/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        10th.
-        
-        Mar. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/03/10/mamp_wimax/">WiMAX接続のMacのMAMP環境でメールが送信できない</a></div>
-      <div class="post-content">事件
-
-WiMAXで接続し、MacでMAMPを立ち上げ、PHPからmb_send_mailを実行したところ、宛先にメールが届かない。
-その後、別のインターネット環境に接続したところ、今まで送信しようとしたメールが一斉に届いた。
-
-原因
-
-多くのプロバイダはOutbound Port25 Blocking をしており、メール送信に25番ポートを利用することができない。
-利用していたUQ WiMAXもその制限があった。
-送ることができなかったメールはMacで標準に搭載されているpostfixのキューに溜まる。
-
-解決方法
-
-gmailのサーバへリレーして送信する。
-
-1
-2
-3
-4
-5
-6
-7
-&gt; sudo vim /etc/postfix/main.cf
-
-relayhost = [smtp.gmail.com]:587
-smtp_use_tls = yes
-smtp_sasl_auth_enable = yes
-smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/03/10/mamp_wimax/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 
