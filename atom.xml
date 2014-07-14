@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-07-07T18:48:39+09:00</updated>
+  <updated>2014-07-14T20:37:36+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SwiftでNSLayoutConstraintを綺麗に扱えるライブラリを作ってみる]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/07/14/swifty-layout/"/>
+    <updated>2014-07-14T21:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/07/14/swifty-layout</id>
+    <content type="html"><![CDATA[<p>こんにちわ、kyohです。</p>
+
+<p>さぁさぁSwiftアツいですね。プライベートでは連日Swiftと戯れながら、RubyMotionで仕事しています。</p>
+
+<p>以前RubyMotion向けに、NSLayoutConstraintの使い方を簡単に書いてみました(<a href="http://blog.wacul.co.jp/blog/2014/05/07/nslayoutconstraint/">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>)が、
+Swift版を作っている最中なので、ここに掲載してみます。</p>
+
+<h3>NSView版（for Mac OSX）</h3>
+
+<p><a href="https://github.com/kyoh/SwiftyLayoutNS">https://github.com/kyoh/SwiftyLayoutNS</a></p>
+
+<h3>UIView版（for iOS）</h3>
+
+<p><a href="https://github.com/kyoh/SwiftyLayoutUI">https://github.com/kyoh/SwiftyLayoutUI</a></p>
+
+<h3>使い方（例）</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ocaml'><span class='line'><span class="n">var</span> <span class="n">view1</span> <span class="o">=</span> <span class="nc">UILabel</span><span class="bp">()</span>
+</span><span class='line'><span class="n">self</span><span class="o">.</span><span class="n">addSubview</span><span class="o">(</span><span class="n">view1</span><span class="o">)</span>
+</span><span class='line'><span class="n">var</span> <span class="n">view2</span> <span class="o">=</span> <span class="nc">UILabel</span><span class="bp">()</span>
+</span><span class='line'><span class="n">self</span><span class="o">.</span><span class="n">addSubview</span><span class="o">(</span><span class="n">view2</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">//</span> <span class="n">view</span><span class="err">に</span><span class="n">bind</span><span class="err">メソッドが追加されます。</span>
+</span><span class='line'><span class="o">//</span> <span class="n">bind</span><span class="err">メソッドにはいくつでも</span><span class="nc">Constraint</span><span class="err">を指定することができます。</span>
+</span><span class='line'><span class="n">self</span><span class="o">.</span><span class="n">bind</span><span class="o">(</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">位置を他のビューの位置との相対位置で指定できます。</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">例：</span><span class="n">view1</span> <span class="err">の上辺＝親ビューの上辺から</span><span class="mi">20</span><span class="n">px</span><span class="err">の位置</span>
+</span><span class='line'>  <span class="n">view1</span><span class="o">.</span><span class="n">top</span> <span class="o">==</span> <span class="n">self</span><span class="o">.</span><span class="n">top</span> <span class="o">+</span> <span class="mi">20</span><span class="o">,</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">位置を一定の位置を超えない様に指定できます。</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">例：</span><span class="n">view2</span> <span class="err">の右辺＝親ビューの右辺から</span><span class="o">-</span><span class="mi">20</span><span class="n">px</span><span class="err">の位置よりも左側</span>
+</span><span class='line'>  <span class="n">view1</span><span class="o">.</span><span class="n">right</span> <span class="o">&lt;=</span> <span class="n">self</span><span class="o">.</span><span class="n">right</span> <span class="o">-</span> <span class="mi">20</span><span class="o">,</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">位置を他のビューの位置の倍数で指定できます。</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">例：</span><span class="n">view1</span><span class="err">の幅</span> <span class="o">:</span> <span class="n">view2</span><span class="err">の幅＝</span><span class="mi">2</span> <span class="o">:</span> <span class="mi">3</span>
+</span><span class='line'>  <span class="n">view1</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">==</span> <span class="n">view2</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mi">2</span><span class="o">,</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">高さや幅などは、固定値も指定できます。</span>
+</span><span class='line'>  <span class="o">//</span> <span class="err">例：</span><span class="n">view1</span> <span class="err">の高さを</span><span class="mi">45</span><span class="n">px</span><span class="err">に固定。</span>
+</span><span class='line'>  <span class="n">view1</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">45</span><span class="o">,</span>
+</span><span class='line'><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみに、Swiftのコードハイライトで困ったときは、「Ocaml」を代用するといいみたいです。
+この記事でも（まだSwiftのハイライトプラグインがないため）Ocamlを代用しています。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[日付の繰り返しルールに便利なRRULEを使う]]></title>

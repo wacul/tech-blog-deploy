@@ -115,6 +115,71 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/07/14/swifty-layout/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-07-14-swifty-layout/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        14th.
+        
+        Jul. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/07/14/swifty-layout/">SwiftでNSLayoutConstraintを綺麗に扱えるライブラリを作ってみる</a></div>
+      <div class="post-content">こんにちわ、kyohです。
+
+さぁさぁSwiftアツいですね。プライベートでは連日Swiftと戯れながら、RubyMotionで仕事しています。
+
+以前RubyMotion向けに、NSLayoutConstraintの使い方を簡単に書いてみました(iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint))が、
+Swift版を作っている最中なので、ここに掲載してみます。
+
+NSView版（for Mac OSX）
+
+https://github.com/kyoh/SwiftyLayoutNS
+
+UIView版（for iOS）
+
+https://github.com/kyoh/SwiftyLayoutUI
+
+使い方（例）
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+var view1 = UILabel()
+self.addSubview(view1)
+var view2 = UILabel()
+self.addSubview(view2)
+
+// &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/07/14/swifty-layout/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/07/07/rrule/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -514,41 +579,6 @@ NSLayoutConstraint &hellip;</div>
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/05/07/nslayoutconstraint/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/04/30/bacon-js/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-04-30-bacon-js/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        30th.
-        
-        Apr. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/04/30/bacon-js/">Canvasのお絵かきに bacon.js を使ってみた</a></div>
-      <div class="post-content">イベント処理の憂鬱とbacon.js
-
-業務でちょっとしたお絵かきツールをjsで作る機会がありました。
-マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。
-
-これを綺麗に書く方法はないか、調べている中で、bacon.js というライブラリを見つけました。試してみたところなかなか良さそうだったのでご紹介します。
-
-bacon.js はFRP(Functional Reactive Programming) という概念をjsで実装したもので、僕なりの理解だと、
-
-
-変化するイベントや値 (EventStream, Property) をオブジェクトとして扱うことができる
-イベントや値の間に関係を持たせることができる 例: b = a + 1
-元の値が変わると、関係する値も自動的に更新される 例: a が 1 &ndash;> 2 に変化すると、bは 2 &ndash;> 3 に変化する (Reactive)
-値の変換を関数として記述できる (Functional) &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/04/30/bacon-js/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 
