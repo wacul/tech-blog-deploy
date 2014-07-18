@@ -1,0 +1,502 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Jadeのmixinでこころぴょんぴょん - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="Jadeにはmixinという再利用可能なオレオレ要素を作る機能があります。
+mixinの機能についての解説はすでにやられてる方がいるので(かずぽんブログ • Jadeで便利なmixinの機能)ここではmixinがどのようにコンパイルされてるのかを解説しようかと思います。ちなみにjade-lang. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/07/18/jade-mixins">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="Jadeのmixinでこころぴょんぴょん - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="Jadeにはmixinという再利用可能なオレオレ要素を作る機能があります。
+mixinの機能についての解説はすでにやられてる方がいるので(かずぽんブログ • Jadeで便利なmixinの機能)ここではmixinがどのようにコンパイルされてるのかを解説しようかと思います。ちなみにjade-lang. &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/07/18/jade-mixins/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-07-18-jade-mixins/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@ukyo">
+  
+
+  <meta name="twitter:title" content="Jadeのmixinでこころぴょんぴょん - The Wacul Blog" />
+  <meta name="twitter:description" content="Jadeにはmixinという再利用可能なオレオレ要素を作る機能があります。
+mixinの機能についての解説はすでにやられてる方がいるので(かずぽんブログ • Jadeで便利なmixinの機能)ここではmixinがどのようにコンパイルされてるのかを解説しようかと思います。ちなみにjade-lang. &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-07-18-jade-mixins/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Jadeのmixinでこころぴょんぴょん</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-18T16:00:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Jadeにはmixinという再利用可能なオレオレ要素を作る機能があります。
+mixinの機能についての解説はすでにやられてる方がいるので(<a href="http://blog.kazupon.jp/post/38877362879/jade-mixin-tips">かずぽんブログ • Jadeで便利なmixinの機能</a>)ここではmixinがどのようにコンパイルされてるのかを解説しようかと思います。ちなみに<a href="http://jade-lang.com/demo/">jade-lang.com/demo/</a>上でリアルタイムにコンパイル結果を確認することができます。</p>
+
+<hr />
+
+<p>さっそく本題に入ります。以下のJadeのコード例を見て下さい。なんだかごてごてしているように見えますが、ここでは基本的なmixinの機能を全て使っています(もし記法がわからなければ上記ブログを参照することをおすすめします)。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='jade'><span class='line'><span class="nt">mixin</span> foo(arg)
+</span><span class='line'>  <span class="nt">div</span> foooooo <span class="si">#{</span><span class="n">arg</span><span class="si">}</span>!
+</span><span class='line'>  <span class="nt">div</span>(<span class="na">class=</span><span class="nv">attributes</span><span class="err">.</span><span class="na">class</span> <span class="na">id=</span><span class="nv">attributes</span><span class="err">.</span><span class="na">id</span>)
+</span><span class='line'>    <span class="nt">block</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">+</span><span class="nt">foo</span>(<span class="err">&quot;こんにちは&quot;</span>)<span class="nc">.hoge</span><span class="nf">#fuga</span>(<span class="na">attr1=</span><span class="s">&quot;js&quot;</span>) hello
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このファイルをコンパイルすると以下のようなコードが生成されます(幅の都合上折り返しています)。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">template</span><span class="p">(</span><span class="nx">locals</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">buf</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">jade_mixins</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>    <span class="nx">jade_mixins</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">block</span> <span class="o">=</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">block</span><span class="p">,</span>
+</span><span class='line'>            <span class="nx">attributes</span> <span class="o">=</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">attributes</span> <span class="o">||</span> <span class="p">{};</span>
+</span><span class='line'>        <span class="nx">buf</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+</span><span class='line'>            <span class="s1">&#39;&lt;div&gt;foooooo &#39;</span> <span class="o">+</span>
+</span><span class='line'>            <span class="nx">jade</span><span class="p">.</span><span class="nx">escape</span><span class="p">((</span><span class="nx">jade</span><span class="p">.</span><span class="nx">interp</span> <span class="o">=</span> <span class="nx">arg</span><span class="p">)</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="nx">jade</span><span class="p">.</span><span class="nx">interp</span><span class="p">)</span> <span class="o">+</span>
+</span><span class='line'>            <span class="s1">&#39;!&lt;/div&gt;&lt;div&#39;</span> <span class="o">+</span>
+</span><span class='line'>            <span class="nx">jade</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">attributes</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="o">+</span>
+</span><span class='line'>            <span class="nx">jade</span><span class="p">.</span><span class="nx">cls</span><span class="p">([</span> <span class="nx">attributes</span><span class="p">.</span><span class="kr">class</span> <span class="p">],</span> <span class="p">[</span> <span class="kc">true</span> <span class="p">])</span> <span class="o">+</span>
+</span><span class='line'>            <span class="s2">&quot;&gt;&quot;</span>
+</span><span class='line'>        <span class="p">);</span>
+</span><span class='line'>        <span class="nx">block</span> <span class="o">&amp;&amp;</span> <span class="nx">block</span><span class="p">();</span>
+</span><span class='line'>        <span class="nx">buf</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>    <span class="nx">jade_mixins</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">].</span><span class="nx">call</span><span class="p">({</span>
+</span><span class='line'>        <span class="nx">block</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">buf</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">},</span>
+</span><span class='line'>        <span class="nx">attributes</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;fuga&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="nx">attr1</span><span class="o">:</span> <span class="s2">&quot;js&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;class&quot;</span><span class="o">:</span> <span class="s2">&quot;hoge&quot;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">},</span> <span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">buf</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>HTML出力は以下のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div&gt;</span>foooooo こんにちは!<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;fuga&quot;</span> <span class="na">class=</span><span class="s">&quot;hoge&quot;</span><span class="nt">&gt;</span>hello
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<p>コンパイルされたコードについて分けながら説明します。</p>
+
+<p>まずはtemplate関数全体から。冒頭のlocalsはテンプレートに流し込むデータです(ここでは使っていませんが)。bufにはhtmlタグなどをテキストとして格納しておき、連結して最終的な結果として返します。
+mixinはjade_mixinsに関数として格納されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">template</span><span class="p">(</span><span class="nx">locals</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">buf</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">jade_mixins</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>    <span class="cm">/* ... 中身 ... */</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">buf</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>foo mixinの呼び出し部分です(定義は後回しにします)。<code>+foo("こんにちは").hoge#fuga(attr1="js") hello</code>の
+最初の<code>"こんにちは"</code>が引数、classとidとattr1がattributesに格納されています。foo mixinの中身であるhelloは
+block関数の中で<code>buf.push("hello")</code>することで所定の位置にhelloの文字列が表示されることになります。
+blockとattributesはthisコンテキストとして関数に渡されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">jade_mixins</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">].</span><span class="nx">call</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">block</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">buf</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="nx">attributes</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;fuga&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">attr1</span><span class="o">:</span> <span class="s2">&quot;js&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;class&quot;</span><span class="o">:</span> <span class="s2">&quot;hoge&quot;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">},</span> <span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>foo mixinの実際の定義部分です。blockとattributesはこの関数の中でローカル変数として展開されます。
+不気味なattributesはこんな感じで定義されてたわけです。<code>div "foooooo #{arg}!"</code>と<code>div(class=attributes.class id=attributes.id)</code>
+の部分は特に問題無いですね。jadeでblockを置いていた行は<code>block &amp;&amp; block();</code>になっています。単純にblock関数があれば実行されるだけで、
+ここではbufに<code>"hello"</code>を追加していることになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">jade_mixins</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">block</span> <span class="o">=</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">block</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">attributes</span> <span class="o">=</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">attributes</span> <span class="o">||</span> <span class="p">{};</span>
+</span><span class='line'>    <span class="nx">buf</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;&lt;div&gt;foooooo &#39;</span> <span class="o">+</span>
+</span><span class='line'>        <span class="nx">jade</span><span class="p">.</span><span class="nx">escape</span><span class="p">((</span><span class="nx">jade</span><span class="p">.</span><span class="nx">interp</span> <span class="o">=</span> <span class="nx">arg</span><span class="p">)</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="nx">jade</span><span class="p">.</span><span class="nx">interp</span><span class="p">)</span> <span class="o">+</span>
+</span><span class='line'>        <span class="s1">&#39;!&lt;/div&gt;&lt;div&#39;</span> <span class="o">+</span>
+</span><span class='line'>        <span class="nx">jade</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">attributes</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="o">+</span>
+</span><span class='line'>        <span class="nx">jade</span><span class="p">.</span><span class="nx">cls</span><span class="p">([</span> <span class="nx">attributes</span><span class="p">.</span><span class="kr">class</span> <span class="p">],</span> <span class="p">[</span> <span class="kc">true</span> <span class="p">])</span> <span class="o">+</span>
+</span><span class='line'>        <span class="s2">&quot;&gt;&quot;</span>
+</span><span class='line'>    <span class="p">);</span>
+</span><span class='line'>    <span class="nx">block</span> <span class="o">&amp;&amp;</span> <span class="nx">block</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">buf</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>まとめ</h2>
+
+<p>mixinがどのようにコンパイルされるかを解説しました。
+attributesがどこから現れたのかとか、blockが実際に何をやっているかを知ることで
+mixinを書くときに迷うことが少なくなるかと思います。
+その他、mixin内ではJavaScriptを書ける上にbufにアクセスしてごにょごにょできるのですが、
+そういうdirty hackはgithubで検索するとわんさか出てくるので興味ある人は調べてみてください。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://jade-lang.com/">Jade &ndash; Template Engine</a></li>
+<li><a href="http://blog.kazupon.jp/post/38877362879/jade-mixin-tips">かずぽんブログ • Jadeで便利なmixinの機能</a></li>
+<li><a href="http://rtshaaaa.hateblo.jp/entry/2013/11/15/092507">Jadeでゴリゴリ書いてく時にちょっと注意することとか &ndash; あまり新しくないもの</a></li>
+<li><a href="https://github.com/search?q=jade+mixin&amp;ref=cmdform">github &ndash; Search · jade mixin</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/07/18/jade-mixins/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/07/18/jade-mixins/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/kato.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと kato</h1>
+    <p>加藤です。JavaScriptに興味があります。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/07/14/swifty-layout/" title="Previous Post: SwiftでNSLayoutConstraintを綺麗に扱えるライブラリを作ってみる">SwiftでNSLayoutConstraintを綺麗に扱えるライブラリを作ってみる</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/18/jade-mixins/">Jadeのmixinでこころぴょんぴょん</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/14/swifty-layout/">SwiftでNSLayoutConstraintを綺麗に扱えるライブラリを作ってみる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/07/rrule/">日付の繰り返しルールに便利なRRULEを使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/26/wacul-tools/">ワカル社内で使っているツール・サービスのご紹介</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/23/angular-form/">AngularJSで楽々、フォームを作ってみよう</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -115,6 +115,46 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/07/18/jade-mixins/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-07-18-jade-mixins/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        18th.
+        
+        Jul. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/07/18/jade-mixins/">Jadeのmixinでこころぴょんぴょん</a></div>
+      <div class="post-content">Jadeにはmixinという再利用可能なオレオレ要素を作る機能があります。
+mixinの機能についての解説はすでにやられてる方がいるので(かずぽんブログ • Jadeで便利なmixinの機能)ここではmixinがどのようにコンパイルされてるのかを解説しようかと思います。ちなみにjade-lang.com/demo/上でリアルタイムにコンパイル結果を確認することができます。
+
+
+
+さっそく本題に入ります。以下のJadeのコード例を見て下さい。なんだかごてごてしているように見えますが、ここでは基本的なmixinの機能を全て使っています(もし記法がわからなければ上記ブログを参照することをおすすめします)。
+
+1
+2
+3
+4
+5
+6
+mixin foo(arg)
+  div foooooo #{arg}!
+  div(class=attributes.class id=attributes.id)
+    block
+
++foo(&quot;こんにちは&quot;).hoge#fuga(attr1=&quot;js&quot;) hello &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/07/18/jade-mixins/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/07/14/swifty-layout/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -539,46 +579,6 @@ node- &hellip;</div>
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/05/14/nodejs-library/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/05/07/nslayoutconstraint/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-05-07-nslayoutconstraint/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        07th.
-        
-        May. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/05/07/nslayoutconstraint/">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a></div>
-      <div class="post-content">はじめまして、プログラマチームの kyoh です。
-最近は津軽金山焼(PV:YouTube)に惚れてます。
-
-背景
-
-ワカルでは現在、RubyMotionを使ってiPadアプリを開発中です。
-プロジェクトとして「InterfaceBuilderを使わない」という選択をした結果、より自由度の高い NSLayoutConstraint の魅力がわかってきました。
-これはもったいない、世の中的にももっと使ってもらえるように、とこの記事を書くに至った次第です。
-
-Objective-C はちょっと・・・というスタンスなので、ソースコードは全てRubyで書いています。すみません。
-
-結論
-
-InterfaceBuilderを使わない変態算数が好きなプログラマーは NSLayoutConstraint.constraintWithItem&hellip; をガシガシ使おう！CSS風に書ける快感を皆で味わおう！
-メソッド名が長い？記述が読みにくい？それならLayoutExpressでどうだっ！（自薦）
-
-NSLayoutConstraint の機能
-
-NSLayoutConstraint &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/05/07/nslayoutconstraint/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 
