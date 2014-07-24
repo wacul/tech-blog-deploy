@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-07-18T16:22:34+09:00</updated>
+  <updated>2014-07-24T15:20:44+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Amazon Web Service ELB 謎のヘルスチェックエラー]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/07/24/elb/"/>
+    <updated>2014-07-24T16:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/07/24/elb</id>
+    <content type="html"><![CDATA[<p>こんにちわ。ワカルでは、サービスの運営などに<a href="http://aws.amazon.com/jp/">Amazon Web Service</a>を利用しています。</p>
+
+<p>先日、インスタンスは正常なのに、ELBのヘルスチェックがうまく動かなくなる現象に遭遇しました。<br/>
+結果的に、ELBを同じ構成で作りなおしたところ直ったのですが、根本的な原因がわからないままなので、ログとして残しておこうと思います。<br/>
+もし原因がわかったら追記します。</p>
+
+<h2>起こったこと</h2>
+
+<p>今回問題が起こった構成は、以下のようなものです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ELB -&gt; Nginx -&gt; Node.jsアプリ</span></code></pre></td></tr></table></div></figure>
+
+
+<p>WebからのリクエストをELBでEC2インスタンス上のNginxに渡し、Nginxのリバースプロキシで、静的ファイル以外を Node.jsのアプリに振り分けます。</p>
+
+<p>この構成で構築後３日ほどすると、サーバーへのリクエストが504(Gateway Timeout) を返すようになりました。
+そしてしばらくすると、ヘルスチェックがOut of Service になり時間が経つと戻る、といった挙動を繰り返します。</p>
+
+<p><img src="http://blog.wacul.co.jp/images/2014-07-23-elb/graph_capture.png" alt="elb" /></p>
+
+<p>(参考): CloudWatchの死活監視グラフ</p>
+
+<h2>原因調査</h2>
+
+<p><a href="http://docs.aws.amazon.com/ja_jp/ElasticLoadBalancing/latest/DeveloperGuide/ts-elb-error-message.html">ELBのエラーコード説明ページ</a></p>
+
+<p>上記ページによると、504が返るのは、ヘルスチェックは通っているがサーバーが応答していない時、とのこと。<br/>
+タイムアウトするようになったあと、ヘルスチェックにも失敗して、インスタンスが切り離されているようです。</p>
+
+<h3>エラー箇所を探る</h3>
+
+<p>エラーが起こっている箇所を特定するため</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ELB -&gt; Nginx -&gt; Node.jsアプリ
+</span><span class='line'>(1)    (2)      (3)</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>ELB越しでアクセス</li>
+<li>Nginx に直接アクセス</li>
+<li>Nodeアプリに直接アクセス</li>
+</ol>
+
+
+<p>の３つを、障害が起こっている時に試しました。<br/>
+その結果、(1) のみでエラーが起こっている状況を確認しました。</p>
+
+<p>問題は、 (1)ELB か (2)Nginx。またはその間にありそうです。</p>
+
+<h3>Nginxの設定を調整してみる</h3>
+
+<p>Nginxに直接アクセスした際には問題が起こっていないことから、ELBからの接続にNginxが設定上うまく対応できていない箇所があることを疑いました。</p>
+
+<p>ELBは、外部からのHTTPリクエストごとに接続を貼り直さず、インスタンスに対してKeepAlvieしたコネクションを使いまわしてリクエストしてくれるらしいことを記事でみつけました。</p>
+
+<p>参考： <a href="http://debiancdn.wordpress.com/2012/06/14/amazon-elb%E3%82%92%E3%81%86%E3%81%BE%E3%81%8F%E3%81%A4%E3%81%8B%E3%81%86%E3%81%AB%E3%81%AF%E3%80%81keepalive%E3%82%92%E6%9C%89%E5%8A%B9%E3%81%AB%E3%81%97%E3%82%88%E3%81%86%E3%80%82timeout%E3%81%AF60/">Amazon ELBをうまくつかうには、KeepAliveを有効にしよう。Timeoutは60秒よりだいぶ長くしよう。その背景。</a></p>
+
+<p>しかし、KeepAliveの値を変えてみるなどしましたが、特に変化なしでした。。</p>
+
+<h2>ELB作りなおしたら直った</h2>
+
+<p>原因がまったくわからなくなったので、もしやと思い、新しいELBを作り、その下に問題を起こしているインスタンスをつなげてみたところ、なんと問題なく動作しました。</p>
+
+<p>ELBの設定もすべて同じにしたので、いまのところ何が悪かったのかわかっていません。。</p>
+
+<p>気持ち悪さが残りますが、同じような現象かも？と思われるAWSフォーラムへの投稿を発見。みなさん作りなおしたり、AWSのサポートの人に設定をリセット？してもらったりして直っているようです。</p>
+
+<p>参考URL:</p>
+
+<ul>
+<li><a href="https://forums.aws.amazon.com/message.jspa?messageID=535336#535336">ELB Health Checks incorrectly failing</a></li>
+<li><a href="https://forums.aws.amazon.com/thread.jspa?threadID=149123&amp;tstart=0">ELB can&rsquo;t connect to EC2 instance anymore</a></li>
+<li><a href="http://kamip.hateblo.jp/entry/2013/11/13/051145">ELBのヘルスチェックでエラー</a></li>
+</ul>
+
+
+<p>はっきりした原因がわからず、少し気持ち悪いですが、また起こらないことを祈りつつ、いったん静観しています。</p>
+
+<p>おしまい</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Jadeのmixinでこころぴょんぴょん]]></title>
