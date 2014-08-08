@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-08-04T10:07:32+09:00</updated>
+  <updated>2014-08-08T22:36:11+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[waculではハッカソンを毎月行ってます]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/08/08/hackathon/"/>
+    <updated>2014-08-08T21:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/08/08/hackathon</id>
+    <content type="html"><![CDATA[<h2>waculのハッカソン</h2>
+
+<p>waculのプログラマチームでは月に1回、就業時間後にハッカソンを行っています（waculのハッカソンということで、社内ではワッカソンと呼んでいます）。<br/>
+社内のプログラマ4人と外部のプログラマが1人〜2人くらいで、行っています。</p>
+
+<h2>どんなことをしているのか</h2>
+
+<p>テーマは特に決めずに、それぞれが取り組んでいる趣味のプログラミングをするというスタイルです。<br/>
+そのため、macのアプリケーションの開発をしている人もいれば、angular-jsでサービスを作っている人もいたりと、多種多様です。<br/>
+また、本気で集中して開発するというよりも、最近の技術の話をしたり、実装上の悩みなど相談するなど、和気あいあいと開発をしています。</p>
+
+<h2>プログラミング時間終了後</h2>
+
+<p>プログラミングの時間が終了すると、その日の成果、あるいは前回のハッカソンから作ったものを紹介する時間となります。<br/>
+自分が作っているものをこういった場で紹介できるというのは、モチベーションアップにつながる良い機会です。</p>
+
+<h2>2014年8月8日の内容</h2>
+
+<p>さて、こういったハッカソンを今日行いましたので、その報告をしたいと思います。
+参加したのは我々waculのプログラマチーム4人と、外部のプログラマのIさんです。</p>
+
+<p><img src="http://blog.wacul.co.jp/images/2014-08-08-hackathon/photo.jpg" alt="ピザを食べながらでした" /></p>
+
+<p>それぞれどのようなことを開発し、発表したか。</p>
+
+<ul>
+<li>Iさん（外部のプログラマ）</li>
+</ul>
+
+
+<p>インフラ自動構築の挑戦(Shef, berkshelf)</p>
+
+<ul>
+<li>包</li>
+</ul>
+
+
+<p>Raspberry pi で クラウドプリントサーバの作成</p>
+
+<ul>
+<li>山田</li>
+</ul>
+
+
+<p>github の issueクライアント OS X アプリ開発</p>
+
+<ul>
+<li>加藤</li>
+</ul>
+
+
+<p>自作ツールの<a href="https://github.com/ukyo/jsziptools">jsziptools</a>のメンテナンス<br/>
+言語Rustを触ってみた</p>
+
+<ul>
+<li>榎戸</li>
+</ul>
+
+
+<p>unityで作ったゲームの紹介  <br/>
+unityで物理エンジンのテストやフェードイン・アウトエフェクトについて実装</p>
+
+<p>以上、waculでは毎月1回、ハッカソンを行っています。<br/>
+もし、ご興味がありましたら、ぜひ！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[TrelloとGitHubで課題管理を行うたった一つの冴えたやり方]]></title>
