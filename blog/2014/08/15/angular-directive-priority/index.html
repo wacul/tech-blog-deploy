@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>AngularJSのディレクティブの実行順に注意しよう #angularjs  - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="TL;DR ディレクティブのコントローラー内で$element.controllerを使って
+他のコントローラーを参照するしようとして失敗したときはpriorityプロパティの値を一度確認してみよう。 ディレクティブの実行順の罠 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/08/15/angular-directive-priority">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="AngularJSのディレクティブの実行順に注意しよう - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="TL;DR ディレクティブのコントローラー内で$element.controllerを使って
+他のコントローラーを参照するしようとして失敗したときはpriorityプロパティの値を一度確認してみよう。 ディレクティブの実行順の罠 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/08/15/angular-directive-priority/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-08-15-angular-directive-priority/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@ukyo">
+  
+
+  <meta name="twitter:title" content="AngularJSのディレクティブの実行順に注意しよう - The Wacul Blog" />
+  <meta name="twitter:description" content="TL;DR ディレクティブのコントローラー内で$element.controllerを使って
+他のコントローラーを参照するしようとして失敗したときはpriorityプロパティの値を一度確認してみよう。 ディレクティブの実行順の罠 &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-08-15-angular-directive-priority/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">AngularJSのディレクティブの実行順に注意しよう </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-15T16:30:00+09:00" pubdate data-updated="true">Aug 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>TL;DR</h2>
+
+<p>ディレクティブのコントローラー内で<code>$element.controller</code>を使って
+他のコントローラーを参照するしようとして失敗したときは<code>priority</code>プロパティの値を一度確認してみよう。</p>
+
+<h2>ディレクティブの実行順の罠</h2>
+
+<p>AngularJSのディレクティブを作るときに何かしらの動作を与えようとする場合、
+殆どのケースでは<code>link</code>プロパティを使うと思います。
+しかしながら、<code>controller</code>プロパティにコントローラーを設定するケースもあるにはあります
+(階層的なディレクティブを作る等々)。
+コントローラーから他のコントローラーを参照するときはDIした<code>$element</code>のメソッドである<code>$element.controller</code>を使いますが
+ここで何も考えずに参照しようとすると失敗することがあります。
+よくあるパターンとして<a href="https://docs.angularjs.org/api/ng/type/ngModel.NgModelController">ngModelController</a>を自作のディレクティブから参照する例を見てみましょう。
+以下の例ではaaa、zzzという名前のディレクティブを作ってそれらのコントローラーからngModelControllerを参照しようとしていますが
+aaaの方では失敗しています。</p>
+
+<p><a href="http://plnkr.co/edit/AmjQwx?p=preview">DEMO</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;aaa</span> <span class="na">ng-model=</span><span class="s">&quot;foo&quot;</span><span class="nt">&gt;&lt;/aaa&gt;</span>
+</span><span class='line'><span class="nt">&lt;zzz</span> <span class="na">ng-model=</span><span class="s">&quot;bar&quot;</span><span class="nt">&gt;&lt;/zzz&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// アルファベット順で &lt; &quot;ngModel&quot;</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">priority</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;aaa hasNgModel: &lt;/div&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// ngModelControllerがない！</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">hasNgModel</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">$element</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ngModel&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// アルファベット順で &gt; &quot;ngModel&quot;</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s2">&quot;zzz&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;zzz hasNgModel: &lt;/div&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// ngModelControllerがある！</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">hasNgModel</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">$element</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ngModel&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同じ要素にディレクティブが複数登録されている場合、以下のルールで実行順が決定されます。</p>
+
+<ol>
+<li><code>priority</code>プロパティがより大きいディレクティブから実行される</li>
+<li><code>priority</code>プロパティが同じ場合はアルファベット順で実行される</li>
+</ol>
+
+
+<p>上の例ではngModelディレクティブは<code>priority</code>が0で、新たに定義する場合もデフォルトでは0になるので、
+アルファベット順でディレクティブが実行されます。
+つまりディレクティブの名前がaaaだと先にそちらが実行されてしまうので、
+そのコントローラー内で<code>$element.controller('ngModel')</code>として参照しようとしてもまだ存在していないことになります。
+これは意図通りの挙動ではないですよね。</p>
+
+<h2>priorityを設定しよう</h2>
+
+<p>ディレクティブの実行順をこちら側で制御するためには<code>priority</code>プロパティに適切な数値を設定します。
+ngModelディレクティブより後に実行させたいので0以下の数値を入れれば期待どおりの結果を得ることができます。</p>
+
+<p><a href="http://plnkr.co/edit/JFtE1F?p=preview">DEMO</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">priority</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="c1">// ここを設定する</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;aaa hasNgModel: &lt;/div&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">hasNgModel</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">$element</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ngModel&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>まとめ</h2>
+
+<ul>
+<li><code>link</code>プロパティを使う場合はディレクティブの実行順はあまり気にしなくてもいいが、<code>controller</code>プロパティを使うときは注意する</li>
+<li>同じ要素で<code>priority</code>プロパティが同じ場合はアルファベット順に実行される</li>
+<li><code>priority</code>プロパティを設定することで実行順を制御することができる</li>
+</ul>
+
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://docs.angularjs.org/guide/directive">AngularJS: Developer Guide: Directives</a></li>
+<li><a href="https://github.com/angular/angular.js/issues/8566">$element.controller fails to get a sibling controller in a directive · Issue #8566 · angular/angular.js</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/08/15/angular-directive-priority/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/08/15/angular-directive-priority/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/kato.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと kato</h1>
+    <p>加藤です。JavaScriptに興味があります。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/08/08/hackathon/" title="Previous Post: waculではハッカソンを毎月行ってます">waculではハッカソンを毎月行ってます</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/15/angular-directive-priority/">AngularJSのディレクティブの実行順に注意しよう</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/08/hackathon/">waculではハッカソンを毎月行ってます</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/01/trello-and-zapier/">TrelloとGitHubで課題管理を行うたった一つの冴えたやり方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/24/elb/">Amazon Web Service ELB 謎のヘルスチェックエラー</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/18/jade-mixins/">Jadeのmixinでこころぴょんぴょん</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

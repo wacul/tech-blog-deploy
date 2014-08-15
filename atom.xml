@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-08-08T22:40:08+09:00</updated>
+  <updated>2014-08-15T18:26:42+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,165 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJSのディレクティブの実行順に注意しよう]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/08/15/angular-directive-priority/"/>
+    <updated>2014-08-15T16:30:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/08/15/angular-directive-priority</id>
+    <content type="html"><![CDATA[<h2>TL;DR</h2>
+
+<p>ディレクティブのコントローラー内で<code>$element.controller</code>を使って
+他のコントローラーを参照するしようとして失敗したときは<code>priority</code>プロパティの値を一度確認してみよう。</p>
+
+<h2>ディレクティブの実行順の罠</h2>
+
+<p>AngularJSのディレクティブを作るときに何かしらの動作を与えようとする場合、
+殆どのケースでは<code>link</code>プロパティを使うと思います。
+しかしながら、<code>controller</code>プロパティにコントローラーを設定するケースもあるにはあります
+(階層的なディレクティブを作る等々)。
+コントローラーから他のコントローラーを参照するときはDIした<code>$element</code>のメソッドである<code>$element.controller</code>を使いますが
+ここで何も考えずに参照しようとすると失敗することがあります。
+よくあるパターンとして<a href="https://docs.angularjs.org/api/ng/type/ngModel.NgModelController">ngModelController</a>を自作のディレクティブから参照する例を見てみましょう。
+以下の例ではaaa、zzzという名前のディレクティブを作ってそれらのコントローラーからngModelControllerを参照しようとしていますが
+aaaの方では失敗しています。</p>
+
+<p><a href="http://plnkr.co/edit/AmjQwx?p=preview">DEMO</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;aaa</span> <span class="na">ng-model=</span><span class="s">&quot;foo&quot;</span><span class="nt">&gt;&lt;/aaa&gt;</span>
+</span><span class='line'><span class="nt">&lt;zzz</span> <span class="na">ng-model=</span><span class="s">&quot;bar&quot;</span><span class="nt">&gt;&lt;/zzz&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// アルファベット順で &lt; &quot;ngModel&quot;</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">priority</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;aaa hasNgModel: &lt;/div&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// ngModelControllerがない！</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">hasNgModel</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">$element</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ngModel&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// アルファベット順で &gt; &quot;ngModel&quot;</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s2">&quot;zzz&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;zzz hasNgModel: &lt;/div&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// ngModelControllerがある！</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">hasNgModel</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">$element</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ngModel&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同じ要素にディレクティブが複数登録されている場合、以下のルールで実行順が決定されます。</p>
+
+<ol>
+<li><code>priority</code>プロパティがより大きいディレクティブから実行される</li>
+<li><code>priority</code>プロパティが同じ場合はアルファベット順で実行される</li>
+</ol>
+
+
+<p>上の例ではngModelディレクティブは<code>priority</code>が0で、新たに定義する場合もデフォルトでは0になるので、
+アルファベット順でディレクティブが実行されます。
+つまりディレクティブの名前がaaaだと先にそちらが実行されてしまうので、
+そのコントローラー内で<code>$element.controller('ngModel')</code>として参照しようとしてもまだ存在していないことになります。
+これは意図通りの挙動ではないですよね。</p>
+
+<h2>priorityを設定しよう</h2>
+
+<p>ディレクティブの実行順をこちら側で制御するためには<code>priority</code>プロパティに適切な数値を設定します。
+ngModelディレクティブより後に実行させたいので0以下の数値を入れれば期待どおりの結果を得ることができます。</p>
+
+<p><a href="http://plnkr.co/edit/JFtE1F?p=preview">DEMO</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">priority</span><span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="c1">// ここを設定する</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;aaa hasNgModel: &lt;/div&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">hasNgModel</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">$element</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ngModel&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>まとめ</h2>
+
+<ul>
+<li><code>link</code>プロパティを使う場合はディレクティブの実行順はあまり気にしなくてもいいが、<code>controller</code>プロパティを使うときは注意する</li>
+<li>同じ要素で<code>priority</code>プロパティが同じ場合はアルファベット順に実行される</li>
+<li><code>priority</code>プロパティを設定することで実行順を制御することができる</li>
+</ul>
+
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://docs.angularjs.org/guide/directive">AngularJS: Developer Guide: Directives</a></li>
+<li><a href="https://github.com/angular/angular.js/issues/8566">$element.controller fails to get a sibling controller in a directive · Issue #8566 · angular/angular.js</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[waculではハッカソンを毎月行ってます]]></title>
