@@ -115,6 +115,61 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/06/11/mongo-ngram/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-06-11-mongo-ngram/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        11th.
+        
+        Jun. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/06/11/mongo-ngram/">Node.js と MongoDB で n-gramを使って全文検索</a></div>
+      <div class="post-content">n-gram による検索
+
+現在、自社開発を行っているプロジェクトではサーバサイドはnode.jsで開発しています。
+そして、DBはMongoDBを採用し、node.jsからMongoDBへのアクセスは mongooseを使用しています。
+
+今回、DBに保存されている「お客の名前」を検索したいという要求が生じました。
+検索条件として、名前の途中でもヒットするようにする必要があります。
+例えば「あい」で検索した場合、以下のような名前がヒットします。
+
+
+あいかわたろう
+あいだはなこ
+やまだあいこ
+おちあいじろう
+
+
+
+また、上記の例で「あいだ」で検索した場合は以下の名前がヒットします。
+
+
+あいだはなこ
+
+
+
+このような検索を実現するために、n-gramによる検索を実装しました。
+n-gramは文字列を nの長さで１文字ずつずらして切り出して保存します。
+
+
+n = 2 のとき 「あいかわたろう」という文字列
+「あい」「いか」「かわ」「わた」「たろ」「ろう」
+
+
+
+今回は、2文字以上の文字列で検索がヒットするようにしたいので、n = 2 の bi-gramを実装します。 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/06/11/mongo-ngram/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/06/05/tableview-upper-space/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">

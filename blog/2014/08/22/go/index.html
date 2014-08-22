@@ -1,0 +1,522 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>これからGoを始める人のためのTips集 #golang  - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="こんにちわ。最近業務でGoを書いているのですが、3,4週間たち、だいぶ環境にも慣れてきたので、これからGoを初めようと思っている人向けにTipsを書きたいと思います。 間違いや改善点などあれば、 @tutuming まで教えていただけると大変ありがたいです。 インストール と設定 (OSX) &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/08/22/go">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="これからGoを始める人のためのTips集 - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="こんにちわ。最近業務でGoを書いているのですが、3,4週間たち、だいぶ環境にも慣れてきたので、これからGoを初めようと思っている人向けにTipsを書きたいと思います。 間違いや改善点などあれば、 @tutuming まで教えていただけると大変ありがたいです。 インストール と設定 (OSX) &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/08/22/go/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-08-22-go/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@tutuming">
+  
+
+  <meta name="twitter:title" content="これからGoを始める人のためのTips集 - The Wacul Blog" />
+  <meta name="twitter:description" content="こんにちわ。最近業務でGoを書いているのですが、3,4週間たち、だいぶ環境にも慣れてきたので、これからGoを初めようと思っている人向けにTipsを書きたいと思います。 間違いや改善点などあれば、 @tutuming まで教えていただけると大変ありがたいです。 インストール と設定 (OSX) &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-08-22-go/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">これからGoを始める人のためのTips集 </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-22T19:00:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>こんにちわ。最近業務でGoを書いているのですが、3,4週間たち、だいぶ環境にも慣れてきたので、これからGoを初めようと思っている人向けにTipsを書きたいと思います。</p>
+
+<p>間違いや改善点などあれば、 <a href="http://twitter.com/tutuming">@tutuming</a> まで教えていただけると大変ありがたいです。</p>
+
+<h2>インストール と設定 (OSX)</h2>
+
+<p><a href="http://golang.org/dl/">http://golang.org/dl/</a>
+から、インストーラー (<code>go1.3.1.darwin-amd64-osx10.8.pkg</code> など) を選んで最新版をインストールしたら大丈夫です。自分の環境にあわせたインストーラ選んでください。</p>
+
+<p>homebrewを使っている人は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>brew install go
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でもインストールできます。</p>
+
+<h2><code>$GOPATH</code> とプロジェクトの作り方</h2>
+
+<p>Go のパッケージ管理には、 <code>go get</code> コマンドを使います。<br/>
+<code>go get github.com/aaa/bbb</code> とすると、 github.com/aaa/bbb で公開されているgoライブラリまたは、実行ファイルがローカルにダウンロードされます。</p>
+
+<p>インストール後、なにも設定せずに、 <code>go get  hogehoge</code> すると、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>package github.com/davecgh/go-spew/spew: cannot download, <span class="nv">$GOPATH</span> not set. For more details see: go <span class="nb">help </span>gopath
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーで怒られると思います。 GOPATH を設定しろと言っていますね。<br/>
+これをどこに設定するか少し迷うと思います。</p>
+
+<h3><code>$GOPATH</code> の２つの役割</h3>
+
+<p><code>GOPATH</code> には２つ役割があります。</p>
+
+<ol>
+<li>ビルド時のインポートパスとして、<code>GOPATH</code> に指定したすべてのディレクトリを参照する(コロン区切り)</li>
+<li><code>go get</code> コマンドで外部パッケージを読み込んだ時、 <code>GOPATH</code> の先頭のディレクトリにダウンロードする</li>
+</ol>
+
+
+<p>そして、公式ドキュメントにもありますが、Goで自分のプロジェクトを書く時にも、このGOPATHの下で書くのが良いとされています。
+例えば、自分が githubでソースコードを管理していて、ユーザー名が foo、リポジトリが bar だったら
+<code>$GOPATH/src/github.com/foo/bar</code> というディレクトリを作ってそこで作業します。</p>
+
+<p>ここで、GOPATHに一つのディレクトリを指定して作業してしまうと、サードパーティのライブラリと、自分の作ったソースコードが混ざってしまって煩雑です。</p>
+
+<p>1, 2 の性質を考慮して、GOPATHを複数指定し</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">GOPATH</span><span class="o">=</span><span class="nv">$HOME</span>/go/third-party:<span class="nv">$HOME</span>/go/my-project
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$HOME</span>/go/third-party/bin:<span class="nv">$HOME</span>/go/my-project/bin:<span class="nv">$PATH</span> <span class="c"># binをPATHに追加するのも忘れずに</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>などとしておけば、<code>go get</code> でインストールしたライブラリは、 <code>~/go/third-party</code> にインストールし、自分のプロジェクトは、 <code>~/go/my-project</code> の下で管理できます。</p>
+
+<p>僕はいまのところこのやり方がしっくりきています。</p>
+
+<p>参考: <a href="http://golang.org/doc/code.html">http://golang.org/doc/code.html</a></p>
+
+<h2><code>go-fmt</code> を使おう</h2>
+
+<p>goには、<code>gofmt</code> という、ソースコードをコード規約に沿った形に整形するコマンドがついています。
+エディタの設定で、保存時に自動で走らせるようにしておくと良いです。</p>
+
+<p>この<code>gofmt</code>コマンドには、<code>-r</code>オプションという、ソースコードをパターンで書き換えるコマンドが用意されています。プロジェクト内の全部の関数名を変えたいときなど、リファクタリングに便利です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># -d オプションで、diffを表示してくれる</span>
+</span><span class='line'><span class="nv">$ </span>gofmt -d -r <span class="s1">&#39;Zen2han -&gt; Zen2Han&#39;</span> .
+</span><span class='line'>diff util/util.go gofmt/util/util.go
+</span><span class='line'>--- /var/folders/cy/nds3c8y97nsb8p6l416w5__w0000gn/T/gofmt327353297     2014-08-14 19:29:31.000000000 +0900
+</span><span class='line'>+++ /var/folders/cy/nds3c8y97nsb8p6l416w5__w0000gn/T/gofmt979152124     2014-08-14 19:29:31.000000000 +0900
+</span><span class='line'>@@ -24,7 +24,7 @@
+</span><span class='line'> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'> // 全角英数字を半角に変換する
+</span><span class='line'>-func Zen2han<span class="o">(</span>src string<span class="o">)</span> string <span class="o">{</span>
+</span><span class='line'>+func Zen2Han<span class="o">(</span>src string<span class="o">)</span> string <span class="o">{</span>
+</span><span class='line'>        retbuf :<span class="o">=</span> make<span class="o">([]</span>rune, 0, utf8.RuneCountInString<span class="o">(</span>src<span class="o">))</span>
+</span><span class='line'>        <span class="k">for </span>_, ch :<span class="o">=</span> range src <span class="o">{</span>
+</span><span class='line'>                <span class="k">if </span>ch &gt;<span class="o">=</span> 0xFF21 <span class="o">&amp;&amp;</span> ch &lt;<span class="o">=</span> 0xFF3A <span class="o">{</span>
+</span><span class='line'>@@ -60,5 +60,5 @@
+</span><span class='line'> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'> func NormalizeStr<span class="o">(</span>src string<span class="o">)</span> string <span class="o">{</span>
+</span><span class='line'>-       <span class="k">return </span>Hiragana2Katakana<span class="o">(</span>Zen2han<span class="o">(</span>src<span class="o">))</span>
+</span><span class='line'>+       <span class="k">return </span>Hiragana2Katakana<span class="o">(</span>Zen2Han<span class="o">(</span>src<span class="o">))</span>
+</span><span class='line'> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 実際に書き換えるには、 -w オプション</span>
+</span><span class='line'><span class="nv">$ </span>gofmt -w -r <span class="s1">&#39;Zen2han -&gt; Zen2Han&#39;</span> .
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考: <a href="https://golang.org/cmd/gofmt/">https://golang.org/cmd/gofmt/</a></p>
+
+<h2>その他、開発に便利なライブラリ</h2>
+
+<h3>go-spew</h3>
+
+<p><a href="https://github.com/davecgh/go-spew">https://github.com/davecgh/go-spew</a></p>
+
+<p>標準パッケージの<code>fmt.Printf</code> 関数でも <code>%v</code> で構造体の中身を覗けるのですが、オブジェクトがインデントされずに１行に収まり、中身を確認しづらいです。 go-spew を使うと、もうちょっといいかんじにフォーマットしてくれます(pythonのpprintみたいな感じ)。</p>
+
+<p>サンプル</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">main</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="p">(</span>
+</span><span class='line'>  <span class="s">&quot;fmt&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="s">&quot;github.com/davecgh/go-spew/spew&quot;</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">a</span> <span class="o">:=</span> <span class="kd">struct</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">A</span> <span class="p">[]</span><span class="kt">string</span>
+</span><span class='line'>      <span class="nx">n</span> <span class="kt">int</span>
+</span><span class='line'>  <span class="p">}{</span>
+</span><span class='line'>      <span class="nx">A</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">},</span>
+</span><span class='line'>      <span class="nx">n</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;--- fmt.Printf ---&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v\n&quot;</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;--- spew.Dump ---&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nx">spew</span><span class="p">.</span><span class="nx">Dump</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>--- fmt.Printf ---
+</span><span class='line'>struct { A []string; n int }{A:[]string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}, n:123}
+</span><span class='line'>--- spew.Dump ---
+</span><span class='line'>(struct { A []string; n int }) {
+</span><span class='line'> A: ([]string) (len=3 cap=3) {
+</span><span class='line'>  (string) (len=1) &quot;a&quot;,
+</span><span class='line'>  (string) (len=1) &quot;b&quot;,
+</span><span class='line'>  (string) (len=1) &quot;c&quot;
+</span><span class='line'> },
+</span><span class='line'> n: (int) 123
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>goconvey</h3>
+
+<p><a href="http://goconvey.co/  ">http://goconvey.co/  </a>
+github: <a href="https://github.com/smartystreets/goconvey">https://github.com/smartystreets/goconvey</a></p>
+
+<p>BDD支援ライブラリですが、<code>goconvey</code> コマンドを起動しておくと、ファイルの更新を検知して、ブラウザでテスト結果を出力してくれます。</p>
+
+<p>ブラウザでの結果確認自体は、goconveyを使ってテストを書かなくても使えるので、プロジェクトの途中からでも導入しやすいですね。</p>
+
+<p><img src="/images/2014-08-22-go/goconvey.png" alt="" /></p>
+
+<h2>まとめ: Go楽しいです</h2>
+
+<p>まだ色々と試行錯誤中ですが、Go楽しいですので、やりましょう。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/08/22/go/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/08/22/go/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/tutuming.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと tutuming</h1>
+    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/08/15/angular-directive-priority/" title="Previous Post: AngularJSのディレクティブの実行順に注意しよう">AngularJSのディレクティブの実行順に注意しよう</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/22/go/">これからGoを始める人のためのTips集</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/15/angular-directive-priority/">AngularJSのディレクティブの実行順に注意しよう</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/08/hackathon/">waculではハッカソンを毎月行ってます</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/01/trello-and-zapier/">TrelloとGitHubで課題管理を行うたった一つの冴えたやり方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/24/elb/">Amazon Web Service ELB 謎のヘルスチェックエラー</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
