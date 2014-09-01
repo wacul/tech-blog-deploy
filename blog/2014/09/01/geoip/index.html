@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>waculではハッカソンを毎月行ってます  - The Wacul Blog</title>
+  <title>どこの地域からアクセスされているのか、IPから検索！  - The Wacul Blog</title>
   <meta name="author" content="WACUL INC.">
 
   
-  <meta name="description" content="waculのハッカソン waculのプログラマチームでは月に1回、就業時間後にハッカソンを行っています（waculのハッカソンということで、社内ではワッカソンと呼んでいます）。
-社内のプログラマ4人と外部のプログラマが1人〜2人くらいで、行っています。 どんなことをしているのか &hellip;">
+  <meta name="description" content="用途 関東からのアクセスと九州からのアクセスでそれぞれ広告を出し分けたい、など、サイト訪問者の地域に応じたコンテンツを提供したい場合があります。
+訪問者のIPアドレスからアクセス元の地域を調べることで、これを実現できます。 JavaScriptによる運用 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/08/08/hackathon/">
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/09/01/geoip/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
@@ -28,13 +28,13 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
 
-  <meta property="og:title" content="waculではハッカソンを毎月行ってます - The Wacul Blog" />
+  <meta property="og:title" content="どこの地域からアクセスされているのか、IPから検索！ - The Wacul Blog" />
   <meta property="og:type" content="article" />
-  <meta property="og:description" content="waculのハッカソン waculのプログラマチームでは月に1回、就業時間後にハッカソンを行っています（waculのハッカソンということで、社内ではワッカソンと呼んでいます）。
-社内のプログラマ4人と外部のプログラマが1人〜2人くらいで、行っています。 どんなことをしているのか &hellip;" />
-  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/08/08/hackathon/" />
+  <meta property="og:description" content="用途 関東からのアクセスと九州からのアクセスでそれぞれ広告を出し分けたい、など、サイト訪問者の地域に応じたコンテンツを提供したい場合があります。
+訪問者のIPアドレスからアクセス元の地域を調べることで、これを実現できます。 JavaScriptによる運用 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/09/01/geoip/" />
   
-  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-08-08-hackathon/title.jpg" />
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-09-01-geoip/title.jpg" />
   
   <meta property="og:site_name" content="The Wacul Blog" />
   
@@ -44,11 +44,11 @@
 
   
 
-  <meta name="twitter:title" content="waculではハッカソンを毎月行ってます - The Wacul Blog" />
-  <meta name="twitter:description" content="waculのハッカソン waculのプログラマチームでは月に1回、就業時間後にハッカソンを行っています（waculのハッカソンということで、社内ではワッカソンと呼んでいます）。
-社内のプログラマ4人と外部のプログラマが1人〜2人くらいで、行っています。 どんなことをしているのか &hellip;" />
+  <meta name="twitter:title" content="どこの地域からアクセスされているのか、IPから検索！ - The Wacul Blog" />
+  <meta name="twitter:description" content="用途 関東からのアクセスと九州からのアクセスでそれぞれ広告を出し分けたい、など、サイト訪問者の地域に応じたコンテンツを提供したい場合があります。
+訪問者のIPアドレスからアクセス元の地域を調べることで、これを実現できます。 JavaScriptによる運用 &hellip;" />
 
-  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-08-08-hackathon/title.jpg" />
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-09-01-geoip/title.jpg" />
 
 
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
@@ -120,7 +120,7 @@ $(function(){
   
   <header>
     
-      <h1 class="entry-title">waculではハッカソンを毎月行ってます </h1>
+      <h1 class="entry-title">どこの地域からアクセスされているのか、IPから検索！ </h1>
     
     
       <p class="meta">
@@ -136,77 +136,61 @@ $(function(){
   
 
 
-<time datetime="2014-08-08T21:00:00+09:00" pubdate data-updated="true">Aug 8<span>th</span>, 2014</time>
+<time datetime="2014-09-01T12:00:00+09:00" pubdate data-updated="true">Sep 1<span>st</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h2>waculのハッカソン</h2>
+<div class="entry-content"><h2>用途</h2>
 
-<p>waculのプログラマチームでは月に1回、就業時間後にハッカソンを行っています（waculのハッカソンということで、社内ではワッカソンと呼んでいます）。<br/>
-社内のプログラマ4人と外部のプログラマが1人〜2人くらいで、行っています。</p>
+<p>関東からのアクセスと九州からのアクセスでそれぞれ広告を出し分けたい、など、サイト訪問者の地域に応じたコンテンツを提供したい場合があります。
+訪問者のIPアドレスからアクセス元の地域を調べることで、これを実現できます。</p>
 
-<h2>どんなことをしているのか</h2>
+<h2>JavaScriptによる運用</h2>
 
-<p>テーマは特に決めずに、それぞれが取り組んでいる趣味のプログラミングをするというスタイルです。<br/>
-そのため、macのアプリケーションの開発をしている人もいれば、angular-jsでサービスを作っている人もいたりと、多種多様です。<br/>
-また、本気で集中して開発するというよりも、最近の技術の話をしたり、実装上の悩みなど相談するなど、和気あいあいと開発をしています。</p>
+<p>JavaScriptからajaxでAPIを呼び、地域情報を取得することを考えます。</p>
 
-<h2>プログラミング時間終了後</h2>
+<p>例えばPHPだと、自前でAPIサーバーを用意する場合は<a href="http://php.net/manual/ja/book.geoip.php">GeoIP</a> というライブラリがあるようです。</p>
 
-<p>プログラミングの時間が終了すると、その日の成果、あるいは前回のハッカソンから作ったものを紹介する時間となります。<br/>
-自分が作っているものをこういった場で紹介できるというのは、モチベーションアップにつながる良い機会です。</p>
+<p>ですが、今回は簡単に試すため、外部のサービスを利用したいと思います。<br/>
+<a href="https://www.google.co.jp/search?q=geoip+api">GeoIP API</a>などで検索するといろいろ出てきますが、
+今回は<a href="http://www.telize.com/">Teliize</a>のAPIを使ってみます。<br/>
+使い方は非常に簡単で、指定された<a href="http://www.telize.com/geoip">URL</a>にgetするだけで良いです。</p>
 
-<h2>2014年8月8日の内容</h2>
+<p>例えば以下のようになります。</p>
 
-<p>さて、こういったハッカソンを今日行いましたので、その報告をしたいと思います。
-参加したのは我々waculのプログラマチーム4人と、外部のプログラマのIさんです。</p>
-
-<p><img src="/images/2014-08-08-hackathon/photo.jpg" alt="ピザを食べながらでした" /></p>
-
-<p>それぞれどのようなことを開発し、発表したか。</p>
-
-<ul>
-<li>Iさん（外部のプログラマ）</li>
-</ul>
-
-
-<p>インフラ自動構築の挑戦(Chef, berkshelf)</p>
-
-<ul>
-<li>包</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;http://www.telize.com/geoip?callback=?&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">geo</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">geo</span> <span class="o">&amp;&amp;</span> <span class="nx">geo</span><span class="p">.</span><span class="nx">region</span><span class="p">){</span> <span class="c1">//地域が取れない場合は、regionには何も入ってこない</span>
+</span><span class='line'>      <span class="c1">//Tokyo など都道府県が入る</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">region</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Raspberry pi で クラウドプリントサーバの作成</p>
+<p>一度取得したregionはセッションストレージなどに保存しておくと、リクエスト回数が減らせて良いと思います。</p>
 
-<ul>
-<li>山田</li>
-</ul>
+<h2>使用して感じた精度</h2>
 
+<p>気になる精度ですが、概ね正しい地域が出るようです。<br/>
+WIMAXを使用時に地域情報が取得できなかったり、ずれた地域になることは何度かありました。<br/>
+そのため、システムに組み込むときは、その辺り考慮しておく必要があります。</p>
 
-<p>github の issueクライアント OS X アプリ開発</p>
+<h2>参考</h2>
 
 <ul>
-<li>加藤</li>
+<li><a href="http://php.net/manual/ja/book.geoip.php">GeoIP</a></li>
+<li><a href="http://www.telize.com/">Teliize</a></li>
 </ul>
 
-
-<p>自作ツールの<a href="https://github.com/ukyo/jsziptools">jsziptools</a>のメンテナンス<br/>
-言語Rustを触ってみた</p>
-
-<ul>
-<li>榎戸</li>
-</ul>
-
-
-<p>unityで作ったゲームの紹介  <br/>
-unityで物理エンジンのテストやフェードイン・アウトエフェクトについて実装</p>
-
-<p>以上、waculでは毎月1回、ハッカソンを行っています。<br/>
-もし、ご興味がありましたら、ぜひ！</p>
 </div>
 
 
@@ -220,7 +204,7 @@ unityで物理エンジンのテストやフェードイン・アウトエフェ
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/08/08/hackathon/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/08/08/hackathon/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/09/01/geoip/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/09/01/geoip/" >Tweet</a>
   
   
   
@@ -277,10 +261,8 @@ unityで物理エンジンのテストやフェードイン・アウトエフェ
 
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/08/01/trello-and-zapier/" title="Previous Post: TrelloとGitHubで課題管理を行うたった一つの冴えたやり方">TrelloとGitHubで課題管理を行うたった一つの冴えたやり方</a>
+        <a class="basic-alignment left" href="/blog/2014/08/22/go/" title="Previous Post: これからGoを始める人のためのTips集">これからGoを始める人のためのTips集</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/08/15/angular-directive-priority/" title="Next Post: AngularJSのディレクティブの実行順に注意しよう">AngularJSのディレクティブの実行順に注意しよう</a>
       
     </p>
   </footer>
