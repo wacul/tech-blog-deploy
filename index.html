@@ -115,6 +115,45 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/09/16/zcookies/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-09-16-zcookies/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        16th.
+        
+        Sep. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/09/16/zcookies/">cookieに効率的にデータを格納するzcookiesを作りました</a></div>
+      <div class="post-content">cookieに効率的にデータを格納するzcookiesを作ったので使い方と仕組みについて紹介しようとおもいます。
+
+モチベーション
+
+あるとき、sessionStorageを使って一時的にデータを保存しておくようなウェブページを作っていました。
+現状ではIE8以上ならsessionStorageを使うことができるので特に問題ないだろうと高をくくっていたのですが、実はsafariのプライベートブラウズモードではsessionStorage含め、Web Storage全般が使えないということがわかりました。
+
+次点の解決策としてcookieを使うことを検討したのですが、いわゆる4kB制限があり作っているウェブページもその制限に引っかかる恐れがありました(特に日本語とか保存しようとすると数倍の容量を食いますからね)。
+
+そこで、オブジェクトを圧縮してcookieに保存できるような仕組みを作ることにしました。
+
+使い方
+
+zcookiesの使い方は簡単です。以下の例を見て下さい。
+
+1
+2
+zcookies.set(&#39;foo&#39;, {a: 1, b: &#39;こんにちは世界 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/09/16/zcookies/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/09/10/camp/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -511,52 +550,6 @@ self.addSubview(view2)
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/07/14/swifty-layout/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/07/07/rrule/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-07-07-rrule/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        07th.
-        
-        Jul. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/07/07/rrule/">日付の繰り返しルールに便利なRRULEを使う</a></div>
-      <div class="post-content">RRULEとは
-
-予定を記録するようなカレンダーアプリは、「毎週月曜日の10時から会議」のような繰り返しの予定を設定できる必要があります。
-例えば、Googleカレンダーでは以下の画像のように、繰り返しの間隔、曜日、開始日、終了日、など細かに設定できます。
-
-
-
-このような繰り返し設定をデータとして保存するのに有用な形式がRFC2445で定められているRRULEです。
-
-
-RRULEの書式の例(毎週月曜日10時からの予定を 2014/6/25 から 2014/12/31 まで繰り返す)
-
-
-
-1
-&quot;FREQ=WEEKLY;BYDAY=MO;DTSTART=20140625T010000Z;UNTIL=20141230T150000Z&quot;
-
-
-
-JavaScriptでRRULEを扱う
-
-waculではnode.jsで自社サービスのサーバサイドを開発しているので、node.jsからRRULEを扱う例を紹介します。
-jakubroztocil/rrule を使うと簡単にできます(サーバサイドでもクライアントサイドでも動きます)。
-
-先ほどの例の「 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/07/07/rrule/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 

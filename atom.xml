@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-09-11T17:32:08+09:00</updated>
+  <updated>2014-09-16T13:04:24+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[cookieに効率的にデータを格納するzcookiesを作りました]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/09/16/zcookies/"/>
+    <updated>2014-09-16T16:30:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/09/16/zcookies</id>
+    <content type="html"><![CDATA[<p>cookieに効率的にデータを格納する<a href="https://github.com/ukyo/zcookies">zcookies</a>を作ったので使い方と仕組みについて紹介しようとおもいます。</p>
+
+<h2>モチベーション</h2>
+
+<p>あるとき、sessionStorageを使って一時的にデータを保存しておくようなウェブページを作っていました。
+現状ではIE8以上ならsessionStorageを使うことができるので特に問題ないだろうと高をくくっていたのですが、実はsafariのプライベートブラウズモードではsessionStorage含め、Web Storage全般が使えないということがわかりました。</p>
+
+<p>次点の解決策としてcookieを使うことを検討したのですが、いわゆる4kB制限があり作っているウェブページもその制限に引っかかる恐れがありました(特に日本語とか保存しようとすると数倍の容量を食いますからね)。</p>
+
+<p>そこで、オブジェクトを圧縮してcookieに保存できるような仕組みを作ることにしました。</p>
+
+<h2>使い方</h2>
+
+<p>zcookiesの使い方は簡単です。以下の例を見て下さい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">zcookies</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="s1">&#39;こんにちは世界&#39;</span><span class="p">},</span> <span class="nx">options</span><span class="p">);</span>
+</span><span class='line'><span class="nx">zcookies</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>zcookiesは単純なキーバリューストアとして機能します。
+<code>zcookies.set</code> に <code>options</code> という引数がありますが、これはcookieを保存するときのオプションで<a href="https://github.com/ScottHamper/Cookies">ScottHamper/Cookies</a>から流用したのでそちらを参照して下さい。</p>
+
+<h2>仕組み</h2>
+
+<p>実際に処理してる部分が10行ちょっとなのでここに載せてみます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">global</span><span class="p">.</span><span class="nx">zcookies</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">msgpack</span><span class="p">.</span><span class="nx">unpack</span><span class="p">(</span><span class="nx">pako</span><span class="p">.</span><span class="nx">inflateRaw</span><span class="p">(</span><span class="nx">atob</span><span class="p">(</span><span class="nx">Cookies</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">k</span><span class="p">))));</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">Cookies</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">cookieSizeBeforeSave</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">btoa</span><span class="p">(</span><span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">pako</span><span class="p">.</span><span class="nx">deflateRaw</span><span class="p">(</span><span class="nx">msgpack</span><span class="p">.</span><span class="nx">pack</span><span class="p">(</span><span class="nx">v</span><span class="p">),</span> <span class="p">{</span><span class="nx">level</span><span class="o">:</span> <span class="mi">9</span><span class="p">})));</span>
+</span><span class='line'>    <span class="nx">Cookies</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">!==</span> <span class="nx">y</span> <span class="o">&amp;&amp;</span> <span class="nx">cookieSizeBeforeSave</span> <span class="o">===</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;zcookies: QUOTA Error!&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ものすごく巨人の肩に乗った感じのコードですが、保存するときに</p>
+
+<ul>
+<li>JavaScriptのオブジェクトをmessagepack形式のバイト列に変換</li>
+<li>deflateで圧縮</li>
+<li>文字列に変換</li>
+<li>base64形式に変換</li>
+</ul>
+
+
+<p>というような処理をしているだけです。簡単ですね。</p>
+
+<h2>圧縮率</h2>
+
+<p>zcookiesとescapeを使った場合で比較してみました。</p>
+
+<table>
+<thead>
+<tr>
+<th> テキスト </th>
+<th align="right"> zcookies </th>
+<th align="right"> escape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> こころ(1章, 1509字)    </td>
+<td align="right"> 2748 </td>
+<td align="right"> 9039</td>
+</tr>
+<tr>
+<td> Alice&rsquo;s Adventures in Wonderland(上から4017字) </td>
+<td align="right"> 2616 </td>
+<td align="right"> 5797 </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>比較する対象として妥当か微妙なところですが、割りと長い文字列でもcookieの範囲に収まることが検証出来ました。</p>
+
+<h2>まとめ</h2>
+
+<p>すごくニッチですが、どうしてもcookieにデータを保存したいときに使えるzcookiesを作りました。
+プライベートブラウズモードで困った人は是非使ってみてください。
+また、最近普通にブラウザ上でmessagepackやzlib系のライブラリを使える環境が整った感があるのでこの例に限らず選択肢の一つとして頭の片隅に置いておきたいところです。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://github.com/ukyo/zcookies">ukyo/zcookies</a></li>
+<li><a href="https://github.com/ScottHamper/Cookies">ScottHamper/Cookies</a></li>
+<li><a href="https://github.com/msgpack/msgpack-javascript">msgpack/msgpack-javascript</a></li>
+<li><a href="https://github.com/nodeca/pako">nodeca/pako</a></li>
+<li><a href="http://browsercookielimits.x64.me/">Browser Cookie Limits</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[wacul で開発合宿を行いました]]></title>
@@ -3326,63 +3451,6 @@ option の値を、太さは数値、色はrgb値の文字列に値を変換し�
 パーツ単位で、特に今回のようなお絵かきやソケット通信などのイベントが主役の部分については、うまく抽象化できて可読性、メンテ性の高いコードが書けるなという印象をうけました。</p>
 
 <p>面白いので、みなさんもぜひ使ってみてください。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[WiMAX接続のMacのMAMP環境でメールが送信できない]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/03/10/mamp_wimax/"/>
-    <updated>2014-03-10T13:50:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/03/10/mamp_wimax</id>
-    <content type="html"><![CDATA[<h3>事件</h3>
-
-<p>WiMAXで接続し、MacでMAMPを立ち上げ、PHPからmb_send_mailを実行したところ、宛先にメールが届かない。
-その後、別のインターネット環境に接続したところ、今まで送信しようとしたメールが一斉に届いた。</p>
-
-<h3>原因</h3>
-
-<p>多くのプロバイダはOutbound Port25 Blocking をしており、メール送信に25番ポートを利用することができない。
-利用していたUQ WiMAXもその制限があった。
-送ることができなかったメールはMacで標準に搭載されているpostfixのキューに溜まる。</p>
-
-<h3>解決方法</h3>
-
-<p>gmailのサーバへリレーして送信する。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; sudo vim /etc/postfix/main.cf
-</span><span class='line'>
-</span><span class='line'>relayhost = [smtp.gmail.com]:587
-</span><span class='line'>smtp_use_tls = yes
-</span><span class='line'>smtp_sasl_auth_enable = yes
-</span><span class='line'>smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-</span><span class='line'>smtp_sasl_tls_security_options = noanonymous</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; sudo vim /etc/postfix/sasl_passwd
-</span><span class='line'>
-</span><span class='line'>[smtp.gmail.com]:587    example@wacul.co.jp:password
-</span><span class='line'>
-</span><span class='line'>&gt; sudo postmap /etc/postfix/sasl_passwd
-</span><span class='line'>&gt; sudo /etc/init.d/postfix start
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでオッケー！</p>
 ]]></content>
   </entry>
   
