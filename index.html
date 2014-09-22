@@ -115,6 +115,61 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/09/23/current-test-server/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-09-22-current-test-server/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        23th.
+        
+        Sep. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/09/23/current-test-server/">Web制作のテストサーバー運用を自動化した話</a></div>
+      <div class="post-content">テストサーバー運用意外と手間かかる問題
+
+ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
+外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。
+しかし、プロジェクトごとにテストサーバーを構成するのはなかなかのコストでした。
+
+そこでワカルでは、GitHubリポジトリと連携し、
+
+
+テスト環境の自動デプロイ
+テストサーバーの追加の自動化
+
+
+
+といったことを行っています。
+
+今回は自動化していった手順をご紹介したいと思います。
+流行りの仮想化とかとはまた違う地道なお話です。
+
+利用したサービス、ミドルウェア
+
+利用した環境は以下のとおりです。
+
+
+ソースコード管理: github
+インフラ: Amazon EC2, Route53, ELB
+ミドルウェア関係: Apache, PHP, MySQL
+自動化スクリプト: Fabric (python)
+
+
+
+最新ソースが反映されるサーバーを構築する
+
+まずは手で効率化していくところから、徐々に自動化していきました &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/09/23/current-test-server/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/09/16/zcookies/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -485,71 +540,6 @@ mixin foo(arg)
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/07/18/jade-mixins/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/07/14/swifty-layout/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-07-14-swifty-layout/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        14th.
-        
-        Jul. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/07/14/swifty-layout/">SwiftでNSLayoutConstraintを綺麗に扱えるライブラリを作ってみる</a></div>
-      <div class="post-content">こんにちわ、kyohです。
-
-さぁさぁSwiftアツいですね。プライベートでは連日Swiftと戯れながら、RubyMotionで仕事しています。
-
-以前RubyMotion向けに、NSLayoutConstraintの使い方を簡単に書いてみました(iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint))が、
-Swift版を作っている最中なので、ここに掲載してみます。
-
-NSView版（for Mac OSX）
-
-https://github.com/kyoh/SwiftyLayoutNS
-
-UIView版（for iOS）
-
-https://github.com/kyoh/SwiftyLayoutUI
-
-使い方（例）
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-var view1 = UILabel()
-self.addSubview(view1)
-var view2 = UILabel()
-self.addSubview(view2)
-
-// &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/07/14/swifty-layout/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 

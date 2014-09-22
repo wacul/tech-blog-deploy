@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Web制作のテストサーバー運用を自動化した話  - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="テストサーバー運用意外と手間かかる問題 ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
+外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。
+しかし、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/09/23/current-test-server/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="Web制作のテストサーバー運用を自動化した話 - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="テストサーバー運用意外と手間かかる問題 ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
+外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。
+しかし、 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/09/23/current-test-server/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-09-22-current-test-server/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@tutuming">
+  
+
+  <meta name="twitter:title" content="Web制作のテストサーバー運用を自動化した話 - The Wacul Blog" />
+  <meta name="twitter:description" content="テストサーバー運用意外と手間かかる問題 ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
+外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。
+しかし、 &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-09-22-current-test-server/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Web制作のテストサーバー運用を自動化した話 </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-23T19:00:00+09:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>テストサーバー運用意外と手間かかる問題</h2>
+
+<p>ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
+外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。<br/>
+しかし、プロジェクトごとにテストサーバーを構成するのはなかなかのコストでした。</p>
+
+<p>そこでワカルでは、GitHubリポジトリと連携し、</p>
+
+<ul>
+<li>テスト環境の自動デプロイ</li>
+<li>テストサーバーの追加の自動化</li>
+</ul>
+
+
+<p>といったことを行っています。</p>
+
+<p>今回は自動化していった手順をご紹介したいと思います。<br/>
+流行りの仮想化とかとはまた違う地道なお話です。</p>
+
+<h2>利用したサービス、ミドルウェア</h2>
+
+<p>利用した環境は以下のとおりです。</p>
+
+<ul>
+<li>ソースコード管理: github</li>
+<li>インフラ: Amazon EC2, Route53, ELB</li>
+<li>ミドルウェア関係: Apache, PHP, MySQL</li>
+<li>自動化スクリプト: Fabric (python)</li>
+</ul>
+
+
+<h2>最新ソースが反映されるサーバーを構築する</h2>
+
+<p>まずは手で効率化していくところから、徐々に自動化していきました。</p>
+
+<h3>Apacheの設定ファイルをプロジェクトごとに書く</h3>
+
+<p>弊社のお客様向け制作物のほとんどは、一般的なPHPの構成か、HTMLだけの静的サイトなため、単一のApache/PHPのサーバー上に、複数のVirtuslHostで環境を構築することにしました。</p>
+
+<p>Route53(DNSサーバ) で、特定のサブドメイン以下へのアクセスをワイルドカードで全てテストサーバーへ受け付けるように設定しておきます。( 例えば、 <code>*.test.hoge.com</code> )<br/>
+こうしておくと、URLもプロジェクト名をドメインに含められるため、わかりやすくなります。例：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://project-a.test.hoge.com
+</span><span class='line'>http://project-b.test.hoge.com
+</span><span class='line'>http://project-c.test.hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プロジェクトごとに、Apacheの設定ファイルを作り、Apacheの設定からインクルードするようにしました。</p>
+
+<p>設定ファイルの例</p>
+
+<figure class='code'><figcaption><span>/data/vhconf.d/project-a.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>&lt;VirtualHost *:80&gt;
+</span><span class='line'>DocumentRoot /data/repos/project-a
+</span><span class='line'>ServerName http://project-a.test.hoge.com
+</span><span class='line'>&lt;Directory /&gt;
+</span><span class='line'>  AuthType Basic
+</span><span class='line'>  AuthName &quot;Secret Zone&quot;
+</span><span class='line'>  AuthUserFile /data/work/project-a.htpasswd
+</span><span class='line'>  Require valid-user
+</span><span class='line'>  AllowOverride All
+</span><span class='line'>&lt;/Directory&gt;
+</span><span class='line'>&lt;/VirtualHost&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>http.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>Include /data/vhconf.d/*.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>githubと連携して、コンテンツを自動反映する</h3>
+
+<p>github には、Web hookという仕組みがあります。 <a href="https://developer.github.com/webhooks/">参考</a><br/>
+これを利用し、フックを受け付けるサーバーを立てておき、リポジトリへPushされたタイミングでテストサーバー上でPullし、コンテンツが自動的に反映されるようにしました。</p>
+
+<h2>テスト環境自体の構築も自動化したい！</h2>
+
+<p>上記までで、テストサーバーを公開し、特定のリポジトリへの最新のコードを自動で反映できるようになりました。<br/>
+しかし、この作業を手動でやるのはとてもめんどくさく、ミスも起こりやすいです。自動化したいですね！</p>
+
+<p>最終的に運用されているのは、以下の図のようなものです。</p>
+
+<p><a href="/images/2014-09-22-current-test-server/overview.png"><img src="/images/2014-09-22-current-test-server/overview.png" alt="図" /></a></p>
+
+<p>テストサーバー構成管理用のリポジトリを作り、各サイトの設定ファイル(json形式)をコミットするようにし、この設定用のリポジトリ自体も、githubのフックに登録し、以下の処理を行うようにしました。</p>
+
+<ul>
+<li>設定ファイルの一覧を読み込み、テストサーバー上の構成を作り直す
+
+<ul>
+<li>Apache設定ファイル・htpasswdファイルの生成</li>
+<li>githubからソースコードのclone</li>
+<li>githubのWebhookにテストサーバーを追加</li>
+<li>Apacheの再起動</li>
+</ul>
+</li>
+</ul>
+
+
+<p>設定ファイルの例:</p>
+
+<figure class='code'><figcaption><span>repos/abc.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;ABC社Webサイト&quot;</span><span class="p">,</span>           <span class="c1">// 名前（表示、識別用）</span>
+</span><span class='line'>  <span class="s2">&quot;repositoryName&quot;</span><span class="o">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span>            <span class="c1">// githubリポジトリの名前</span>
+</span><span class='line'>  <span class="s2">&quot;branches&quot;</span><span class="o">:</span> <span class="p">[{</span>                      <span class="c1">// テストサーバーを構築したいbranchを配列で指定</span>
+</span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;master&quot;</span><span class="p">,</span>                 <span class="c1">// branch名</span>
+</span><span class='line'>    <span class="s2">&quot;sites&quot;</span><span class="o">:</span> <span class="p">[{</span>                       <span class="c1">// このブランチの中でたてたいサイトを配列で指定</span>
+</span><span class='line'>      <span class="s2">&quot;documentRoot&quot;</span><span class="o">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>         <span class="c1">// リポジトリの中でサーバーのルートにするディレクトリ</span>
+</span><span class='line'>      <span class="s2">&quot;subDomain&quot;</span><span class="o">:</span> <span class="s2">&quot;hoge&quot;</span><span class="p">,</span>            <span class="c1">// 使用したいサブドメイン この場合は hoge.abc.testserver.jp </span>
+</span><span class='line'>      <span class="s2">&quot;basicAuth&quot;</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>             <span class="c1">// basic認証の利用</span>
+</span><span class='line'>      <span class="s2">&quot;auths&quot;</span><span class="o">:</span> <span class="p">[{</span>                     <span class="c1">// 認証用のパスワードを配列で指定</span>
+</span><span class='line'>         <span class="s2">&quot;user&quot;</span><span class="o">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span>               <span class="c1">// basic認証 ユーザー名</span>
+</span><span class='line'>         <span class="s2">&quot;password&quot;</span><span class="o">:</span> <span class="s2">&quot;abcpassword&quot;</span>    <span class="c1">// basic認証 パスワード</span>
+</span><span class='line'>       <span class="p">}]</span>
+</span><span class='line'>     <span class="p">}]</span>
+</span><span class='line'>  <span class="p">},{</span>
+</span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;develop&quot;</span><span class="p">,</span>                <span class="c1">// 以下２つめのブランチ</span>
+</span><span class='line'>    <span class="s2">&quot;sites&quot;</span><span class="o">:</span> <span class="p">[{</span>
+</span><span class='line'>      <span class="s2">&quot;documentRoot&quot;</span><span class="o">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;subDomain&quot;</span><span class="o">:</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;basicAuth&quot;</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;auths&quot;</span><span class="o">:</span> <span class="p">[]</span>
+</span><span class='line'>    <span class="p">}]</span>
+</span><span class='line'>  <span class="p">}]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、2,3分で新しいテストサーバーを構成できるようになりました！</p>
+
+<h2>現状の構成の課題点と、今後改善したい点</h2>
+
+<p>1年ほど運用して、特に大きな問題はなく運用できていますが、現時点で改善したいと思っている点が幾つかあります。</p>
+
+<ul>
+<li>すべて共通のApache/PHP環境を使っているので、お客様のサーバーにあわせた微妙な構成の違いを検証できない (現時点では、.htaccessで設定できることのみ対応している)</li>
+<li>DBが必要な場合などは、手動で構成が必要</li>
+<li>上記設定ファイルを書けるのは、なんだかんだでプログラマだけなので、依頼がくる。Webのインターフェイスとかつけて、だれでも触れるようにしたい。</li>
+<li>サーバーの再構成を全てのテスト環境に対して行うので重い (実装上の手抜きの問題)</li>
+</ul>
+
+
+<p>現在、これらの問題を解決するために、Dockerを使って、各テスト環境をコンテナに閉じ込めて管理する方向で改善を考えています。はやりのイミュータブルインフラストラクチャってやつですね。</p>
+
+<h2>まとめ</h2>
+
+<p>今回はワカルで行っているWeb制作時のテスト環境構築の自動化についてご紹介しました。<br/>
+管理のような仕事をどんどん効率化して減らしていかないといけません。こういった自動化がうまくはまると、プログラマ冥利に尽きるというやつですね！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/09/23/current-test-server/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/09/23/current-test-server/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/tutuming.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと tutuming</h1>
+    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/16/zcookies/" title="Previous Post: cookieに効率的にデータを格納するzcookiesを作りました">cookieに効率的にデータを格納するzcookiesを作りました</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/current-test-server/">Web制作のテストサーバー運用を自動化した話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/zcookies/">cookieに効率的にデータを格納するzcookiesを作りました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/10/camp/">wacul で開発合宿を行いました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/01/geoip/">どこの地域からアクセスされているのか、IPから検索！</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/22/go/">これからGoを始める人のためのTips集</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

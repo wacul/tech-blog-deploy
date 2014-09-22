@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-09-16T13:04:24+09:00</updated>
+  <updated>2014-09-22T18:28:38+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,202 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Web制作のテストサーバー運用を自動化した話]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/09/23/current-test-server/"/>
+    <updated>2014-09-23T19:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/09/23/current-test-server</id>
+    <content type="html"><![CDATA[<h2>テストサーバー運用意外と手間かかる問題</h2>
+
+<p>ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
+外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。<br/>
+しかし、プロジェクトごとにテストサーバーを構成するのはなかなかのコストでした。</p>
+
+<p>そこでワカルでは、GitHubリポジトリと連携し、</p>
+
+<ul>
+<li>テスト環境の自動デプロイ</li>
+<li>テストサーバーの追加の自動化</li>
+</ul>
+
+
+<p>といったことを行っています。</p>
+
+<p>今回は自動化していった手順をご紹介したいと思います。<br/>
+流行りの仮想化とかとはまた違う地道なお話です。</p>
+
+<h2>利用したサービス、ミドルウェア</h2>
+
+<p>利用した環境は以下のとおりです。</p>
+
+<ul>
+<li>ソースコード管理: github</li>
+<li>インフラ: Amazon EC2, Route53, ELB</li>
+<li>ミドルウェア関係: Apache, PHP, MySQL</li>
+<li>自動化スクリプト: Fabric (python)</li>
+</ul>
+
+
+<h2>最新ソースが反映されるサーバーを構築する</h2>
+
+<p>まずは手で効率化していくところから、徐々に自動化していきました。</p>
+
+<h3>Apacheの設定ファイルをプロジェクトごとに書く</h3>
+
+<p>弊社のお客様向け制作物のほとんどは、一般的なPHPの構成か、HTMLだけの静的サイトなため、単一のApache/PHPのサーバー上に、複数のVirtuslHostで環境を構築することにしました。</p>
+
+<p>Route53(DNSサーバ) で、特定のサブドメイン以下へのアクセスをワイルドカードで全てテストサーバーへ受け付けるように設定しておきます。( 例えば、 <code>*.test.hoge.com</code> )<br/>
+こうしておくと、URLもプロジェクト名をドメインに含められるため、わかりやすくなります。例：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://project-a.test.hoge.com
+</span><span class='line'>http://project-b.test.hoge.com
+</span><span class='line'>http://project-c.test.hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プロジェクトごとに、Apacheの設定ファイルを作り、Apacheの設定からインクルードするようにしました。</p>
+
+<p>設定ファイルの例</p>
+
+<figure class='code'><figcaption><span>/data/vhconf.d/project-a.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>&lt;VirtualHost *:80&gt;
+</span><span class='line'>DocumentRoot /data/repos/project-a
+</span><span class='line'>ServerName http://project-a.test.hoge.com
+</span><span class='line'>&lt;Directory /&gt;
+</span><span class='line'>  AuthType Basic
+</span><span class='line'>  AuthName &quot;Secret Zone&quot;
+</span><span class='line'>  AuthUserFile /data/work/project-a.htpasswd
+</span><span class='line'>  Require valid-user
+</span><span class='line'>  AllowOverride All
+</span><span class='line'>&lt;/Directory&gt;
+</span><span class='line'>&lt;/VirtualHost&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>http.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>Include /data/vhconf.d/*.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>githubと連携して、コンテンツを自動反映する</h3>
+
+<p>github には、Web hookという仕組みがあります。 <a href="https://developer.github.com/webhooks/">参考</a><br/>
+これを利用し、フックを受け付けるサーバーを立てておき、リポジトリへPushされたタイミングでテストサーバー上でPullし、コンテンツが自動的に反映されるようにしました。</p>
+
+<h2>テスト環境自体の構築も自動化したい！</h2>
+
+<p>上記までで、テストサーバーを公開し、特定のリポジトリへの最新のコードを自動で反映できるようになりました。<br/>
+しかし、この作業を手動でやるのはとてもめんどくさく、ミスも起こりやすいです。自動化したいですね！</p>
+
+<p>最終的に運用されているのは、以下の図のようなものです。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-09-22-current-test-server/overview.png"><img src="http://blog.wacul.co.jp/images/2014-09-22-current-test-server/overview.png" alt="図" /></a></p>
+
+<p>テストサーバー構成管理用のリポジトリを作り、各サイトの設定ファイル(json形式)をコミットするようにし、この設定用のリポジトリ自体も、githubのフックに登録し、以下の処理を行うようにしました。</p>
+
+<ul>
+<li>設定ファイルの一覧を読み込み、テストサーバー上の構成を作り直す
+
+<ul>
+<li>Apache設定ファイル・htpasswdファイルの生成</li>
+<li>githubからソースコードのclone</li>
+<li>githubのWebhookにテストサーバーを追加</li>
+<li>Apacheの再起動</li>
+</ul>
+</li>
+</ul>
+
+
+<p>設定ファイルの例:</p>
+
+<figure class='code'><figcaption><span>repos/abc.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;ABC社Webサイト&quot;</span><span class="p">,</span>           <span class="c1">// 名前（表示、識別用）</span>
+</span><span class='line'>  <span class="s2">&quot;repositoryName&quot;</span><span class="o">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span>            <span class="c1">// githubリポジトリの名前</span>
+</span><span class='line'>  <span class="s2">&quot;branches&quot;</span><span class="o">:</span> <span class="p">[{</span>                      <span class="c1">// テストサーバーを構築したいbranchを配列で指定</span>
+</span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;master&quot;</span><span class="p">,</span>                 <span class="c1">// branch名</span>
+</span><span class='line'>    <span class="s2">&quot;sites&quot;</span><span class="o">:</span> <span class="p">[{</span>                       <span class="c1">// このブランチの中でたてたいサイトを配列で指定</span>
+</span><span class='line'>      <span class="s2">&quot;documentRoot&quot;</span><span class="o">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>         <span class="c1">// リポジトリの中でサーバーのルートにするディレクトリ</span>
+</span><span class='line'>      <span class="s2">&quot;subDomain&quot;</span><span class="o">:</span> <span class="s2">&quot;hoge&quot;</span><span class="p">,</span>            <span class="c1">// 使用したいサブドメイン この場合は hoge.abc.testserver.jp </span>
+</span><span class='line'>      <span class="s2">&quot;basicAuth&quot;</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>             <span class="c1">// basic認証の利用</span>
+</span><span class='line'>      <span class="s2">&quot;auths&quot;</span><span class="o">:</span> <span class="p">[{</span>                     <span class="c1">// 認証用のパスワードを配列で指定</span>
+</span><span class='line'>         <span class="s2">&quot;user&quot;</span><span class="o">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span>               <span class="c1">// basic認証 ユーザー名</span>
+</span><span class='line'>         <span class="s2">&quot;password&quot;</span><span class="o">:</span> <span class="s2">&quot;abcpassword&quot;</span>    <span class="c1">// basic認証 パスワード</span>
+</span><span class='line'>       <span class="p">}]</span>
+</span><span class='line'>     <span class="p">}]</span>
+</span><span class='line'>  <span class="p">},{</span>
+</span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;develop&quot;</span><span class="p">,</span>                <span class="c1">// 以下２つめのブランチ</span>
+</span><span class='line'>    <span class="s2">&quot;sites&quot;</span><span class="o">:</span> <span class="p">[{</span>
+</span><span class='line'>      <span class="s2">&quot;documentRoot&quot;</span><span class="o">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;subDomain&quot;</span><span class="o">:</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;basicAuth&quot;</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;auths&quot;</span><span class="o">:</span> <span class="p">[]</span>
+</span><span class='line'>    <span class="p">}]</span>
+</span><span class='line'>  <span class="p">}]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、2,3分で新しいテストサーバーを構成できるようになりました！</p>
+
+<h2>現状の構成の課題点と、今後改善したい点</h2>
+
+<p>1年ほど運用して、特に大きな問題はなく運用できていますが、現時点で改善したいと思っている点が幾つかあります。</p>
+
+<ul>
+<li>すべて共通のApache/PHP環境を使っているので、お客様のサーバーにあわせた微妙な構成の違いを検証できない (現時点では、.htaccessで設定できることのみ対応している)</li>
+<li>DBが必要な場合などは、手動で構成が必要</li>
+<li>上記設定ファイルを書けるのは、なんだかんだでプログラマだけなので、依頼がくる。Webのインターフェイスとかつけて、だれでも触れるようにしたい。</li>
+<li>サーバーの再構成を全てのテスト環境に対して行うので重い (実装上の手抜きの問題)</li>
+</ul>
+
+
+<p>現在、これらの問題を解決するために、Dockerを使って、各テスト環境をコンテナに閉じ込めて管理する方向で改善を考えています。はやりのイミュータブルインフラストラクチャってやつですね。</p>
+
+<h2>まとめ</h2>
+
+<p>今回はワカルで行っているWeb制作時のテスト環境構築の自動化についてご紹介しました。<br/>
+管理のような仕事をどんどん効率化して減らしていかないといけません。こういった自動化がうまくはまると、プログラマ冥利に尽きるというやつですね！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[cookieに効率的にデータを格納するzcookiesを作りました]]></title>
@@ -3147,310 +3343,6 @@ RubyMotion での開発向けに、<strong>レイアウトを数式の様に書�
 
 
 <p>これで皆さんが NSLayoutConstraint を使ってくれることを祈って。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Canvasのお絵かきに bacon.js を使ってみた]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/"/>
-    <updated>2014-04-30T19:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/04/30/bacon-js</id>
-    <content type="html"><![CDATA[<h3>イベント処理の憂鬱とbacon.js</h3>
-
-<p>業務でちょっとしたお絵かきツールをjsで作る機会がありました。<br/>
-マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。</p>
-
-<p>これを綺麗に書く方法はないか、調べている中で、<a href="http://baconjs.github.io" target="_blank">bacon.js</a> というライブラリを見つけました。試してみたところなかなか良さそうだったのでご紹介します。</p>
-
-<p>bacon.js はFRP(Functional Reactive Programming) という概念をjsで実装したもので、僕なりの理解だと、</p>
-
-<ul>
-<li>変化するイベントや値 (EventStream, Property) をオブジェクトとして扱うことができる</li>
-<li>イベントや値の間に関係を持たせることができる 例: b = a + 1</li>
-<li>元の値が変わると、関係する値も自動的に更新される 例: a が 1 &ndash;> 2 に変化すると、bは 2 &ndash;> 3 に変化する (Reactive)</li>
-<li>値の変換を関数として記述できる (Functional)</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//例: c は a + b </span>
-</span><span class='line'><span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">combine</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span> <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>といった特徴があります。<br/>
-FRPの概念については、そんなに深追いしてないのですが、FRPをiOS/OSXのCocoa APIの上に実装した
-<a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank">ReactiveCocoa</a>などのライブラリもあります。</p>
-
-<h3>お絵かきアプリを bacon.js で実装してみる</h3>
-
-<p>さて、今回はお絵かきアプリのサンプルをbacon.jsを使って書いてみました。</p>
-
-<p><a href="http://tutuming.github.io/bacon-sample/" target="_blank">動いているデモ</a><br/>
-<a href="https://github.com/tutuming/bacon-sample/blob/master/sample.js" target="_blank">ソースコード(github)</a></p>
-
-<p>機能としては以下を実装しています</p>
-
-<ul>
-<li>マウス、タッチイベント両方で描画できる</li>
-<li>色、太さを選択できる</li>
-</ul>
-
-
-<p>使っているライブラリは、jQuery, bacon.js, bacon.UI.JS（ jQueryのイベントをbacon.jsで扱うためのライブラリ）です。</p>
-
-<h4>マウス、タッチイベントから、描画に必要な座標の流れに変換する</h4>
-
-<p>描画に必要な情報は、描画に必要な座標の変化の流れです。
-時間にそって、x,yの組が変化していくストリームを抽象化し、そのストリームを描画する処理と切り離します。</p>
-
-<p>ここが少しどう実装するか迷ったポイントだったのですが、
-描画には開始と終了があるので、<strong> 一連のx,y座標のストリームを返すストリーム </strong> として実装するとうまくいくことがわかりました。</p>
-
-<p>sample.js:L9-21 エレメントに対するマウスのイベントからx,y 座標の組のストリームを生成するストリームを返す関数を定義しています</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'> <span class="c1">// マウスでの描画座標ストリーム生成</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">mouseDrawStreamSource</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;mousedown&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>      <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;mousemove&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">).</span><span class="nx">takeUntil</span><span class="p">(</span>
-</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;mouseup&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-</span><span class='line'>        <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">offset</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">return</span> <span class="p">{</span>
-</span><span class='line'>          <span class="nx">x</span> <span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageX</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span>
-</span><span class='line'>          <span class="nx">y</span> <span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageY</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">top</span>
-</span><span class='line'>        <span class="p">};</span>
-</span><span class='line'>      <span class="p">});</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>  <span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>sample.js:L24-55 タッチイベントに関しても同じインターフェイスのストリームを返せるような関数を書きます</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// タッチでの描画座標ストリーム生成</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">touchDrawStreamSource</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touchstart&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">).</span><span class="nx">flatMap</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-</span><span class='line'>      <span class="k">return</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">fromArray</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">originalEvent</span><span class="p">.</span><span class="nx">changedTouches</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">touch</span><span class="p">){</span>
-</span><span class='line'>      <span class="kd">var</span> <span class="nx">filterEventContainesTouch</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">stream</span><span class="p">){</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span>
-</span><span class='line'>          <span class="s1">&#39;.originalEvent.changedTouches&#39;</span>
-</span><span class='line'>        <span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">touches</span><span class="p">){</span>
-</span><span class='line'>          <span class="k">return</span> <span class="nx">_</span><span class="p">(</span><span class="nx">touches</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="nx">touch</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">});</span>
-</span><span class='line'>      <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="kd">var</span> <span class="nx">endStream</span> <span class="o">=</span> <span class="nx">filterEventContainesTouch</span><span class="p">(</span><span class="nx">Bacon</span><span class="p">.</span><span class="nx">mergeAll</span><span class="p">([</span>
-</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touchend&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">),</span>
-</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touches&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span><span class="s1">&#39;.preventDefault&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">]));</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="k">return</span> <span class="nx">filterEventContainesTouch</span><span class="p">(</span>
-</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">asEventStream</span><span class="p">(</span><span class="s1">&#39;touchmove&#39;</span><span class="p">).</span><span class="nx">doAction</span><span class="p">(</span>
-</span><span class='line'>          <span class="s1">&#39;.preventDefault&#39;</span>
-</span><span class='line'>        <span class="p">).</span><span class="nx">takeUntil</span><span class="p">(</span>
-</span><span class='line'>          <span class="nx">endStream</span>
-</span><span class='line'>        <span class="p">)</span>
-</span><span class='line'>      <span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-</span><span class='line'>        <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">offset</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">return</span> <span class="p">{</span>
-</span><span class='line'>          <span class="nx">x</span> <span class="o">:</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">pageX</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span>
-</span><span class='line'>          <span class="nx">y</span> <span class="o">:</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">pageY</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">.</span><span class="nx">top</span>
-</span><span class='line'>        <span class="p">};</span>
-</span><span class='line'>      <span class="p">});</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>  <span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>sample.js:L57-59 それぞれのストリームをcanvasから生成して、マウス、タッチの入力を両方とも受け付けられるように、２つのストリームを統合します</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">var</span> <span class="nx">mouseStreamSource</span> <span class="o">=</span> <span class="nx">mouseDrawStreamSource</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#canvas&#39;</span><span class="p">));</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">touchStreamSource</span> <span class="o">=</span> <span class="nx">touchDrawStreamSource</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#canvas&#39;</span><span class="p">));</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">strokeStreamSource</span> <span class="o">=</span> <span class="nx">mouseStreamSource</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">touchStreamSource</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>strokeStreamSource は、描画に必要な情報のみ提供していて、マウスとかタッチのことはうまく隠蔽されているのがわかると思います。</p>
-
-<h4>ペンの設定と描画処理</h4>
-
-<p>sample.js:L61-71 次に、色と太さをProperty(状態を持ったイベントストリーム) として定義します<br/>
-option の値を、太さは数値、色はrgb値の文字列に値を変換しています。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// 太さ</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">sizeProperty</span> <span class="o">=</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">optionValue</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;[name=size]&#39;</span><span class="p">),</span> <span class="s1">&#39;2&#39;</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1">// 色</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">colorProperty</span> <span class="o">=</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">optionValue</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;[name=color]&#39;</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">).</span><span class="nx">decode</span><span class="p">({</span>
-</span><span class='line'>    <span class="nx">red</span> <span class="o">:</span> <span class="s1">&#39;rgb(255, 0, 0)&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">green</span> <span class="o">:</span> <span class="s1">&#39;rgb(0, 255, 0)&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">blue</span><span class="o">:</span> <span class="s1">&#39;rgb(0, 0, 255)&#39;</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">Bacon</span><span class="p">.</span><span class="nx">combineTemplate</span><span class="p">({</span>
-</span><span class='line'>    <span class="nx">size</span> <span class="o">:</span> <span class="nx">sizeProperty</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">color</span> <span class="o">:</span> <span class="nx">colorProperty</span>
-</span><span class='line'>  <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最後に色、太さの設定情報とx,y座標のストリームを使って、描画処理を書きます。<br/>
-描画が発生したときに、設定の値を取得しています。</p>
-
-<p>L78-105</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// 描画</span>
-</span><span class='line'>  <span class="nx">options</span><span class="p">.</span><span class="nx">sampledBy</span><span class="p">(</span><span class="nx">strokeStreamSource</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">stream</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">{</span> <span class="nx">options</span> <span class="o">:</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">stream</span> <span class="o">:</span> <span class="nx">stream</span> <span class="p">};</span>
-</span><span class='line'>  <span class="p">}).</span><span class="nx">onValue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">stream</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// 2点の組みで返すストリーム</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">pointSetStream</span> <span class="o">=</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">slidingWindow</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">points</span><span class="p">){</span>
-</span><span class='line'>      <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">points</span><span class="p">){</span>
-</span><span class='line'>      <span class="kd">var</span> <span class="nx">fromPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">toPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-</span><span class='line'>      <span class="k">return</span> <span class="p">(</span><span class="nx">fromPoint</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">&amp;&amp;</span> <span class="nx">fromPoint</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span> <span class="o">||</span>
-</span><span class='line'>        <span class="p">(</span><span class="nx">toPoint</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">&amp;&amp;</span> <span class="nx">toPoint</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">pointSetStream</span><span class="p">.</span><span class="nx">onValue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">points</span><span class="p">){</span>
-</span><span class='line'>      <span class="kd">var</span> <span class="nx">fromPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">toPoint</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">color</span><span class="p">;</span>
-</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">size</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
-</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">fromPoint</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">fromPoint</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
-</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">toPoint</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">toPoint</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
-</span><span class='line'>      <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>  <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>サンプルコードのまとめ</h4>
-
-<p>イベントの流れを抽象化することで、様々な入力に容易に対応できるコードにすることができました。<br/>
-入力を増やすには、他のイベントから座標の流れのイベントに変換すれば良いので</p>
-
-<ul>
-<li>Webソケットを使ってリアルタイムにサーバーから送られてくる座標を描画</li>
-<li>保存されたお絵かきを再生</li>
-</ul>
-
-
-<p>なども描画処理を変えることなく実装できそうです。
-出力についても、描画した線をベジェ曲線に近似させる、といったことも入力とは独立して実装することができます。</p>
-
-<h3>bacon.js を使ってみて</h3>
-
-<p>今回は、簡単なお絵かきツールの実装に沿ってbacon.jsを使ってみましたが、なかなか良さそうです。</p>
-
-<p>イベントの捉え方を根本的に変えないといけないので、チーム開発でのメンテ性などを考えるとアプリ全体をbacon.jsを使って書くのはまだ厳しい気もします。<br/>
-パーツ単位で、特に今回のようなお絵かきやソケット通信などのイベントが主役の部分については、うまく抽象化できて可読性、メンテ性の高いコードが書けるなという印象をうけました。</p>
-
-<p>面白いので、みなさんもぜひ使ってみてください。</p>
 ]]></content>
   </entry>
   
