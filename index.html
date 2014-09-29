@@ -115,6 +115,50 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/09/29/collaborative-realtime-markdown/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-09-29-collaborative-realtime-markdown/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        29th.
+        
+        Sep. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a></div>
+      <div class="post-content">Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io
+
+こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。
+
+今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。
+
+そんなMarkdownをリアルタイムで一緒に編集できるサービスはないものかと
+色々探してみたところ、Socrates (→GitHubリポジトリ) というサービスが
+そこそこハマったので紹介してみようと思います。
+
+Socrates のいいところ
+
+「リアルタイムでMarkdownを編集したい」という要件はほぼ満たしています。
+また、リアルタイムでマークアップした結果のプレビューもしてくれるので、
+微妙な記法におっかなびっくりしながら編集する目にも遭わなくて済みます。
+
+Markdownの記法についても、ヘッダ、罫線、強調、リンク、画像などなど基本的なところは押さえているようです。
+
+
+
+また、ソースがGithubで公開されているため、cloneして試すことができます。
+最近は、 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/09/29/collaborative-realtime-markdown/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/09/23/current-test-server/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -500,46 +544,6 @@ WebからのリクエストをELBでEC2インスタンス上のNginxに渡し、
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/07/24/elb/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/07/18/jade-mixins/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-07-18-jade-mixins/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        18th.
-        
-        Jul. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/07/18/jade-mixins/">Jadeのmixinでこころぴょんぴょん</a></div>
-      <div class="post-content">Jadeにはmixinという再利用可能なオレオレ要素を作る機能があります。
-mixinの機能についての解説はすでにやられてる方がいるので(かずぽんブログ • Jadeで便利なmixinの機能)ここではmixinがどのようにコンパイルされてるのかを解説しようかと思います。ちなみにjade-lang.com/demo/上でリアルタイムにコンパイル結果を確認することができます。
-
-
-
-さっそく本題に入ります。以下のJadeのコード例を見て下さい。なんだかごてごてしているように見えますが、ここでは基本的なmixinの機能を全て使っています(もし記法がわからなければ上記ブログを参照することをおすすめします)。
-
-1
-2
-3
-4
-5
-6
-mixin foo(arg)
-  div foooooo #{arg}!
-  div(class=attributes.class id=attributes.id)
-    block
-
-+foo(&quot;こんにちは&quot;).hoge#fuga(attr1=&quot;js&quot;) hello &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/07/18/jade-mixins/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 

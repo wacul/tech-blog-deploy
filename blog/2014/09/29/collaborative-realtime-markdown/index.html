@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Markdownを複数人でリアルタイム編集できる socrates.io   - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。 今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="Markdownを複数人でリアルタイム編集できる socrates.io  - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。 今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@kyoh86">
+  
+
+  <meta name="twitter:title" content="Markdownを複数人でリアルタイム編集できる socrates.io  - The Wacul Blog" />
+  <meta name="twitter:description" content="Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。 今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。 &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Markdownを複数人でリアルタイム編集できる socrates.io  </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-29T22:00:00+09:00" pubdate data-updated="true">Sep 29<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io</h2>
+
+<p>こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。</p>
+
+<p>今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。</p>
+
+<p>そんなMarkdownをリアルタイムで一緒に編集できるサービスはないものかと
+色々探してみたところ、<a href="http://socrates.io/">Socrates</a> (<a href="https://github.com/segmentio/socrates">→GitHubリポジトリ</a>) というサービスが
+そこそこハマったので紹介してみようと思います。</p>
+
+<h3>Socrates のいいところ</h3>
+
+<p>「リアルタイムでMarkdownを編集したい」という要件はほぼ満たしています。
+また、リアルタイムでマークアップした結果のプレビューもしてくれるので、
+微妙な記法におっかなびっくりしながら編集する目にも遭わなくて済みます。</p>
+
+<p>Markdownの記法についても、ヘッダ、罫線、強調、リンク、画像などなど基本的なところは押さえているようです。</p>
+
+<p><a href="/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png"><img src="/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png" width="440" height="384" alt="Socrates画面キャプチャ" /></a></p>
+
+<p>また、ソースがGithubで公開されているため、cloneして試すことができます。
+最近は、OSSも当たり前になってきましたね。</p>
+
+<h3>Socrates をどう使うのか</h3>
+
+<p>Socrates.io は、リアルタイムの共有とプレビューのみに特化した「エディタ」なので、
+外部に保存したりエクスポートしたりはできません。
+データは LocalStorage に保存されているので、キャッシュクリアなどをすると消えてしまいます。</p>
+
+<p>保存については GitHub なりローカルなり、他を利用するようにして、
+「一緒に編集したい」というシーンに対してここへコピー＆ペーストして使う、
+というのが良い活用方法と言えるでしょう。</p>
+
+<h3>Socrates の残念なところ（2014/09/24時点）</h3>
+
+<p>とはいえ、このサービスにもいくらか改善の余地はありそうです。</p>
+
+<ul>
+<li><p>デフォルトのプレビュースタイルが、若干見にくい。<br/>
+引用の入れ子など、ちょっと発展的なことをするとスタイリッシュじゃない。</p>
+
+<p>Chrome 拡張の <a href="https://chrome.google.com/webstore/detail/stylish/fjnbnpbmkenffdnngjfgmeleoegfcffe?hl=ja">Stylish</a> を使って、
+世に出回っている GitHub css を適用するのがベターでしょう。</p></li>
+<li><p>2年間放置されてる。<br/>
+・・・いつ消えてもおかしくないですね。</p></li>
+<li><p>ビュー専用モード・編集専用モードに入ると、戻るリンクがない。<br/>
+画面上部の「目玉」アイコンや「ペン」アイコンをクリックすると、
+それぞれビュー専用／編集専用モードに入りますが、戻るリンクがない。
+URL直打ちで元のページに戻るしかないのが残念。</p>
+
+<p>こちらも前述のChrome拡張で、目玉アイコン・ペンアイコンを非表示にしちゃってます。</p></li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<p>Markdown × Webサービスでリアルタイムコラボレーション、イイね！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/kyoh.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと kyoh</h1>
+    <p>kyohです。蕎麦と鳥をこよなく愛するおでぶです。C#使いでした。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/23/current-test-server/" title="Previous Post: Web制作のテストサーバー運用を自動化した話">Web制作のテストサーバー運用を自動化した話</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/current-test-server/">Web制作のテストサーバー運用を自動化した話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/zcookies/">cookieに効率的にデータを格納するzcookiesを作りました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/10/camp/">wacul で開発合宿を行いました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/01/geoip/">どこの地域からアクセスされているのか、IPから検索！</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

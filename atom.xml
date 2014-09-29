@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-09-22T18:28:38+09:00</updated>
+  <updated>2014-09-29T22:02:55+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Markdownを複数人でリアルタイム編集できる socrates.io ]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/"/>
+    <updated>2014-09-29T22:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown</id>
+    <content type="html"><![CDATA[<h2>Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io</h2>
+
+<p>こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。</p>
+
+<p>今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。</p>
+
+<p>そんなMarkdownをリアルタイムで一緒に編集できるサービスはないものかと
+色々探してみたところ、<a href="http://socrates.io/">Socrates</a> (<a href="https://github.com/segmentio/socrates">→GitHubリポジトリ</a>) というサービスが
+そこそこハマったので紹介してみようと思います。</p>
+
+<h3>Socrates のいいところ</h3>
+
+<p>「リアルタイムでMarkdownを編集したい」という要件はほぼ満たしています。
+また、リアルタイムでマークアップした結果のプレビューもしてくれるので、
+微妙な記法におっかなびっくりしながら編集する目にも遭わなくて済みます。</p>
+
+<p>Markdownの記法についても、ヘッダ、罫線、強調、リンク、画像などなど基本的なところは押さえているようです。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png"><img src="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png" width="440" height="384" alt="Socrates画面キャプチャ" /></a></p>
+
+<p>また、ソースがGithubで公開されているため、cloneして試すことができます。
+最近は、OSSも当たり前になってきましたね。</p>
+
+<h3>Socrates をどう使うのか</h3>
+
+<p>Socrates.io は、リアルタイムの共有とプレビューのみに特化した「エディタ」なので、
+外部に保存したりエクスポートしたりはできません。
+データは LocalStorage に保存されているので、キャッシュクリアなどをすると消えてしまいます。</p>
+
+<p>保存については GitHub なりローカルなり、他を利用するようにして、
+「一緒に編集したい」というシーンに対してここへコピー＆ペーストして使う、
+というのが良い活用方法と言えるでしょう。</p>
+
+<h3>Socrates の残念なところ（2014/09/24時点）</h3>
+
+<p>とはいえ、このサービスにもいくらか改善の余地はありそうです。</p>
+
+<ul>
+<li><p>デフォルトのプレビュースタイルが、若干見にくい。<br/>
+引用の入れ子など、ちょっと発展的なことをするとスタイリッシュじゃない。</p>
+
+<p>Chrome 拡張の <a href="https://chrome.google.com/webstore/detail/stylish/fjnbnpbmkenffdnngjfgmeleoegfcffe?hl=ja">Stylish</a> を使って、
+世に出回っている GitHub css を適用するのがベターでしょう。</p></li>
+<li><p>2年間放置されてる。<br/>
+・・・いつ消えてもおかしくないですね。</p></li>
+<li><p>ビュー専用モード・編集専用モードに入ると、戻るリンクがない。<br/>
+画面上部の「目玉」アイコンや「ペン」アイコンをクリックすると、
+それぞれビュー専用／編集専用モードに入りますが、戻るリンクがない。
+URL直打ちで元のページに戻るしかないのが残念。</p>
+
+<p>こちらも前述のChrome拡張で、目玉アイコン・ペンアイコンを非表示にしちゃってます。</p></li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<p>Markdown × Webサービスでリアルタイムコラボレーション、イイね！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Web制作のテストサーバー運用を自動化した話]]></title>
@@ -2947,402 +3013,6 @@ CoffeeScriptにも対応しています。</p>
 <p>JavaScriptにおいて時間の計算を行うのには、これがないとつらいです。</p>
 
 <p>以上です！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/05/07/nslayoutconstraint/"/>
-    <updated>2014-05-07T17:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/05/07/nslayoutconstraint</id>
-    <content type="html"><![CDATA[<p>はじめまして、プログラマチームの kyoh です。
-最近は津軽金山焼(<a href="https://www.youtube.com/watch?v=lITs5D8XW5M#t=20" target="_blank">PV:YouTube</a>)に惚れてます。</p>
-
-<h2>背景</h2>
-
-<p>ワカルでは現在、RubyMotionを使ってiPadアプリを開発中です。
-プロジェクトとして「InterfaceBuilderを使わない」という選択をした結果、より自由度の高い NSLayoutConstraint の魅力がわかってきました。
-これはもったいない、世の中的にももっと使ってもらえるように、とこの記事を書くに至った次第です。</p>
-
-<p>Objective-C はちょっと・・・というスタンスなので、ソースコードは全てRubyで書いています。すみません。</p>
-
-<h2>結論</h2>
-
-<p><del>InterfaceBuilderを使わない変態</del><ins>算数が好きな</ins>プログラマーは NSLayoutConstraint.constraintWithItem&hellip; をガシガシ使おう！CSS風に書ける快感を皆で味わおう！
-メソッド名が長い？記述が読みにくい？それなら<a href="https://github.com/kyoh/LayoutExpress" target="_blank">LayoutExpress</a>でどうだっ！（自薦）</p>
-
-<h2>NSLayoutConstraint の機能</h2>
-
-<p>NSLayoutConstraint という名前の通り、ビューの位置やサイズを他のビューの位置やサイズに従って制約（constrain）することで、自動レイアウトする機能を提供しています。
-例えば、親ビューの幅が変わったら子のビューの幅も従属する、というような場合も、いちいちユーザーのアクションに従ってframeを再設定する必要が<strong>ありません</strong>。</p>
-
-<p>NSLayoutConstraint には、2つのクラスメソッドが用意されています。</p>
-
-<ul>
-<li>constraintsWithVisualFormat:options:metrics:views:
-<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3" target="_blank">Visual Format Language</a> （以下、<abbr>VFL</abbr>）を使って、可視的にレイアウトを記述できます。
-比較的簡単、かつ他所でも記事が充実<small>(<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3" target="_blank">例1</a>,<a href="http://blogios.stack3.net/archives/98" target="_blank">例2</a>,<a href="http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/" target="_blank">例3</a>)</small>しているのでここではこちらの詳しい説明は割愛します。</li>
-<li>constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:
-めまいのする長さのメソッドですが、こちらが今回の記事の要です。</li>
-</ul>
-
-
-<h2>constraintWithItem&hellip;の使い方</h2>
-
-<p>引数が多い上に名前が長く、そして<a href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutConstraint_Class/NSLayoutConstraint/NSLayoutConstraint.html" target="_blank">公式ドキュメント</a>の記述が複雑であるがゆえに、障壁の高いこちら。
-ですが、落ち着いて紐解いてみればさほど難しいことをやっているわけではありません。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span><span class="n">view1</span><span class="p">,</span> <span class="ss">attribute</span><span class="p">:</span><span class="n">attr1</span><span class="p">,</span> <span class="ss">relatedBy</span><span class="p">:</span><span class="n">relation</span><span class="p">,</span> <span class="ss">toItem</span><span class="p">:</span><span class="n">view2</span><span class="p">,</span> <span class="ss">attribute</span><span class="p">:</span><span class="n">attr2</span><span class="p">,</span> <span class="ss">multiplier</span><span class="p">:</span><span class="n">multiplier</span><span class="p">,</span> <span class="ss">constant</span><span class="p">:</span><span class="n">constant</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>・・・うーん、長い。このメソッドで作ることができるのは、次のような制約です。</p>
-
-<blockquote><p><strong>view1</strong>.<strong>attr1</strong> [<strong>＝</strong>|<strong>≦</strong>|<strong>≧</strong>] <strong>view2</strong>.<strong>attr2</strong> × multiplier ＋ constant</p></blockquote>
-
-<ul>
-<li><strong>view1</strong> の属性 <strong>attr1</strong> を、<strong>view2</strong> の属性 <strong>attr2</strong> に従って制約する。
-
-<ul>
-<li><strong>逆ではない（view2 を制約するものではない）ので注意</strong></li>
-<li>サイズや位置を単なる数値で指定したい場合、view2 に nil を指定すればいい。</li>
-</ul>
-</li>
-<li>attr1, attr2 は、幅(width)、高さ(height)、位置(left / right / top / bottom / centerX / centerY)、などがある。</li>
-<li><strong>relation</strong> には、等値（＝）、以下（≦）、以上（≧）の3種類がある。</li>
-<li>view2 の属性 attr2 の◯◯倍、という指定ができるのが <strong>multiplier</strong> 。</li>
-<li>view2 の属性 attr2 ＋◯◯、という指定ができるのが <strong>constant</strong> 。</li>
-</ul>
-
-
-<p>ただし、使う際には少しだけ注意するポイントがあります。</p>
-
-<ul>
-<li>attr1 と attr2 に、位置とサイズの組み合わせは指定できない。
-
-<ul>
-<li>例えば、attr1: NSLayoutAttributeLeft（左側の位置）, &hellip; attr2: NSLayoutAttributeWidth（幅） はエラー。</li>
-</ul>
-</li>
-<li>位置の指定をする場合、view2 に nil を指定することはできない。
-
-<ul>
-<li>当然といえば当然ですが、位置の指定では基準となるViewを指定する必要があります。</li>
-</ul>
-</li>
-</ul>
-
-
-<p>これらはVFLでも当然指定できません。(指定する方法も無いでしょうが・・・)</p>
-
-<h2>constraintWithItem&hellip;の持つ能力</h2>
-
-<p>さて、実のところ、constraintWithItem と constraintsWithVisualFormat のできることに<strong>大きな違いはありません</strong>。
-しかし逆に言えば、少ないながらもVFLでは書けないレイアウトがあります。
-今までに私が気づいた範囲内で VFL を超えている部分としては、次があります。</p>
-
-<h3>width と height を組み合わせた制約</h3>
-
-<p>例）幅：高さ＝4:3のビュー</p>
-
-<p><img src="http://blog.wacul.co.jp/images/2014-05-07-nslayoutconstraint/layout_fixed_ratio.png" alt="UIView @viewの中に、UIImageView @imageView が配置されていて、UIImageViewの幅：高さが4:3に固定される" /></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@imageView</span><span class="o">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="vi">@view</span><span class="o">.</span><span class="n">addConstraints</span><span class="p">(</span><span class="o">[</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="vi">@imageView</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span> <span class="no">NSLayoutAttributeLeft</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@view</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeLeft</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="mi">60</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="vi">@imageView</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span> <span class="no">NSLayoutAttributeRight</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@view</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeRight</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="o">-</span><span class="mi">60</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="vi">@imageView</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span> <span class="no">NSLayoutAttributeHeight</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@imageView</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeWidth</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="mi">3</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>       <span class="c1"># imageView の高さを、imageView 自身の幅の3/4に固定する</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="mi">0</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>  <span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>一定サイズ重なりあう様な制約</h3>
-
-<p>例）幅60、高さ40の領域が重なる @label と @imageView
-<img src="http://blog.wacul.co.jp/images/2014-05-07-nslayoutconstraint/layout_layered_fields.png" alt="UIView @viewの中に、UILabel @label と UIImageView @imageView が配置されていて、@label の右下 60x40 の領域が下の @imageView に重なっている" /></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@label</span><span class="o">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="vi">@imageView</span><span class="o">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="vi">@view</span><span class="o">.</span><span class="n">addConstraints</span><span class="p">(</span><span class="o">[</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="vi">@imageView</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span> <span class="no">NSLayoutAttributeTop</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@label</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeBottom</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="vi">@imageView</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span> <span class="no">NSLayoutAttributeLeft</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@label</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeRight</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="o">-</span><span class="mi">60</span>
-</span><span class='line'>    <span class="p">)</span>
-</span><span class='line'>  <span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>位置に対して multiplier を使う様な制約</h3>
-
-<p>例）View 全体の幅を等分するSubview
-<img src="http://blog.wacul.co.jp/images/2014-05-07-nslayoutconstraint/layout_equal_spaces.png" alt="UIView @viewの中に、複数の subview があって、それぞれ均等な領域に割り当てられている。" /></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">delta</span> <span class="o">=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="n">subviews</span><span class="o">.</span><span class="n">count</span>
-</span><span class='line'><span class="n">centerN</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">/</span> <span class="mi">2</span>
-</span><span class='line'><span class="n">subviews</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">r</span><span class="o">|</span>
-</span><span class='line'>  <span class="vi">@view</span><span class="o">.</span><span class="n">addConstraints</span><span class="p">(</span><span class="o">[</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="n">r</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeCenterX</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@view</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeCenterX</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="n">centerN</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="mi">0</span>
-</span><span class='line'>    <span class="p">)</span>
-</span><span class='line'>    <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>      <span class="n">r</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeCenterY</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">toItem</span><span class="p">:</span><span class="vi">@view</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeCenterY</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">multiplier</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">constant</span><span class="p">:</span><span class="mi">0</span>
-</span><span class='line'>    <span class="p">)</span>
-</span><span class='line'>  <span class="o">]</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">centerN</span> <span class="o">+=</span> <span class="n">delta</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>まとめ</h2>
-
-<p>若干複雑なconstraintWithItem&hellip;ですが、いかがでしょう。やっていることはとてもシンプルなので、読み解くにはさほど難しいものではありません。
-そして、VFLだけではできないオートレイアウトの深淵を覗いてみれば、これまでは「実装上の都合」で諦めてきた
-複雑なレイアウトも、チャレンジしてみる価値があるのではないでしょうか。</p>
-
-<p>難しい！嫌だ！と完全拒絶する前に、一度使ってみることをおすすめします。
-以外に優しいやつなんです。</p>
-
-<h2>おまけ</h2>
-
-<p>本題とはちょっとずれるので、付記として2つほど。</p>
-
-<h3>NSLayoutConstraint.constant の秘密</h3>
-
-<p>VFLを使っていると中々気づけないことがあります。
-NSLayoutConstraint の ほとんどのプロパティは読み取り専用ですが、constant プロパティだけは<strong>後から変更することができる</strong>のです。
-つまり、constraintWithItem&hellip;で課した制約に対して、ユーザの操作などに応じて値を変えることができます。</p>
-
-<p>例）ユーザがフォーカスした時に40pxだけ大きくなるTextField</p>
-
-<ul>
-<li>初期化時</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@textField</span><span class="o">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'><span class="c1"># constraintWithItem は、NSLayoutConstraint を単体で返すので、このように変数に取っておくことも容易です。</span>
-</span><span class='line'><span class="vi">@textWidthConstraint</span> <span class="o">=</span> <span class="no">NSLayoutConstraint</span><span class="o">.</span><span class="n">constraintWithItem</span><span class="p">(</span>
-</span><span class='line'>  <span class="vi">@textField</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">attribute</span><span class="p">:</span> <span class="no">NSLayoutAttributeWidth</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">relatedBy</span><span class="p">:</span><span class="no">NSLayoutRelationEqual</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">toItem</span><span class="p">:</span><span class="kp">nil</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">attribute</span><span class="p">:</span><span class="no">NSLayoutAttributeNotAnAttribute</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">multiplier</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">constant</span><span class="p">:</span><span class="mi">120</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="vi">@view</span><span class="o">.</span><span class="n">addConstraints</span><span class="p">(</span><span class="o">[</span>
-</span><span class='line'>  <span class="vi">@textWidthConstraint</span>
-</span><span class='line'>  <span class="c1">#... 実際はより多くの制約が必要でしょうが、割愛します。</span>
-</span><span class='line'><span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>ユーザの操作時</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># TextFieldDelegateProtocol::textFieldShouldBeginEditing</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">textFieldShouldBeginEditing</span><span class="p">(</span><span class="n">textField</span><span class="p">)</span>
-</span><span class='line'>  <span class="c1"># せっかくなのでアニメーションさせてみます。</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">animateWithDuration</span><span class="p">(</span><span class="no">KCLRadioCheckAnimationDuration</span><span class="p">,</span> <span class="ss">animations</span><span class="p">:</span> <span class="nb">lambda</span> <span class="p">{</span>
-</span><span class='line'>    <span class="vi">@textWidthConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mi">160</span> <span class="c1"># 制約のconstant値だけ書き換えます。</span>
-</span><span class='line'>    <span class="vi">@view</span><span class="o">.</span><span class="n">layoutIfNeeded</span> <span class="c1"># 制約を変えた場合は、layoutIfNeeded を呼んでおきます。</span>
-</span><span class='line'>  <span class="p">})</span>
-</span><span class='line'>  <span class="k">return</span> <span class="kp">true</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="c1"># TextFieldDelegateProtocol::textFieldShouldEndEditing</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">textFieldShouldEndEditing</span><span class="p">(</span><span class="n">textField</span><span class="p">)</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">animateWithDuration</span><span class="p">(</span><span class="no">KCLRadioCheckAnimationDuration</span><span class="p">,</span> <span class="ss">animations</span><span class="p">:</span> <span class="nb">lambda</span> <span class="p">{</span>
-</span><span class='line'>    <span class="vi">@textWidthConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mi">120</span> <span class="c1"># 元の幅に戻します。</span>
-</span><span class='line'>    <span class="vi">@view</span><span class="o">.</span><span class="n">layoutIfNeeded</span>
-</span><span class='line'>  <span class="p">})</span>
-</span><span class='line'>  <span class="k">return</span> <span class="kp">true</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>それでもやっぱり書きづらい</h3>
-
-<p>入力補完やlinterがあればさほど困ることはないんでしょうが、それでもやたらと長いクラス名、メソッド名、引数名が続いてうんざりする、という方には、拙作ながら <a href="https://github.com/kyoh/LayoutExpress" target="_blank">LayoutExpress</a>を自薦させていただきます。
-RubyMotion での開発向けに、<strong>レイアウトを数式の様に書く</strong> ことができるライブラリです。</p>
-
-<p>例として、先に挙げた幅：高さ＝4:3のビューを LayoutExpress に置き換えたものがこちらです。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">layout</span><span class="p">(</span>
-</span><span class='line'>    <span class="n">leftOf</span><span class="p">(</span><span class="vi">@imageView</span><span class="p">)</span> <span class="o">==</span> <span class="n">leftOf</span><span class="p">(</span><span class="vi">@view</span><span class="p">)</span> <span class="o">+</span> <span class="mi">60</span><span class="p">,</span>
-</span><span class='line'>    <span class="n">rightOf</span><span class="p">(</span><span class="vi">@imageView</span><span class="p">)</span> <span class="o">==</span> <span class="n">rightOf</span><span class="p">(</span><span class="vi">@view</span><span class="p">)</span> <span class="o">-</span> <span class="mi">60</span><span class="p">,</span>
-</span><span class='line'>    <span class="n">heightOf</span><span class="p">(</span><span class="vi">@imageView</span><span class="p">)</span> <span class="o">==</span> <span class="n">widthOf</span><span class="p">(</span><span class="vi">@imageView</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="mi">4</span>
-</span><span class='line'>  <span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで皆さんが NSLayoutConstraint を使ってくれることを祈って。</p>
 ]]></content>
   </entry>
   
