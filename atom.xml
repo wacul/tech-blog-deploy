@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-09-29T22:02:55+09:00</updated>
+  <updated>2014-10-09T16:22:02+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,106 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SMS送信サービスのNexmoを利用する]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/"/>
+    <updated>2014-10-07T12:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/10/07/nexmo</id>
+    <content type="html"><![CDATA[<h2>概要</h2>
+
+<p>ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。<br/>
+今回、SMS送信サービスの<a href="https://jp.nexmo.com/">Nexmo</a>を利用してみたので紹介します。</p>
+
+<h2>SMS送信サービス</h2>
+
+<p><a href="https://www.google.co.jp/search?q=SMS%E9%80%81%E4%BF%A1%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9">SMS送信サービス</a>などでGoogle検索を行うと、様々なサービスが見つかります。<br/>
+送るキャリアによって料金が異なったりしますが、おおよそ１通6円〜10円前後となっています。</p>
+
+<p>今回は、Lineやカカオトークで採用されている<a href="https://jp.nexmo.com/">Nexmo</a>を利用したいと思います。
+値段は2014/10/03現在、どのキャリア宛でも1通、0.0631ドルとなっています。<br/>
+<img src="http://blog.wacul.co.jp/images/2014-10-07-nexmo/price.png" alt="値段" /></p>
+
+<h2>NexmoのSMS送信APIを使用する</h2>
+
+<p>NexmoのSMS送信APIは非常にシンプルです。
+<a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a>
+によると、指定されたURLにパラメータをつけてGETかPOSTをするだけで良さそうです。<br/>
+その際、Nexmoに登録した際に発行されるKEY、SECRET、送信元として使用する電話番号が必要になります。</p>
+
+<p>Node.jsでAPIを使用して送信する場合のサンプルが以下です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">request</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;https://rest.nexmo.com/sms/json&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">form</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">api_key</span><span class="o">:</span> <span class="s1">&#39;xxxxxxx&#39;</span><span class="p">,</span>     <span class="c1">//Nexmoで発行されたKEY</span>
+</span><span class='line'>  <span class="nx">api_secret</span><span class="o">:</span> <span class="s1">&#39;xxxxxxxx&#39;</span><span class="p">,</span> <span class="c1">//Nexmoで発行されたSECRET</span>
+</span><span class='line'>  <span class="nx">from</span><span class="o">:</span> <span class="s1">&#39;xxxxxxxxx&#39;</span><span class="p">,</span>      <span class="c1">//Nexmoで購入した電話番号</span>
+</span><span class='line'>  <span class="nx">to</span><span class="o">:</span> <span class="s1">&#39;81xxxxxxxxxx&#39;</span><span class="p">,</span>     <span class="c1">//送信先電話番号。日本の場合は81で始め、先頭の0は取る。例: 09012345678なら819012345678</span>
+</span><span class='line'>  <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;テスト送信。日本語もOK&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;unicode&#39;</span>         <span class="c1">//日本語を送る際は typeを unicode にする必要があります</span>
+</span><span class='line'><span class="p">}},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">body</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="nx">err</span> <span class="o">||</span> <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//jsonでレスポンスが返ってくる</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">msg</span><span class="p">[</span><span class="s1">&#39;message-count&#39;</span><span class="p">];</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>    <span class="c1">//メッセージのステータスを確認する。パラメータ誤りや送信先誤りの場合、エラーとして検出される</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">messages</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">status</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">){</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;error code:&quot;</span> <span class="o">+</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">messages</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">status</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>日本語を送る際に、送信パラメータの type に unicode を指定しないといけないのが注意です。<br/>
+au、ドコモ、ソフトバンク宛に試したところ、無事届くことが確認できました。</p>
+
+<h2>まとめ</h2>
+
+<p>今回はSMS送信サービスとして、Lineなどで利用実績のあるNexmoを利用しました。<br/>
+Nexmoの提供しているSMS送信APIはシンプルで使いやすいと思います。<br/>
+現在、SMSは1通数円程度かかるため、大量に送信する場合は、コストを考慮する必要があります。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://jp.nexmo.com/">Nexmo</a></li>
+<li><a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Markdownを複数人でリアルタイム編集できる socrates.io ]]></title>
@@ -2927,92 +3027,6 @@ decoratorの略記法について</li>
 ディレクティブ置き換え、AngularJSのコアに手を加える方法</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[waculで使用しているnode.jsのライブラリ]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/05/14/nodejs-library/"/>
-    <updated>2014-05-14T13:50:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/05/14/nodejs-library</id>
-    <content type="html"><![CDATA[<h2>node.jsでの開発</h2>
-
-<p>現在、waculで自社開発を行っているプロジェクトにおいて、サーバ側はnode.jsで構築しています。
-webフレームワークはExpressを、DBはmongoDBを採用しています。</p>
-
-<p>今回は、我々が開発で利用しているJavaScriptのライブラリを紹介したいと思います。</p>
-
-<h3><a href='http://coffeescript.org/' target='_blank'>CoffeeScript</a></h3>
-
-<p>CoffeeScript自体を紹介するまでもありませんが、綺麗に簡潔に書けるのは良いことです。</p>
-
-<h3><a href='https://github.com/remy/nodemon' target='_blank'>nodemon</a></h3>
-
-<p>ソースを変更したときに、node.jsのアプリケーションを起動しなおしてくれます。<br/>
-CoffeeScriptにも対応しています。</p>
-
-<h3><a href='http://mongoosejs.com/' target='_blank'>mongoose</a></h3>
-
-<p>node.jsからmongoDBにアクセスするためのライブラリです。</p>
-
-<h3><a href='https://www.npmjs.org/package/mpath' target='_blank'>mpath</a></h3>
-
-<p>mongoDBで使うパス指定でJavaSciptのオブジェクトにアクセスできます。</p>
-
-<h3><a href='http://aws.amazon.com/jp/sdkfornodejs/' target='_blank'>AWS SDK for JavaScript</a></h3>
-
-<p>プロジェクトではAWSのSQSやS3などを使用していますが、それらに簡単にアクセスするため、amazon謹製のnode.js用のライブラリを使用しています。</p>
-
-<h3><a href='https://github.com/lorenwest/node-config' target='_blank'>node-config</a></h3>
-
-<p>環境変数によって、ローカル、テストサーバ、本番など環境を分けるために使用しています。<br/>
-それぞれの環境ごとに設定値を変えられるので便利です。</p>
-
-<h3><a href='https://github.com/goodeggs/fibrous' target='_blank'>fibrous</a></h3>
-
-<p>jsの非同期処理を同期的に書けるようになります。これでコールバックのネストが深くなるのを防ぎ、可読性が良くなります。</p>
-
-<h3><a href='https://github.com/bruce/node-temp' target='_blank'>node-temp</a></h3>
-
-<p>テンポラリーなフォルダを作って、ファイルの読み書きができます。ダウンロードしたファイルを一時的に保存する用途に使用しています。</p>
-
-<h3><a href='https://github.com/rsms/node-imagemagick' target='_blank'>node-imagemagick</a></h3>
-
-<p>画像を扱うためのライブラリであるImageMagickをnode.jsから使えるようにするライブラリです。</p>
-
-<h3><a href='https://github.com/mikeal/request' target='_blank'>request</a></h3>
-
-<p>httpリクエストを簡単に行えるライブラリです。</p>
-
-<h3><a href='http://visionmedia.github.io/mocha/' target='_blank'>mocha</a></h3>
-
-<p>テストフレームワークです。</p>
-
-<h3><a href='https://github.com/chaijs/chai' target='_blank'>chai</a></h3>
-
-<p>テスト時の値比較に使用しているライブラリです。</p>
-
-<h3><a href='https://github.com/visionmedia/supertest' target='_blank'>SuperTest</a></h3>
-
-<p>テスト時にhttpリクエストするのに使用しています。名前がかっこいい。</p>
-
-<h3><a href='https://github.com/visionmedia/node-querystring' target='_blank'>node-querystring</a></h3>
-
-<p>オブジェクトをクエリパラメータにしてくれるライブラリです。</p>
-
-<h3><a href='https://github.com/tutuming/async-validator' target='_blank'>async-validator</a></h3>
-
-<p>弊社、包が作成したバリデーションライブラリです。ブラウザでも動きます。</p>
-
-<h3><a href='http://lodash.com/' target='_blank'>Lo-Dash</a></h3>
-
-<p>これも言わずもがな、便利なJavaScriptのライブラリです。オブジェクトや配列の操作がずっと簡単になります。</p>
-
-<h3><a href='http://momentjs.com/' target='_blank'>Moment.js</a></h3>
-
-<p>JavaScriptにおいて時間の計算を行うのには、これがないとつらいです。</p>
-
-<p>以上です！</p>
 ]]></content>
   </entry>
   

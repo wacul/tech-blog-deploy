@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SMS送信サービスのNexmoを利用する  - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="概要 ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。
+今回、SMS送信サービスのNexmoを利用してみたので紹介します。 SMS送信サービス SMS送信サービスなどでGoogle検索を行うと、様々なサービスが見つかります。
+送るキャリアによって料金が異なったりしますが、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="SMS送信サービスのNexmoを利用する - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="概要 ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。
+今回、SMS送信サービスのNexmoを利用してみたので紹介します。 SMS送信サービス SMS送信サービスなどでGoogle検索を行うと、様々なサービスが見つかります。
+送るキャリアによって料金が異なったりしますが、 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-10-07-nexmo/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+
+  <meta name="twitter:title" content="SMS送信サービスのNexmoを利用する - The Wacul Blog" />
+  <meta name="twitter:description" content="概要 ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。
+今回、SMS送信サービスのNexmoを利用してみたので紹介します。 SMS送信サービス SMS送信サービスなどでGoogle検索を行うと、様々なサービスが見つかります。
+送るキャリアによって料金が異なったりしますが、 &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-10-07-nexmo/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">SMS送信サービスのNexmoを利用する </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-07T12:00:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>概要</h2>
+
+<p>ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。<br/>
+今回、SMS送信サービスの<a href="https://jp.nexmo.com/">Nexmo</a>を利用してみたので紹介します。</p>
+
+<h2>SMS送信サービス</h2>
+
+<p><a href="https://www.google.co.jp/search?q=SMS%E9%80%81%E4%BF%A1%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9">SMS送信サービス</a>などでGoogle検索を行うと、様々なサービスが見つかります。<br/>
+送るキャリアによって料金が異なったりしますが、おおよそ１通6円〜10円前後となっています。</p>
+
+<p>今回は、Lineやカカオトークで採用されている<a href="https://jp.nexmo.com/">Nexmo</a>を利用したいと思います。
+値段は2014/10/03現在、どのキャリア宛でも1通、0.0631ドルとなっています。<br/>
+<img src="/images/2014-10-07-nexmo/price.png" alt="値段" /></p>
+
+<h2>NexmoのSMS送信APIを使用する</h2>
+
+<p>NexmoのSMS送信APIは非常にシンプルです。
+<a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a>
+によると、指定されたURLにパラメータをつけてGETかPOSTをするだけで良さそうです。<br/>
+その際、Nexmoに登録した際に発行されるKEY、SECRET、送信元として使用する電話番号が必要になります。</p>
+
+<p>Node.jsでAPIを使用して送信する場合のサンプルが以下です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">request</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;https://rest.nexmo.com/sms/json&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">form</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">api_key</span><span class="o">:</span> <span class="s1">&#39;xxxxxxx&#39;</span><span class="p">,</span>     <span class="c1">//Nexmoで発行されたKEY</span>
+</span><span class='line'>  <span class="nx">api_secret</span><span class="o">:</span> <span class="s1">&#39;xxxxxxxx&#39;</span><span class="p">,</span> <span class="c1">//Nexmoで発行されたSECRET</span>
+</span><span class='line'>  <span class="nx">from</span><span class="o">:</span> <span class="s1">&#39;xxxxxxxxx&#39;</span><span class="p">,</span>      <span class="c1">//Nexmoで購入した電話番号</span>
+</span><span class='line'>  <span class="nx">to</span><span class="o">:</span> <span class="s1">&#39;81xxxxxxxxxx&#39;</span><span class="p">,</span>     <span class="c1">//送信先電話番号。日本の場合は81で始め、先頭の0は取る。例: 09012345678なら819012345678</span>
+</span><span class='line'>  <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;テスト送信。日本語もOK&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;unicode&#39;</span>         <span class="c1">//日本語を送る際は typeを unicode にする必要があります</span>
+</span><span class='line'><span class="p">}},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">body</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="nx">err</span> <span class="o">||</span> <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//jsonでレスポンスが返ってくる</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">msg</span><span class="p">[</span><span class="s1">&#39;message-count&#39;</span><span class="p">];</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>    <span class="c1">//メッセージのステータスを確認する。パラメータ誤りや送信先誤りの場合、エラーとして検出される</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">messages</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">status</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">){</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;error code:&quot;</span> <span class="o">+</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">messages</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">status</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>日本語を送る際に、送信パラメータの type に unicode を指定しないといけないのが注意です。<br/>
+au、ドコモ、ソフトバンク宛に試したところ、無事届くことが確認できました。</p>
+
+<h2>まとめ</h2>
+
+<p>今回はSMS送信サービスとして、Lineなどで利用実績のあるNexmoを利用しました。<br/>
+Nexmoの提供しているSMS送信APIはシンプルで使いやすいと思います。<br/>
+現在、SMSは1通数円程度かかるため、大量に送信する場合は、コストを考慮する必要があります。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://jp.nexmo.com/">Nexmo</a></li>
+<li><a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/enokido.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと enokido</h1>
+    <p>榎戸です。趣味ではゲームを作っています。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/29/collaborative-realtime-markdown/" title="Previous Post: Markdownを複数人でリアルタイム編集できる socrates.io ">Markdownを複数人でリアルタイム編集できる socrates.io </a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/07/nexmo/">SMS送信サービスのNexmoを利用する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/current-test-server/">Web制作のテストサーバー運用を自動化した話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/zcookies/">cookieに効率的にデータを格納するzcookiesを作りました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/10/camp/">wacul で開発合宿を行いました</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

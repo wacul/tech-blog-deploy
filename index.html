@@ -115,6 +115,63 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/10/07/nexmo/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-10-07-nexmo/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        07th.
+        
+        Oct. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/10/07/nexmo/">SMS送信サービスのNexmoを利用する</a></div>
+      <div class="post-content">概要
+
+ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。
+今回、SMS送信サービスのNexmoを利用してみたので紹介します。
+
+SMS送信サービス
+
+SMS送信サービスなどでGoogle検索を行うと、様々なサービスが見つかります。
+送るキャリアによって料金が異なったりしますが、おおよそ１通6円〜10円前後となっています。
+
+今回は、Lineやカカオトークで採用されているNexmoを利用したいと思います。
+値段は2014/10/03現在、どのキャリア宛でも1通、0.0631ドルとなっています。
+
+
+NexmoのSMS送信APIを使用する
+
+NexmoのSMS送信APIは非常にシンプルです。
+Nexmo SMS送信APIドキュメント
+によると、指定されたURLにパラメータをつけてGETかPOSTをするだけで良さそうです。
+その際、Nexmoに登録した際に発行されるKEY、SECRET、送信元として使用する電話番号が必要になります。
+
+Node.jsでAPIを使用して送信する場合のサンプルが以下です。
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/10/07/nexmo/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/09/29/collaborative-realtime-markdown/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -499,51 +556,6 @@ Trello &hellip;</div>
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/08/01/trello-and-zapier/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/07/24/elb/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-07-23-elb/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        24th.
-        
-        Jul. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/07/24/elb/">Amazon Web Service ELB 謎のヘルスチェックエラー</a></div>
-      <div class="post-content">こんにちわ。ワカルでは、サービスの運営などにAmazon Web Serviceを利用しています。
-
-先日、インスタンスは正常なのに、ELBのヘルスチェックがうまく動かなくなる現象に遭遇しました。
-結果的に、ELBを同じ構成で作りなおしたところ直ったのですが、根本的な原因がわからないままなので、ログとして残しておこうと思います。
-もし原因がわかったら追記します。
-
-起こったこと
-
-今回問題が起こった構成は、以下のようなものです。
-
-1
-ELB -&gt; Nginx -&gt; Node.jsアプリ
-
-
-WebからのリクエストをELBでEC2インスタンス上のNginxに渡し、Nginxのリバースプロキシで、静的ファイル以外を Node.jsのアプリに振り分けます。
-
-この構成で構築後３日ほどすると、サーバーへのリクエストが504(Gateway Timeout) を返すようになりました。
-そしてしばらくすると、ヘルスチェックがOut of Service になり時間が経つと戻る、といった挙動を繰り返します。
-
-
-
-(参考): CloudWatchの死活監視グラフ
-
-原因調査 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/07/24/elb/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 
