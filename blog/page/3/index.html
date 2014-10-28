@@ -115,6 +115,47 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/05/21/angular-cors-postmessage/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-05-21-angular-cors-postmessage/title.png" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        21th.
+        
+        May. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/05/21/angular-cors-postmessage/">AngularJSでのCORSな通信をpostMessageに置き換える</a></div>
+      <div class="post-content">あなたは突然AngularJSでCORSでxhrな通信を行いたくなりました。
+通信時に独自のヘッダーを付けたいのでpostMessageを使う必要がありましたが、
+すでに$http、$resourceサービスを使った結構な量のソースコードがあります。
+これを修正するのは骨が折れそうな作業です。
+
+しかし、心配は無用です。
+このような場合$provide.decoratorが強力な武器となってくれます。
+$provide.decoratorを使うことで、すでに書いたソースコードに触れることなく対象のサービスの挙動を変更することができます。
+
+本記事では、まず$provide.decoratorの概要と簡単なチュートリアルについて説明し、
+次に$httpBackendを置き換えてpostMessageを使ったxhr通信を行う方法を紹介します。
+
+$provide.decoratorの概要
+
+$provide.decorator
+はすでに定義されているサービスの生成をフックして新しいサービスに置き換えます。
+
+簡単なチュートリアル
+
+と言ってもこれだけではなんのことかわからないので、 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/05/21/angular-cors-postmessage/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/05/14/nodejs-library/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">

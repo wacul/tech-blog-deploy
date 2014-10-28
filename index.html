@@ -115,6 +115,65 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/10/28/go-rest-api/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><img src="/images/2014-10-28-go-rest-api/title.jpg" height="250"/></div>
+    <div class="post-info">
+      <div class="post-date">
+        28th.
+        
+        Oct. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/10/28/go-rest-api/">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</a></div>
+      <div class="post-content">３行で言うと
+
+
+herokuが作ってる prmd を使って、JSON SchemaからAPIドキュメントを出力したよ！
+スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！
+Goのバリデーション用のライブラリも作ったよ！
+
+
+
+今回作ったものの概要とサンプルコード
+
+概要
+
+以前から、APIを開発する上で、以下のようなことが課題となっていました。
+
+
+そもそもドキュメント書くのがつらい
+それもあって、ドキュメントより先にコードが変わってしまう
+ドキュメントと実装の状況の違いが把握しづらい
+
+
+
+また、ロジックがそんなに複雑ではないAPIでは、実装の作業は
+
+
+リクエストデータのバリデーション
+出力データの整形 (フィルタリング)
+
+
+
+の２つの作業が大きな割合を占めます。
+
+APIの定義ファイルからドキュメントと、バリデーションや出力データ整形のコードを自動生成できれば、大幅に効率が上がると思い実装してみました。
+
+今回実装した仕組みの全体の処理の流れは以下の様になっています。
+
+
+prmd を使って、schema.json (JSON Hyper- &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/10/28/go-rest-api/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/10/07/nexmo/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -515,47 +574,6 @@ waculのプログラマチームでは月に1回、就業時間後にハッカ�
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/08/08/hackathon/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/08/01/trello-and-zapier/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><img src="/images/2014-08-01-trello-and-zapier/title.jpg" height="250"/></div>
-    <div class="post-info">
-      <div class="post-date">
-        01th.
-        
-        Aug. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/08/01/trello-and-zapier/">TrelloとGitHubで課題管理を行うたった一つの冴えたやり方</a></div>
-      <div class="post-content">こんにちわ、kyohです。
-
-昨日会社のそばに引っ越して、今日から自転車通勤に切り替えましたが、さすがに暑いですね。
-気づけば８月ですものね、ジーンズが張り付いてエラいコトです。
-
-課題管理に限界を感じて
-
-さて、Waculではみんなだいすき GitHub で開発作業の管理をしています。
-しかし、GitHub の issues は、問題を簡潔に管理することに特化しており、進捗管理や状態管理には向いていません。
-こと問題を俯瞰する立場の人から「わかりづらい」と苦情が度々ありました。
-
-Google Docs での管理も考えましたが、GitHub と Docsの二重管理になってしまうこと、Docs では自由度が高すぎてやりたいことがぼやけてしまうことなどもあって、限界を感じていました。
-そこで、流行りのかんばん方式でもやってみるか、と Trello に手を出すに至ります。
-
-管理ツールの有名ドコロでは Redmine や JIRA もありましたが、如何せん導入・撤退のコストが大きく、
-少人数でさほど管理工数に余裕の無い状態では導入に踏み切れませんでした。
-
-Trello
-
-Trello &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/08/01/trello-and-zapier/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 

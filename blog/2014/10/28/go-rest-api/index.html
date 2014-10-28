@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する #golang  - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="３行で言うと herokuが作ってる prmd を使って、JSON SchemaからAPIドキュメントを出力したよ！
+スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！
+Goのバリデーション用のライブラリも作ったよ！ 今回作ったものの概要とサンプルコード 概要 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="３行で言うと herokuが作ってる prmd を使って、JSON SchemaからAPIドキュメントを出力したよ！
+スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！
+Goのバリデーション用のライブラリも作ったよ！ 今回作ったものの概要とサンプルコード 概要 &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-10-28-go-rest-api/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="@tutuming">
+  
+
+  <meta name="twitter:title" content="JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する - The Wacul Blog" />
+  <meta name="twitter:description" content="３行で言うと herokuが作ってる prmd を使って、JSON SchemaからAPIドキュメントを出力したよ！
+スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！
+Goのバリデーション用のライブラリも作ったよ！ 今回作ったものの概要とサンプルコード 概要 &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-10-28-go-rest-api/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-28T15:00:00+09:00" pubdate data-updated="true">Oct 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>３行で言うと</h2>
+
+<ul>
+<li>herokuが作ってる <a href="https://github.com/interagent/prmd">prmd</a> を使って、JSON SchemaからAPIドキュメントを出力したよ！</li>
+<li>スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！</li>
+<li>Goの<a href="https://github.com/wcl48/valval">バリデーション用のライブラリ</a>も作ったよ！</li>
+</ul>
+
+
+<h2>今回作ったものの概要とサンプルコード</h2>
+
+<h3>概要</h3>
+
+<p>以前から、APIを開発する上で、以下のようなことが課題となっていました。</p>
+
+<ul>
+<li>そもそもドキュメント書くのがつらい</li>
+<li>それもあって、ドキュメントより先にコードが変わってしまう</li>
+<li>ドキュメントと実装の状況の違いが把握しづらい</li>
+</ul>
+
+
+<p>また、ロジックがそんなに複雑ではないAPIでは、実装の作業は</p>
+
+<ul>
+<li>リクエストデータのバリデーション</li>
+<li>出力データの整形 (フィルタリング)</li>
+</ul>
+
+
+<p>の２つの作業が大きな割合を占めます。</p>
+
+<p>APIの定義ファイルからドキュメントと、バリデーションや出力データ整形のコードを自動生成できれば、大幅に効率が上がると思い実装してみました。</p>
+
+<p>今回実装した仕組みの全体の処理の流れは以下の様になっています。</p>
+
+<ul>
+<li><a href="https://github.com/interagent/prmd">prmd</a> を使って、schema.json (JSON Hyper-Schemaドキュメント) を生成  <code>prmd combine</code></li>
+<li>schema.json から、APIドキュメント (schema.md) を生成 <code>prmd doc</code></li>
+<li>schema.json から、Goのサーバー側実装を生成 (独自実装)</li>
+</ul>
+
+
+<p><img src="/images/2014-10-28-go-rest-api/overview.png" alt="概要" /></p>
+
+<h3>サンプルコード</h3>
+
+<p>今回の記事のサンプルコードは
+<a href="https://github.com/wcl48/go-api-generation-sample">https://github.com/wcl48/go-api-generation-sample</a>
+にあります。</p>
+
+<p>サンプルプロジェクト内のディレクトリ、ファイルは以下の様な構成です</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Cakefile            # ビルドタスク定義
+</span><span class='line'>README.md
+</span><span class='line'>bin/                # ビルド用スクリプト
+</span><span class='line'>package.json
+</span><span class='line'>templates/          # 共通 go ファイル(自動生成時にパッケージ名だけ変えてコピーされる)
+</span><span class='line'>test/               # テスト用のスキーマ定義
+</span><span class='line'>    gen/            # 生成されたGoパッケージの出力先
+</span><span class='line'>    meta.yml        # prmd メタ情報
+</span><span class='line'>    overview.md     # ドキュメントのトップに挿入されるマークダウン
+</span><span class='line'>    schema.json     # prmd で出力される schemaファイル
+</span><span class='line'>    schema.md       # prmd で出力されるドキュメント
+</span><span class='line'>    schemata/       # prmd で使うスキーマ定義
+</span><span class='line'>test-build.sh       # ビルド用スクリプト</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>APIの定義 : JSON Hyper-Schema</h2>
+
+<p>Rest API を定義するための仕様はいくつか世の中にあって、代表的なものとしては</p>
+
+<ul>
+<li>JSON Hyper-Schema  <a href="http://json-schema.org/">http://json-schema.org/</a></li>
+<li>RAML <a href="http://raml.org/">http://raml.org/</a></li>
+<li>apiblueprint <a href="http://apiblueprint.org/">http://apiblueprint.org/</a></li>
+</ul>
+
+
+<p>を見つけました。</p>
+
+<p>そこそこ世の中に浸透している「JSON Schema」に対する拡張であり、関連ライブラリなども豊富なことから、今回は JSON Hyper-Schema を選択しました。</p>
+
+<h2>ドキュメンテーション: prmd by heroku</h2>
+
+<p><a href="https://www.heroku.com/">heroku</a> が作っている、 <a href="https://github.com/interagent/prmd">prmd</a> というツールがあります。prmd を使うと、APIの定義をファイルを分割して管理でき、JSON Hyper-Schema の生成とバリデーション、ドキュメントの生成が行えます。</p>
+
+<p><a href="https://devcenter.heroku.com/articles/platform-api-reference">herokuのAPIドキュメント</a> もこのツールをベースに生成されているようです。  <a href="https://devcenter.heroku.com/articles/platform-api-reference#schema">元のスキーマ定義</a> も公開されています。</p>
+
+<p>サンプルコードでは、生成されたドキュメントが、 <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/schema.md">test/schema.md</a> にあります。 元のスキーマ定義は、 <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/schemata/hoge.yaml">test/schemata/hoge.yaml</a>  です。</p>
+
+<h2>どんなGoのコードを生成するか</h2>
+
+<p>ドキュメントは無事生成できたので、次にGoのコードの生成について考えます。</p>
+
+<p>要件としては、概ね以下のようなものとしました。</p>
+
+<ul>
+<li>利用するライブラリは、標準ライブラリの net/http と Gorilla</li>
+<li>自動生成するコードは、手書きコードとパッケージレベルで分離する。
+
+<ul>
+<li>つまり、生成したコードは人の手でいじることなく、再生成が任意に実行できるように保つ</li>
+</ul>
+</li>
+<li>対応するURLをあとで変更できる</li>
+<li>リクエスト、レスポンスのオブジェクトに型つきでアクセスできる</li>
+<li>リクエストオブジェクトのバリデーションを行う</li>
+</ul>
+
+
+<h3>リクエスト、レスポンスオブジェクトの定義</h3>
+
+<p>リクエスト、レスポンスオブジェクトは単純に、json schemaのオブジェクト定義を、Goの構造体の定義に変換するだけです。<br/>
+サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/structs.go">test/gen/struct.go</a></p>
+
+<h3>ロジックの注入</h3>
+
+<p>APIロジック部分の実装は、自動生成されたコードにハンドラを登録する形にしました。ハンドラは次のような定義を生成しています。(サンプルでは、<code>POST /hoge</code> というAPIを定義しています)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">type</span> <span class="nx">HogePostParamDataHandler</span> <span class="kd">func</span><span class="p">(</span>
+</span><span class='line'>  <span class="nx">vars</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span>        <span class="c1">// URLに含まれる、idなどのマップ</span>
+</span><span class='line'>  <span class="nx">param</span> <span class="nx">HogePostParam</span><span class="p">,</span>           <span class="c1">// リクエストオブジェクト</span>
+</span><span class='line'>  <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">(</span><span class="nx">Hoge</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">// レスポンスオブジェクトを返す</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実装した関数を登録するには、次の関数を呼び出します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">InjectHogePost</span><span class="p">(</span>
+</span><span class='line'>  <span class="nx">router</span> <span class="o">*</span><span class="nx">mux</span><span class="p">.</span><span class="nx">Router</span><span class="p">,</span>                                 <span class="c1">// gorilla.mux のルーターオブジェクト</span>
+</span><span class='line'>  <span class="nx">dh</span> <span class="nx">HogePostParamDataHandler</span><span class="p">,</span>                        <span class="c1">// ハンドラの実装</span>
+</span><span class='line'>  <span class="nx">middleware</span> <span class="kd">func</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">HandlerFunc</span><span class="p">)</span> <span class="nx">http</span><span class="p">.</span><span class="nx">HandlerFunc</span><span class="p">,</span> <span class="c1">// ミドルウェア</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サンプルコード詳細: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/hoge.go">test/gen/hoge.go</a></p>
+
+<h3>リクエストのバリデーション</h3>
+
+<p>JSON Schemaには、オブジェクトのバリデーションを記述する仕様が用意されています。
+( <a href="http://json-schema.org/latest/json-schema-validation.html">http://json-schema.org/latest/json-schema-validation.html</a> )
+こいつら、Goのバリデーションコードを生成します。</p>
+
+<p>オブジェクトをバリデーションするのにちょうどいいライブラリがなかったため、この部分については、バリデーションを定義するためのライブラリを作りました。</p>
+
+<p><a href="https://github.com/wcl48/valval">wcl48/valval</a></p>
+
+<p>特徴として</p>
+
+<ul>
+<li>バリデータの定義を使いまわせる</li>
+<li>ネストしたオブジェクトもバリデーションできる</li>
+<li>バリデータの中身はただの関数 ( <code>func(interface{}) error</code> )</li>
+<li>構造体と、 <code>map[string]interface{}</code> の両方をバリデーションできる</li>
+</ul>
+
+
+<p>を備えています（実装がもうちょっと落ち着いたら別記事であげたいと思います）</p>
+
+<p>バリデータとして、次のような感じで出力します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">var</span> <span class="nx">HogePostValidator</span> <span class="p">=</span> <span class="nx">valval</span><span class="p">.</span><span class="nx">Object</span><span class="p">(</span><span class="nx">valval</span><span class="p">.</span><span class="nx">M</span><span class="p">{</span>
+</span><span class='line'>  <span class="s">&quot;Name&quot;</span><span class="p">:</span> <span class="nx">valval</span><span class="p">.</span><span class="nx">String</span><span class="p">(),</span>
+</span><span class='line'>  <span class="s">&quot;Code&quot;</span><span class="p">:</span> <span class="nx">valval</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span>
+</span><span class='line'>      <span class="nx">valval</span><span class="p">.</span><span class="nx">MinLength</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+</span><span class='line'>      <span class="nx">valval</span><span class="p">.</span><span class="nx">MaxLength</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+</span><span class='line'>      <span class="nx">valval</span><span class="p">.</span><span class="nx">Regexp</span><span class="p">(</span><span class="nx">regexp</span><span class="p">.</span><span class="nx">MustCompile</span><span class="p">(</span><span class="s">`^[a-z0-9]+$`</span><span class="p">)),</span>
+</span><span class='line'>  <span class="p">),</span>
+</span><span class='line'>  <span class="s">&quot;Email&quot;</span><span class="p">:</span> <span class="nx">valval</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span>
+</span><span class='line'>      <span class="nx">validateEmail</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">),</span>
+</span><span class='line'>    <span class="c1">// ...長いので省略</span>
+</span><span class='line'><span class="p">}).</span><span class="nx">Self</span><span class="p">(</span>
+</span><span class='line'>  <span class="nx">valval</span><span class="p">.</span><span class="nx">RequiredFields</span><span class="p">(</span><span class="s">&quot;Email&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">),</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/validators.go">test/gen/validators.go</a></p>
+
+<p>リクエストの中身(POSTなら r.Bodyに入っているJSON)を構造体に組み立た後、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">HogePostValidator</span><span class="p">.</span><span class="nx">Validate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">reqData</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">SendError</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">validateError2APIError</span><span class="p">(</span><span class="nx">err</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">return</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のようにして、バリデーションしています。<br/>
+サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/hoge.go#L57">test/gen/hoge.go</a></p>
+
+<p>リクエストだけから判断できるエラーについては、自動生成側でバリデーションしてしまうことで、ロジック側のコード量をかなり抑えることができます。</p>
+
+<h2>Goのコードを自動生成する時の細かいTips</h2>
+
+<p>Goのコードを生成するときには幾つかポイントがあります。</p>
+
+<h3>適当に出力して、 go fmt</h3>
+
+<p>構文エラーのチェックと、フォーマットを自動でしてくれます。 改行だけ注意してコードを吐き出せばよしなにやってくれます。</p>
+
+<h3>使わない可能性があるimportは、_に代入しておく</h3>
+
+<p>例えば、 regexp を使う場合と使わない場合があるコードを出力するとき、import して使用していないものがあるとコンパイルエラーになります。
+ちゃんとフラグ立てて出力するか、goimport など使えば綺麗になりますが、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">import</span> <span class="p">(</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>  <span class="s">&quot;regexp&quot;</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">regexp</span><span class="p">.</span><span class="nx">Compile</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のように出力してしまえば良いです。<br/>
+これは、 <a href="https://code.google.com/p/google-api-go-client/source/browse/calendar/v3/calendar-gen.go">Google APIのGoクライアントのコード</a> をみて参考にしました。</p>
+
+<h2>まとめ</h2>
+
+<p>JSON Hyper-Schema から、APIのドキュメンテーション、Goのソースコードを生成することで、かなり効率のよいAPIの開発ができるようになりました。<br/>
+静的な型付け言語とコード自動生成の組み合わせは、生成 → コンパイル（型と実装のチェック） → 修正 というサイクルが高速で回せるため、とても強力です。</p>
+
+<p>まだ取り組み始めたばかりなので、これからどんどん改善していきたいと思います！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/tutuming.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと tutuming</h1>
+    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <a href="http://wacul.co.jp" target="_blank"><h1 class="wacul-title"></h1></a/>
+
+  <p>ワカルでは、開発チームを一緒に作っていくプログラマーを募集しています。</p>
+
+  <p>
+    私たちワカルは、ユーザー視点のシステム開発を支援する会社です。WebやアプリのUI設計から開発まで、幅広くサポートしてきました。<br />
+    現在は自社プロダクトとして、美容、エステ業界むけの予約システムを開発中です(2014年にリリース予定)。
+  </p>
+  <p>
+    ワカルにご意見やご興味がある方は、お気軽に下記フォームからお問い合わせください。
+  </p>
+  <a class="contact-link" href="http://wacul.co.jp" target="_blank">株式会社ワカルのホームページへ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/10/07/nexmo/" title="Previous Post: SMS送信サービスのNexmoを利用する">SMS送信サービスのNexmoを利用する</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/go-rest-api/">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/07/nexmo/">SMS送信サービスのNexmoを利用する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/current-test-server/">Web制作のテストサーバー運用を自動化した話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/zcookies/">cookieに効率的にデータを格納するzcookiesを作りました</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
