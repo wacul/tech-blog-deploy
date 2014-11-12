@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-11-10T21:21:01+09:00</updated>
+  <updated>2014-11-12T17:52:46+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Sublime Text, Atomで使えるAngularJSプラグインを作りました]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/"/>
+    <updated>2014-11-12T19:25:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users</id>
+    <content type="html"><![CDATA[<p>CoffeeScriptでAngularJSを書いている開発者、特にSublime TextやAtomを使っている人向けのプラグインを作ったので紹介します。</p>
+
+<h2>どんなプラグイン？</h2>
+
+<p>このプラグインは <strong>インラインテンプレートのハイライト機能</strong>を提供します(ちょっとしたスニペットもあります)。
+WebStormのLanguage Injection(図2)や、Github Flavored Markdownのコード部分がハイライトされるアレの簡易版です。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime.gif"><img src="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime.gif" alt="sublime sample" /></a><br>
+Sublime Textでのプラグイン動作例(テンプレート内での補完は<a href="https://github.com/angular-ui/AngularJS-sublime-package">angular-ui/AngularJS-sublime-package</a>が使われています)</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/webstorm.gif"><img src="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/webstorm.gif" alt="webstorm sample" /></a><br>
+WebStromのLanguage Injection動作例</p>
+
+<h2>インストール</h2>
+
+<h3>Sublime Text</h3>
+
+<p>Package Installから <code>CoffeeAngular Syntax</code> を検索してインストールします。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime_install.gif"><img src="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime_install.gif" alt="sublime install sample" /></a></p>
+
+<h3>Atom</h3>
+
+<p>設定画面から <code>Language Coffee Script Angular</code> を検索してインストールするか、ターミナルから<code>apm install language-coffee-script-angular</code>して下さい。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/atom_install.png"><img src="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/atom_install.png" alt="atom install sample" /></a></p>
+
+<h2>使い方(共通)</h2>
+
+<p>言語モードにCoffeeScript (Angular.js)が追加されているのでそれを選択します。
+すると以下図のようなコードのテンプレート部分がハイライトされます。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/run.gif"><img src="http://blog.wacul.co.jp/images/2014-11-12-angular-plugin-for-sublime-atom-users/run.gif" alt="run plugin" /></a></p>
+
+<h2>まとめ</h2>
+
+<p>Sublime TextとAtom用のCoffeeScript+AngularJSプラグインを作りました。
+結構ユーザ層が限定的ではありますがCoffeeでAngularな人は是非使ってみてください。</p>
+
+<h2>レポジトリ</h2>
+
+<ul>
+<li><a href="https://github.com/ukyo/CoffeeAngular.tmLanguage">github.com/ukyo/CoffeeAngular.tmLanguage(Sublime)</a></li>
+<li><a href="https://github.com/ukyo/language-coffee-script">github.com/ukyo/language-coffee-script(Atom)</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する]]></title>
@@ -2715,197 +2769,6 @@ The default value is nil. The table header view is different from a section head
 <h2>けつろん！</h2>
 
 <p>UITableView の上方に発生した謎の隙間に悩まされたら、置くだけ簡単 height=0.1 view!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RubyMotionを業務でのアプリ開発に使ってみた感想]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/05/30/ruby-motion/"/>
-    <updated>2014-05-30T13:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/05/30/ruby-motion</id>
-    <content type="html"><![CDATA[<p>こんにちわ。いまワカルでは、美容院向けのiPadアプリ &ldquo;clulu&rdquo; を開発中です。<br/>
-テストも一旦終了し、最初のバージョンをApp Storeに申請したところです。</p>
-
-<p>美容院では、お客様の予約管理を紙で行っているところがほとんどです。cluluは、そんな紙での管理方法から極力インターフェースを変えることなく、予約管理をiPadで行えるシステムです。また管理された情報を元に、リアルタイムに空き枠を検索・予約できるフォームを自分の美容院のホームページに設置できます。</p>
-
-<p><img src="http://blog.wacul.co.jp/images/2014-05-30-ruby-motion/clulu-ss.png" alt="clulu-ss" /></p>
-
-<p>サービスの詳細については、リリース後詳しくお伝えするとして、今回はiPad版開発で使った、
-<a href="http://www.rubymotion.com/" target="_blank">RubyMotion</a> について書きたいと思います。</p>
-
-<h2>なぜ RubyMotion を選んだか</h2>
-
-<p>iOSアプリ開発環境にはおおまかに</p>
-
-<ul>
-<li>ObjectiveC(Xcode)</li>
-<li>RubyMotion</li>
-<li>Titanium, PhoneGap等、HTML,JSベースのもの</li>
-</ul>
-
-
-<p>があります。</p>
-
-<p>まず、cluluは予約表の操作感を最適化したかったため、画面のアニメーション等パフォーマンス調整の難しいHTMLベースのものは、候補からはずしました。</p>
-
-<p>僕自身は、2,3年前にiOSのアプリの開発経験があり、ひと通りObjectiveCとiOSのSDKについては理解している状態でした。</p>
-
-<p>過去のiOS開発から、ObjectiveCコードを書くことへの気の重さのようなことを感じていました。
-Webの開発では、僕はEmacs,弊社の他のエンジニアもSublime Textなど、好みのエディタで開発している状態で、Xcodeの操作に慣れるというのもひとつの障壁です。</p>
-
-<p>RubyMotionを選択するにあたって、情報不足や、予期せぬ不具合への対応などが不安でしたが、2013年末ごろにはかなりコミュニティも盛り上がってきていました。
-また、基本的にCocoaのAPIをそのまま使う形なので、RubyMotion特有の不具合は少なそうというのも後押しとなり、RubyMotionで実装することに決めました。</p>
-
-<p>まとめると、RubyMotionを選んだ理由は次の３つです。</p>
-
-<ul>
-<li>iOSのSDKをそのまま使える (パフォーマンスの劣化が最小限、情報源が豊富)</li>
-<li>ObjectiveCを書かなくてよい、 慣れたエディタで開発できる</li>
-<li>コミュニティの盛り上がり (困ったときに参照する情報が十分にある)</li>
-</ul>
-
-
-<h2>実際に使ってみてよかった点</h2>
-
-<h3>RubyのAPIの使いやすさ</h3>
-
-<p>RubyMotionは、Rubyの基本的な型のAPIがそのまま使えるようになっているため、Array#each,map などのコレクション系の操作がRubyライクに書けます。
-もちろんブロックも使えるので、データの加工のコードなどが短く書けます</p>
-
-<h3>BubbleWrap, sugarcube便利</h3>
-
-<p>2つとも、CocoaのAPIをラップして使いやすくしてくれるライブラリです。
-両者は似たような機能を提供している部分が多いですが、sugarcubeはBubbleWrapより、UIKitのクラス自身を拡張しにいっている感じになっています。</p>
-
-<p>それぞれ、使いどころによって便利なほうを使って実装しました。
-自然にかけるので、どちらかというとsugarcubeのほうが利用頻度高めでした。</p>
-
-<p>特に便利だったものたち</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">### sugarcube</span>
-</span><span class='line'><span class="c1"># RGB HexからUIColor</span>
-</span><span class='line'><span class="s1">&#39;#FBFBFB&#39;</span><span class="o">.</span><span class="n">uicolor</span>
-</span><span class='line'><span class="c1"># ImageNamed のかわり</span>
-</span><span class='line'><span class="s1">&#39;hogehogeimage&#39;</span><span class="o">.</span><span class="n">uiimage</span>
-</span><span class='line'><span class="c1"># タイマー</span>
-</span><span class='line'><span class="mi">30</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">every</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">refresh</span><span class="p">()</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="c1"># 日付の始まりの日</span>
-</span><span class='line'><span class="n">dateTime</span><span class="o">.</span><span class="n">start_of_day</span>
-</span><span class='line'><span class="c1"># NotificationCenter</span>
-</span><span class='line'><span class="s2">&quot;SomeNotificationName&quot;</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="ss">:&quot;onNotif:&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Mix-in便利</h3>
-
-<p>Rubyならではの便利さとして最も大きかったのが、Mix-inの活用です。</p>
-
-<p>例えばよくあるDelegateを取るクラスを作るためのMix-inとして以下のようなものを作りました</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Clulu</span>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">Delegation</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">delegate</span>
-</span><span class='line'>      <span class="vi">@delegate</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">delegate</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</span><span class='line'>      <span class="vi">@delegate</span> <span class="o">=</span> <span class="no">WeakRef</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1"># delegateが設定されていたら指定されたメソッドを呼び出す</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">delegateCall</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">if</span> <span class="vi">@delegate</span> <span class="ow">and</span> <span class="vi">@delegate</span><span class="o">.</span><span class="n">weakref_alive?</span> <span class="ow">and</span> <span class="vi">@delegate</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
-</span><span class='line'>        <span class="vi">@delegate</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Delegateを実装したいクラスは、 <code>include Clulu::Delegation</code> するだけです。</p>
-
-<p>他にも、ローディングやエラー処理など、共通の挙動をViewControllerに付けたい場合などに使いました。
-実装を注入できるのは便利です。</p>
-
-<h2>逆に大変だった点</h2>
-
-<h3>サードパーティライブラリとの相性</h3>
-
-<p>基本的にCocoaPodsに登録されているライブラリ群はそのまま使えました。
-一部、ObjectiveCのプロパティ定義を利用しているライブラリなど、そのままでは使えないものもあったので
-薄いラッパを作って使いました。</p>
-
-<h3>メモリ管理</h3>
-
-<p>基本的にRubyMotionがメモリを自動で管理してくれるのですが、循環参照に関しては開放してくれないので、
-適宜弱参照( <code>WeakRef.new(hoge)</code> )などを使って、循環参照が起きない用配慮する必要があります。
-また、Rubyのブロックを使うと、外側のスコープの変数を束縛したままになるため、注意が必要でした。</p>
-
-<h3>コンパイル速度とタイプミス問題</h3>
-
-<p>一般的にコンパイル言語は型チェックや静的な解析をしてくれるので、早めにタイプミスなどが見つけやすい構造になっています。
-しかしRubyMotionの場合は、コンパイルと起動にそれなりの時間がかかる一方、実行時まで定義されていない変数や、型の間違いがわからないため、タイプミスするとわーってなります。
-僕はEmacsを使っているので、motion-mode と ac-dict を使ってある程度補完が効くようにはしていたのですが、
-それでもCocoaの長いメソッド名とか、思わぬタイプミスでわーってなっていました。
-ここらへんは宿命でしょうが、なかなかストレスでした。</p>
-
-<h2>まとめ</h2>
-
-<p>今回アプリ開発に携わったのは、僕(
-<a href="http://twitter.com/tutuming" target="_blank">tutuming</a>
-)と、<a href="http://twitter.com/kyoh86" target="_blank">kyoh</a>
-の2名です。
-kyoh君はiOSの開発自体が初めてだったのですが、苦労しつつも1ヶ月もしたら慣れたようでした。</p>
-
-<p>個人的には特にRubyMotionだったから大変だったということはなかったです。
-それ以上にiOSのSDKの使い方とか、実装面での苦労のほうが多いです。</p>
-
-<p>1度ObjectiveCでアプリを書いたことがあり、RubyやPython,JavaScriptなど、Webっぽい言語も経験がある程度ある人であれば、スムーズに移行でき、少しだけ効率も上がる感じじゃないかなと思います。</p>
-
-<p>RubyMotion3.0 (今年後半リリース予定)では、Androidにも対応する(同じくネイティブのラッパ)みたいなので、どんどん広がっていけばいいですね！</p>
-
-<h2>参考</h2>
-
-<ul>
-<li><a href="http://www.rubymotion.com/" target="_blank">RubyMotion公式サイト</a></li>
-<li><a href="http://tosik.github.io/blog/2012/09/13/about-rubymotion/" target="_blank">RubyMotion について感想 &ndash; tosik blog</a></li>
-<li><a href="http://d.hatena.ne.jp/naoya/20131205/1386237472" target="_blank">RubyMotion を1年以上使い続けてみての雑感 &ndash; naoyaのはてなダイアリー</a></li>
-</ul>
-
 ]]></content>
   </entry>
   
