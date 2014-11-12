@@ -23,7 +23,7 @@
   #content > aside.sidebar {
     max-width: 342px;
     width: 342px;
-    padding: 0 0 0 20px !important;
+    padding: 0 0 0 80px !important;
     box-sizing: border-box;
   }
 }
