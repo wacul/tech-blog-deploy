@@ -1194,21 +1194,41 @@ p.meta + .sharing {
     display: table;
   }
 }
-/* line 9, ../../sass/partials/_author.scss */
+/* line 7, ../../sass/partials/_author.scss */
+.author img {
+  box-shadow: none;
+  border: none;
+  box-sizing: content-box;
+}
+/* line 13, ../../sass/partials/_author.scss */
+.author p {
+  margin: 0 0 0 0 !important;
+}
+/* line 17, ../../sass/partials/_author.scss */
+.author .account {
+  display: block !important;
+  margin: 10px 0 0 0 !important;
+}
+/* line 22, ../../sass/partials/_author.scss */
+.author .account a {
+  margin-left: 5px;
+}
+/* line 26, ../../sass/partials/_author.scss */
+.author .account a:nth-of-type(1) {
+  margin-left: 0;
+}
+/* line 32, ../../sass/partials/_author.scss */
 .author .author-image {
   text-align: center;
 }
-/* line 11, ../../sass/partials/_author.scss */
+/* line 34, ../../sass/partials/_author.scss */
 .author .author-image img {
   border-radius: 100%;
   width: 120px;
   height: 120px;
-  -webkit-box-shadow: black 0 0 0;
-  -moz-box-shadow: black 0 0 0;
-  box-shadow: black 0 0 0;
 }
 @media only screen and (min-width: 768px) {
-  /* line 9, ../../sass/partials/_author.scss */
+  /* line 32, ../../sass/partials/_author.scss */
   .author .author-image {
     display: table-cell;
     vertical-align: middle;
@@ -1216,18 +1236,18 @@ p.meta + .sharing {
     width: 140px;
     height: 140px;
   }
-  /* line 24, ../../sass/partials/_author.scss */
+  /* line 46, ../../sass/partials/_author.scss */
   .author .author-image img {
     width: 140px;
     height: 140px;
   }
 }
-/* line 30, ../../sass/partials/_author.scss */
+/* line 52, ../../sass/partials/_author.scss */
 .author .author-abstract {
   margin-top: 1em;
 }
 @media only screen and (min-width: 768px) {
-  /* line 30, ../../sass/partials/_author.scss */
+  /* line 52, ../../sass/partials/_author.scss */
   .author .author-abstract {
     margin-top: 0;
     height: 140px;
@@ -1236,11 +1256,11 @@ p.meta + .sharing {
     width: 450px;
     padding-left: 1em;
   }
-  /* line 33, ../../sass/partials/_author.scss */
+  /* line 55, ../../sass/partials/_author.scss */
   .author .author-abstract * {
     display: inline-block;
   }
-  /* line 36, ../../sass/partials/_author.scss */
+  /* line 58, ../../sass/partials/_author.scss */
   .author .author-abstract p {
     margin: 0;
   }
