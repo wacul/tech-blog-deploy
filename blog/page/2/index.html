@@ -116,6 +116,42 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/08/15/angular-directive-priority/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><a href="/blog/2014/08/15/angular-directive-priority/"><img src="/images/2014-08-15-angular-directive-priority/title.jpg" height="250"/></a></div>
+    <div class="post-info">
+      <div class="post-date">
+        15th.
+        
+        Aug. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/08/15/angular-directive-priority/">AngularJSのディレクティブの実行順に注意しよう</a></div>
+      <div class="post-content">TL;DR
+
+ディレクティブのコントローラー内で$element.controllerを使って
+他のコントローラーを参照するしようとして失敗したときはpriorityプロパティの値を一度確認してみよう。
+
+ディレクティブの実行順の罠
+
+AngularJSのディレクティブを作るときに何かしらの動作を与えようとする場合、
+殆どのケースではlinkプロパティを使うと思います。
+しかしながら、controllerプロパティにコントローラーを設定するケースもあるにはあります
+(階層的なディレクティブを作る等々)。
+コントローラーから他のコントローラーを参照するときはDIした$elementのメソッドである$element.controllerを使いますが
+ここで何も考えずに参照しようとすると失敗することがあります。
+よくあるパターンとしてngModelControllerを自作のディレクティブから参照する例を見てみましょう。
+以下の例ではaaa、zzzという名前のディレクティブを作ってそれらのコントローラーからngModelControllerを参照しようとしていますが &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/08/15/angular-directive-priority/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/08/08/hackathon/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -525,51 +561,6 @@ n = 2 のとき 「あいかわたろう」という文字列
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/06/11/mongo-ngram/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/06/05/tableview-upper-space/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/06/05/tableview-upper-space/"><img src="/images/2014-06-05-tableview-upper-space/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        05th.
-        
-        Jun. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/06/05/tableview-upper-space/">UITableViewの一番上に隙間が出来てしまう件</a></div>
-      <div class="post-content">こんにちは、wacul開発メンバーの kyoh です。
-WWDC2014でSwiftが発表された時、
-恋に落ちる音を聞いた気がします。
-
-さて、今日は、最近iPadアプリの開発中に遭遇した不可解な事象と、その解決方法について書いてみようと思います。
-
-UITableView の狭き門、険しい道
-
-iOSアプリといえば凡そ避けることのできない「UITableView」ですが、一癖も二癖もあるそれに悩まされるのはiOS開発の登竜門となっているようです。
-今回私も、そんな登竜門の狭い門柱に引っかかって苦しめられました。
-
-謎の隙間が発生する
-
-UITableViewController ベースの画面を作り、UINavigationControll に push した時のことです。
-表示された画面には、ナビゲーションバーとセクションヘッダとの間に、意図しない隙間が表示されていました。
-
-
-
-正体不明！
-
-REVEALというツールなども駆使して、この隙間は一体なんぞやと探ってみました。が・・・
-
-
-UINavigationBar にははみ出すようなビューは含まれていない。 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/06/05/tableview-upper-space/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 

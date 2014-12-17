@@ -116,6 +116,48 @@ $(function(){
   
   
   <div class="post-indexes">
+    <a href="/blog/2014/12/17/rubymotion-64bit/" class="mask"></a>
+<div class="post-cell">
+  <div class="post-cell-inner">
+    <div class="post-image"><a href="/blog/2014/12/17/rubymotion-64bit/"><img src="/images/2014-12-17-rubymotion-64bit/title.jpg" height="250"/></a></div>
+    <div class="post-info">
+      <div class="post-date">
+        17th.
+        
+        Dec. 2014.
+      </div>
+      <div class="post-title"><a href="/blog/2014/12/17/rubymotion-64bit/">RubyMotion で 64bit アプリに対応する</a></div>
+      <div class="post-content">こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:(
+
+急に 64bit が来たので
+
+世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む）において64bit対応したアプリのみを受け付けるようになります。
+
+64-bit and iOS 8 Requirements for New Apps
+
+これに合わせ、弊社サービスの「Clulu」も64bit対応を行いました。
+
+およその32bit &ndash; 64bit間の差異はRubyMotionが吸収してくれる（便利！）のですが、
+どうしたって一部はソース上での対応が必要です。
+その最中、思わぬところで躓き、親切にもRubyMotionのContributorの方に丁寧に教えていただけたので、
+簡単な解説でも書いてみようと思います。
+
+64bit対応① まずはターゲットを追加する！
+
+何はともあれ、ビルドターゲットに64bit環境を追加します。
+RubyMotionの場合、 &hellip;</div>
+    </div>
+    <div style="clear:both;"></div>
+    <a href='/blog/2014/12/17/rubymotion-64bit/'><div class="post-more"><img src="/images/more.png"/></div></a>
+  </div>
+</div>
+
+  </div>
+  
+  
+  <div class="post-indexes">
     <a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/" class="mask"></a>
 <div class="post-cell">
   <div class="post-cell-inner">
@@ -544,42 +586,6 @@ go get github.com/aaa/bbb とすると、 github.com/aaa/bbb で公開されて�
     </div>
     <div style="clear:both;"></div>
     <a href='/blog/2014/08/22/go/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/08/15/angular-directive-priority/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/08/15/angular-directive-priority/"><img src="/images/2014-08-15-angular-directive-priority/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        15th.
-        
-        Aug. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/08/15/angular-directive-priority/">AngularJSのディレクティブの実行順に注意しよう</a></div>
-      <div class="post-content">TL;DR
-
-ディレクティブのコントローラー内で$element.controllerを使って
-他のコントローラーを参照するしようとして失敗したときはpriorityプロパティの値を一度確認してみよう。
-
-ディレクティブの実行順の罠
-
-AngularJSのディレクティブを作るときに何かしらの動作を与えようとする場合、
-殆どのケースではlinkプロパティを使うと思います。
-しかしながら、controllerプロパティにコントローラーを設定するケースもあるにはあります
-(階層的なディレクティブを作る等々)。
-コントローラーから他のコントローラーを参照するときはDIした$elementのメソッドである$element.controllerを使いますが
-ここで何も考えずに参照しようとすると失敗することがあります。
-よくあるパターンとしてngModelControllerを自作のディレクティブから参照する例を見てみましょう。
-以下の例ではaaa、zzzという名前のディレクティブを作ってそれらのコントローラーからngModelControllerを参照しようとしていますが &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/08/15/angular-directive-priority/'><div class="post-more"><img src="/images/more.png"/></div></a>
   </div>
 </div>
 

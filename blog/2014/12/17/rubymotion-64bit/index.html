@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RubyMotion で 64bit アプリに対応する  - The Wacul Blog</title>
+  <meta name="author" content="WACUL INC.">
+
+  
+  <meta name="description" content="こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:( 急に 64bit が来たので 世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む） &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/post.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <meta property="og:title" content="RubyMotion で 64bit アプリに対応する - The Wacul Blog" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:( 急に 64bit が来たので 世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む） &hellip;" />
+  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit/" />
+  
+  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-12-17-rubymotion-64bit/title.jpg" />
+  
+  <meta property="og:site_name" content="The Wacul Blog" />
+  
+            
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@wacul_jp">
+
+  
+  <meta name="twitter:creator" content="kyoh86">
+  
+
+  <meta name="twitter:title" content="RubyMotion で 64bit アプリに対応する - The Wacul Blog" />
+  <meta name="twitter:description" content="こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:( 急に 64bit が来たので 世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む） &hellip;" />
+
+  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-12-17-rubymotion-64bit/title.jpg" />
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script>
+$(function(){
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
+});
+</script>
+
+  
+
+  
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+        height="0" width="0" style="display:none;visibility:hidden">
+</iframe>
+</noscript>
+<script>
+  (
+    function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event:'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    }
+  )
+  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
+</script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Wacul Blog</a></h1>
+  
+    <h2>おとなになるか、プログラマーになるか</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RubyMotion で 64bit アプリに対応する </h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-17T17:40:00+09:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:(</p>
+
+<h2>急に 64bit が来たので</h2>
+
+<p>世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む）において64bit対応したアプリのみを受け付けるようになります。</p>
+
+<p><a href="https://developer.apple.com/news/?id=10202014a">64-bit and iOS 8 Requirements for New Apps</a></p>
+
+<p>これに合わせ、弊社サービスの「<a href="http://clulu.com/">Clulu</a>」も64bit対応を行いました。</p>
+
+<p>およその32bit &ndash; 64bit間の差異はRubyMotionが吸収してくれる（便利！）のですが、
+どうしたって一部はソース上での対応が必要です。
+その最中、思わぬところで躓き、親切にもRubyMotionのContributorの方に丁寧に教えていただけたので、
+簡単な解説でも書いてみようと思います。</p>
+
+<h2>64bit対応① まずはターゲットを追加する！</h2>
+
+<p>何はともあれ、ビルドターゲットに64bit環境を追加します。
+RubyMotionの場合、Rakefileで次のように指定するだけです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneOS&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;arm64&#39;</span>
+</span><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneSimulator&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;x86_64&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake clean
+</span><span class='line'>rake
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすれば、ターゲットが追加されます。</p>
+
+<h3>ところがどっこい。</h3>
+
+<p>RubyMotion 2.38 までで開発ターゲットをiPadにしている場合、
+<strong> iOS Simulatorが64bitモードで起動しない </strong>
+というバグがありました。</p>
+
+<p>どうやら、<code>app.archs['iPhoneSimulator'] &lt;&lt; 'x86_64'</code> としても、<code>app.archs</code> 内に <code>x86</code> が入っている限り、iOS Simulator が32bitモードで起動してしまうようです。</p>
+
+<p>困り果ててTwitterで呟いたところ、RubyMotionのContributorの方が丁寧に教えてくれました。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> iPhoneアプリでx86_64が含まれていればシミュレータが64bitで起動するのですが、iPadでは違うということを確認しました。調査してみます。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540677981249622016">2014, 12月 5</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>そのため、iOS Simulatorの起動を64bitモードで起動するために環境変数の指定を追加する必要があります。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> Rakefileに&#10;ENV[‘device_name’] = ‘iPad Air’&#10;を追加する方が良かったかも。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540691881256964096">2014, 12月 5</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneOS&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;arm64&#39;</span>
+</span><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneSimulator&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;x86_64&#39;</span>
+</span><span class='line'><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;device_name&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;iPad Air&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただし、この不具合は最新のRubyMotion 3.0では（<a href="https://twitter.com/watson1978">@watson1978</a>さんの修正により）
+Fixされているようです。</p>
+
+<h2>64bit対応② ポインタを使用している箇所で不具合が起きないか確認する</h2>
+
+<p>今回私が直面したのは、UIGraphics/CGContext でポインタを使った処理でのこと。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># 点線を引く！</span>
+</span><span class='line'><span class="n">context</span> <span class="o">=</span> <span class="no">UIGraphicsGetCurrentContext</span><span class="p">()</span>
+</span><span class='line'><span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span><span class="o">.</span><span class="n">setStroke</span>
+</span><span class='line'><span class="no">CGContextSetLineWidth</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="n">lengths</span> <span class="o">=</span> <span class="no">Pointer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:float</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># :float</span>
+</span><span class='line'><span class="n">lengths</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'><span class="n">lengths</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'><span class="no">CGContextSetLineDash</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">lengths</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">CGContextMoveToPoint</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</span><span class='line'><span class="no">CGContextAddLineToPoint</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span class='line'><span class="no">CGContextStrokePath</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>CGFloatは、32bit環境では32bit小数点数、64bit環境では64bit小数点数となっているため、
+64bit環境でこいつを動かすと、<code>CGContextSetLineDash(context, 0.0, lengths, 2)</code> のところでコケます。</p>
+
+<p>64bit環境に対応するためには、Pointerが指すオブジェクトの型をdoubleにしてやる必要があります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">lengths</span> <span class="o">=</span> <span class="no">Pointer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:double</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># :double</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうしても64bitと32bitを両立させたい！という場合（そんなのあるのか？）は、この両者を並立させることもできます。
+こちらも件の@watson1978さんから情報をいただきました。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> CGFloatは32bitと64bitでサイズが違うので <a href="https://t.co/dR2f0SdKAw">https://t.co/dR2f0SdKAw</a> みたいな感じで切り分けて適切な型でPointerを作ってください。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540488987203235840">2014, 12月 4</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>つまり、先の例で言えば</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">CGFloat_Type</span> <span class="o">=</span> <span class="no">CGSize</span><span class="o">.</span><span class="n">type</span><span class="o">[</span><span class="sr">/(f|d)/</span><span class="o">]</span>
+</span><span class='line'><span class="n">lengths</span> <span class="o">=</span> <span class="no">Pointer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">CGFloat_Type</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># :float/:double</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じですね。</p>
+
+<h2>さいごに</h2>
+
+<p>RubyMotionでの64bit環境対応はそう難しくはありません。
+今回のような事態に巻き込まれることも極稀にあるようですが・・・。
+Appleの設けた来年2月までの期限に向けて、早々に取り掛かってみるのも悪く無いと思います。</p>
+
+<p>ともあれ、今回のトラブルで丁寧にご対応くださった上、この記事への引用をご了承くださった
+<a href="https://twitter.com/watson1978/">@watson1978</a>様には厚く御礼申し上げます。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+    </p>
+
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+
+    
+  
+
+
+
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+
+<div class="author">
+  <div class="author-image">
+    <img src="/images/author/kyoh.png" />
+  </div>
+  <div class="author-abstract">
+    <h1>この記事を書いたひと kyoh</h1>
+    <p>kyohです。蕎麦と鳥をこよなく愛するおでぶです。C#使いでした。</p>
+    <p class="account">
+      
+        <a href="https://github.com/kyoh86"><img src="/images/icon/github.png" /></a>
+      
+      
+        <a href="https://twitter.com/kyoh86"><img src="/images/icon/twitter.png" /></a>
+      
+      
+        <a href="https://facebook.com/kyoh86"><img src="/images/icon/facebook.png" /></a>
+      
+    </p>
+    
+      <p class="account">
+        <a href="http://kyoh.net/">http://kyoh.net/</a>
+      </p>
+    
+  </div>
+</div>
+
+
+
+    <div class="company">
+  <h1>ワカルでは、プログラマを募集しています。</h1>
+  <p>
+
+  </p>
+  <h2>主なプロダクト</h2>
+  <ul>
+    <li>課題発見から改善提案まで・Web改善プラットフォーム「<a href="http://wacul.co.jp/services/sure">Sure!</a>」</a>
+    <li>美容・エステ業界むけの予約システム「<a href="http://clulu.com">Clulu</a>」</li>
+  </ul>
+  <a class="contact-link" href="http://wacul.co.jp/recruiting/programmer.html" target="_blank">ワカルの採用情報へ</a>
+</div>
+
+
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/" title="Previous Post: Sublime Text, Atomで使えるAngularJSプラグインを作りました">Sublime Text, Atomで使えるAngularJSプラグインを作りました</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/rubymotion-64bit/">RubyMotion で 64bit アプリに対応する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/">Sublime Text, Atomで使えるAngularJSプラグインを作りました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/go-rest-api/">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/07/nexmo/">SMS送信サービスのNexmoを利用する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; WACUL INC. All Rights Reserved.
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

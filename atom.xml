@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2014-12-03T17:13:54+09:00</updated>
+  <updated>2014-12-17T15:41:45+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyMotion で 64bit アプリに対応する]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit/"/>
+    <updated>2014-12-17T17:40:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit</id>
+    <content type="html"><![CDATA[<p>こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:(</p>
+
+<h2>急に 64bit が来たので</h2>
+
+<p>世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む）において64bit対応したアプリのみを受け付けるようになります。</p>
+
+<p><a href="https://developer.apple.com/news/?id=10202014a">64-bit and iOS 8 Requirements for New Apps</a></p>
+
+<p>これに合わせ、弊社サービスの「<a href="http://clulu.com/">Clulu</a>」も64bit対応を行いました。</p>
+
+<p>およその32bit &ndash; 64bit間の差異はRubyMotionが吸収してくれる（便利！）のですが、
+どうしたって一部はソース上での対応が必要です。
+その最中、思わぬところで躓き、親切にもRubyMotionのContributorの方に丁寧に教えていただけたので、
+簡単な解説でも書いてみようと思います。</p>
+
+<h2>64bit対応① まずはターゲットを追加する！</h2>
+
+<p>何はともあれ、ビルドターゲットに64bit環境を追加します。
+RubyMotionの場合、Rakefileで次のように指定するだけです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneOS&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;arm64&#39;</span>
+</span><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneSimulator&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;x86_64&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake clean
+</span><span class='line'>rake
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすれば、ターゲットが追加されます。</p>
+
+<h3>ところがどっこい。</h3>
+
+<p>RubyMotion 2.38 までで開発ターゲットをiPadにしている場合、
+<strong> iOS Simulatorが64bitモードで起動しない </strong>
+というバグがありました。</p>
+
+<p>どうやら、<code>app.archs['iPhoneSimulator'] &lt;&lt; 'x86_64'</code> としても、<code>app.archs</code> 内に <code>x86</code> が入っている限り、iOS Simulator が32bitモードで起動してしまうようです。</p>
+
+<p>困り果ててTwitterで呟いたところ、RubyMotionのContributorの方が丁寧に教えてくれました。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> iPhoneアプリでx86_64が含まれていればシミュレータが64bitで起動するのですが、iPadでは違うということを確認しました。調査してみます。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540677981249622016">2014, 12月 5</a></blockquote>
+
+
+<script async src="http://blog.wacul.co.jp//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>そのため、iOS Simulatorの起動を64bitモードで起動するために環境変数の指定を追加する必要があります。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> Rakefileに&#10;ENV[‘device_name’] = ‘iPad Air’&#10;を追加する方が良かったかも。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540691881256964096">2014, 12月 5</a></blockquote>
+
+
+<script async src="http://blog.wacul.co.jp//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneOS&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;arm64&#39;</span>
+</span><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">archs</span><span class="o">[</span><span class="s1">&#39;iPhoneSimulator&#39;</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;x86_64&#39;</span>
+</span><span class='line'><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;device_name&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;iPad Air&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただし、この不具合は最新のRubyMotion 3.0では（<a href="https://twitter.com/watson1978">@watson1978</a>さんの修正により）
+Fixされているようです。</p>
+
+<h2>64bit対応② ポインタを使用している箇所で不具合が起きないか確認する</h2>
+
+<p>今回私が直面したのは、UIGraphics/CGContext でポインタを使った処理でのこと。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># 点線を引く！</span>
+</span><span class='line'><span class="n">context</span> <span class="o">=</span> <span class="no">UIGraphicsGetCurrentContext</span><span class="p">()</span>
+</span><span class='line'><span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span><span class="o">.</span><span class="n">setStroke</span>
+</span><span class='line'><span class="no">CGContextSetLineWidth</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="n">lengths</span> <span class="o">=</span> <span class="no">Pointer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:float</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># :float</span>
+</span><span class='line'><span class="n">lengths</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'><span class="n">lengths</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'><span class="no">CGContextSetLineDash</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">lengths</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">CGContextMoveToPoint</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</span><span class='line'><span class="no">CGContextAddLineToPoint</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span class='line'><span class="no">CGContextStrokePath</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>CGFloatは、32bit環境では32bit小数点数、64bit環境では64bit小数点数となっているため、
+64bit環境でこいつを動かすと、<code>CGContextSetLineDash(context, 0.0, lengths, 2)</code> のところでコケます。</p>
+
+<p>64bit環境に対応するためには、Pointerが指すオブジェクトの型をdoubleにしてやる必要があります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">lengths</span> <span class="o">=</span> <span class="no">Pointer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:double</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># :double</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうしても64bitと32bitを両立させたい！という場合（そんなのあるのか？）は、この両者を並立させることもできます。
+こちらも件の@watson1978さんから情報をいただきました。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> CGFloatは32bitと64bitでサイズが違うので <a href="https://t.co/dR2f0SdKAw">https://t.co/dR2f0SdKAw</a> みたいな感じで切り分けて適切な型でPointerを作ってください。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540488987203235840">2014, 12月 4</a></blockquote>
+
+
+<script async src="http://blog.wacul.co.jp//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>つまり、先の例で言えば</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">CGFloat_Type</span> <span class="o">=</span> <span class="no">CGSize</span><span class="o">.</span><span class="n">type</span><span class="o">[</span><span class="sr">/(f|d)/</span><span class="o">]</span>
+</span><span class='line'><span class="n">lengths</span> <span class="o">=</span> <span class="no">Pointer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">CGFloat_Type</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># :float/:double</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じですね。</p>
+
+<h2>さいごに</h2>
+
+<p>RubyMotionでの64bit環境対応はそう難しくはありません。
+今回のような事態に巻き込まれることも極稀にあるようですが・・・。
+Appleの設けた来年2月までの期限に向けて、早々に取り掛かってみるのも悪く無いと思います。</p>
+
+<p>ともあれ、今回のトラブルで丁寧にご対応くださった上、この記事への引用をご了承くださった
+<a href="https://twitter.com/watson1978/">@watson1978</a>様には厚く御礼申し上げます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sublime Text, Atomで使えるAngularJSプラグインを作りました]]></title>
@@ -2686,89 +2841,6 @@ $all は保存されているarrayフィールドに対して、クエリで渡�
 <p>上記手法は検索文字列の順番を見ていないため、一部、正しくない検索結果が返る場合があります。<br/>
 例えば、 「あいう」 というワードで検索した場合、「あいおいう」というワードもヒットします。
 こういう特性があるので、使用する際は注意が必要です。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[UITableViewの一番上に隙間が出来てしまう件]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/06/05/tableview-upper-space/"/>
-    <updated>2014-06-05T19:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/06/05/tableview-upper-space</id>
-    <content type="html"><![CDATA[<p>こんにちは、wacul開発メンバーの kyoh です。
-WWDC2014で<a href="https://developer.apple.com/swift/" target="_blank">Swift</a>が発表された時、
-恋に落ちる音を聞いた気がします。</p>
-
-<p>さて、今日は、最近iPadアプリの開発中に遭遇した不可解な事象と、その解決方法について書いてみようと思います。</p>
-
-<h2>UITableView の狭き門、険しい道</h2>
-
-<p>iOSアプリといえば凡そ避けることのできない「UITableView」ですが、一癖も二癖もあるそれに悩まされるのはiOS開発の登竜門となっているようです。
-今回私も、そんな登竜門の狭い門柱に引っかかって苦しめられました。</p>
-
-<h3>謎の隙間が発生する</h3>
-
-<p>UITableViewController ベースの画面を作り、UINavigationControll に push した時のことです。
-表示された画面には、ナビゲーションバーとセクションヘッダとの間に、意図しない隙間が表示されていました。</p>
-
-<p><img src="http://blog.wacul.co.jp/images/2014-06-05-tableview-upper-space/upper_space.png" alt="UITableView と UINavigationBar との間に、33pxの隙間が生じている" /></p>
-
-<h3>正体不明！</h3>
-
-<p><a href="http://revealapp.com/" target="_blank">REVEAL</a>というツールなども駆使して、この隙間は一体なんぞやと探ってみました。が・・・</p>
-
-<ul>
-<li>UINavigationBar にははみ出すようなビューは含まれていない。</li>
-<li>UITableViewController の tableView は、UINavigationBar と密着している。</li>
-<li>UITableViewDelegateProtocol の tableView:heightForHeaderInSection:は実装済で、適切な高さが返っている。</li>
-<li>同 Protocol の tableView:viewForHeaderInSection: も実装済で、同じ高さの view を返している。
-
-<ul>
-<li>返しているビューに、はみ出すような子孫ビューはない。</li>
-</ul>
-</li>
-</ul>
-
-
-<p>つまるところ、そこには何のビューもなければ何のマージンもない、「ただ開いている」隙間でした。</p>
-
-<h3>怪しいプロパティ</h3>
-
-<p>それとなく UITableView Class Reference を眺めていると、 tableHeaderView なる怪しげなプロパティを発見しました。</p>
-
-<blockquote><p><strong>tableHeaderView</strong>
-Returns an accessory view that is displayed above the table.
-@property(nonatomic, retain) UIView *tableHeaderView</p>
-
-<p><strong>Discussion</strong>
-The default value is nil. The table header view is different from a section header.</p></blockquote>
-
-<p>Tableの上に表示される何がしかのビューを設定できるようです。しかし調べてみても、説明にも書かれている通り、そこには nil が入っているだけでした。</p>
-
-<h2>解決方法</h2>
-
-<p>延々悩んだ結果、どうもその tableHeaderView が怪しいぞ、という結論にいたり、空のビューを設定すると見事に隙間が消えました。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">setTableHeaderView:</span><span class="p">[[</span><span class="n">UIView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)]]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><img src="http://blog.wacul.co.jp/images/2014-06-05-tableview-upper-space/no_space.png" alt="UINavigationBar の直下に セクションヘッダが密着している" /></p>
-
-<h3>ちょっとした解説</h3>
-
-<p>UINavigationController に push した場合にのみ発生する事象の様です。
-また、UINavigationController の先頭にあるViewControllerの場合は発生しないみたい。</p>
-
-<p>ちなみに、sectionHeaderView に設定する空 view は、高さと幅に有意値（0ではない値）を設定しないと、
-この問題は解決しません。</p>
-
-<p>UITableView のセルやセクションヘッダの高さを 0 にしたい場合は、0.1 を設定するのがセオリーです。
-0を設定すると、基本的に「その他のプロパティ（例：sectionHeaderHeight）に従う大きさ」や「内容に従う大きさ」が設定される様です。</p>
-
-<h2>けつろん！</h2>
-
-<p>UITableView の上方に発生した謎の隙間に悩まされたら、置くだけ簡単 height=0.1 view!</p>
 ]]></content>
   </entry>
   
