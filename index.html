@@ -1,641 +1,262 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>The Wacul Blog</title>
-  <meta name="author" content="WACUL INC.">
-
-  
-  <meta name="description" content="株式会社waculの技術ブログです">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://blog.wacul.co.jp/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	
-  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-
-  <meta property="og:title" content="The Wacul Blog" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="株式会社waculの技術ブログです" />
-  <meta property="og:url" content="http://blog.wacul.co.jp/index.html" />
-  
-  <meta property="og:image" content="http://blog.wacul.co.jp/images/ogp.png" />
-  
-  <meta property="og:site_name" content="The Wacul Blog" />
-  
-          
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@wacul_jp">
-
-  <meta name="twitter:title" content="The Wacul Blog" />
-  <meta name="twitter:description" content="株式会社waculの技術ブログです" />
-
-  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/ogp.png" />
+<html lang="ja">
 
 
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
-<script>
-$(function(){
-  $(document.links).filter(function() {
-      return this.hostname != window.location.hostname;
-  }).attr('target', '_blank');
-});
-</script>
+<head prefix="og: http://ogp.me/ns#">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  
+	<meta name="keywords" content="">
 
-  
-<noscript>
-<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
-        height="0" width="0" style="display:none;visibility:hidden">
-</iframe>
-</noscript>
-<script>
-  (
-    function(w, d, s, l, i) {
-      w[l] = w[l] || [];
-      w[l].push({
-        'gtm.start': new Date().getTime(),
-        event:'gtm.js'
-      });
-      var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true;
-      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    }
-  )
-  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
-</script>
+	<meta property="og:site_name" content="The Wacul Blog">
+
+	<title>The Wacul Blog</title>
+	<meta property="og:title" content="The Wacul Blog">
 
 
+
+
+
+	<meta property="og:image" content="http://blog.wacul.co.jp/images/common/ogp.png">
+	<meta property="og:url" content="http://blog.wacul.co.jp/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css" href="/stylesheets/common.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/layout.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/sp_layout.css" media="only screen and (max-width: 640px)">
+
+	<!--[if IE 7]><link href="/stylesheets/ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+	<!--[if lte IE 8]><link href="/stylesheets/ie8lte.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+	<script type="text/javascript">
+	<!--
+	var br = navigator.userAgent.toLowerCase();
+	if (br.indexOf("iphone") != -1 ) {
+		document.write('<link rel="stylesheet" type="text/css" href="/stylesheets/sp_layout.css">');
+	};
+	//-->
+	</script>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<script type="text/javascript" src="/javascripts/jquery.scrollTo.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.scrollchaser.js"></script>
+	<script type="text/javascript" src="/javascripts/jQueryAutoHeight.js"></script>
+	<script type="text/javascript" src="/javascripts/lodash.compat.min.js"></script>
+	<script type="text/javascript" src="/javascripts/moment.min.js"></script>
+	<script type="text/javascript" src="/javascripts/main.js"></script>
+
+	<script type="text/javascript" src="/javascripts/css_browser_selector.js"></script>
+	<script type="text/javascript" src="/javascripts/common.js"></script>
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">The Wacul Blog</a></h1>
-  
-    <h2>おとなになるか、プログラマーになるか</h2>
-  
-</hgroup>
 
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
+<body class="blog top">
+  <a name="pagetop" id="pagetop"></a>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/12/17/rubymotion-64bit/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/12/17/rubymotion-64bit/"><img src="/images/2014-12-17-rubymotion-64bit/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        17th.
-        
-        Dec. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/12/17/rubymotion-64bit/">RubyMotion で 64bit アプリに対応する</a></div>
-      <div class="post-content">こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
-最近の趣味はダイエットですが、なかなか成果が出ません。:(
-
-急に 64bit が来たので
-
-世の中、だいぶ64bit環境が普及してきたこともあり、
-Appleは2015年2月から、新しいアプリの申請（更新含む）において64bit対応したアプリのみを受け付けるようになります。
-
-64-bit and iOS 8 Requirements for New Apps
-
-これに合わせ、弊社サービスの「Clulu」も64bit対応を行いました。
-
-およその32bit &ndash; 64bit間の差異はRubyMotionが吸収してくれる（便利！）のですが、
-どうしたって一部はソース上での対応が必要です。
-その最中、思わぬところで躓き、親切にもRubyMotionのContributorの方に丁寧に教えていただけたので、
-簡単な解説でも書いてみようと思います。
-
-64bit対応① まずはターゲットを追加する！
-
-何はともあれ、ビルドターゲットに64bit環境を追加します。
-RubyMotionの場合、 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/12/17/rubymotion-64bit/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
+  <div class="sp-group sp-header-menu-group">
+	<ul>
+		<li><a href="http://wacul.co.jp">
+			コーポレートサイト
+			<span class="icon arrow-next"></span>
+		</a></li>
+		
+		
+		<li><a href="/category/programmer/">
+			プログラマブログ
+			<span class="icon arrow-next"></span>
+		</a></li>
+		
+		
+	</ul>
+<!-- /sp-header-menu-group -->
 </div>
 
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/"><img src="/images/2014-11-12-angular-plugin-for-sublime-atom-users/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        12th.
-        
-        Nov. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/">Sublime Text, Atomで使えるAngularJSプラグインを作りました</a></div>
-      <div class="post-content">CoffeeScriptでAngularJSを書いている開発者、特にSublime TextやAtomを使っている人向けのプラグインを作ったので紹介します。
 
-どんなプラグイン？
+  <div class="wrap-master">
 
-このプラグインは インラインテンプレートのハイライト機能を提供します(ちょっとしたスニペットもあります)。
-WebStormのLanguage Injection(図2)や、Github Flavored Markdownのコード部分がハイライトされるアレの簡易版です。
+    <header><div class="header-group"><div class="wrap clr">
+	
+	
+	<p class="logo-text">The Wacul Blog</p>
+	
+	
+	<p class="logo-bywacul">by wacul</p>
+
+	<ul class="link-group">
+		<li><a href="http://wacul.co.jp">コーポレートサイト</a></li>
+	</ul>
+	<a href="#" class="sp-group menu"><span class="icon sp-menu">menu</span></a>
+<!-- /header-group -->
+</div></div></header>
 
 
-Sublime Textでのプラグイン動作例(テンプレート内での補完はangular-ui/AngularJS-sublime-packageが使われています)
-
-
-WebStromのLanguage Injection動作例
-
-インストール
-
-Sublime Text
-
-Package Installから CoffeeAngular Syntax を検索してインストールします。
-
-
-
-Atom
-
-設定画面から Language Coffee Script Angular を検索してインストールするか、ターミナルからapm &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
+    <div class="body-group">
+      <div class="pankuzu-group">
+  <ul class="wrap clr">
+    <li>The Wacul Blog トップ</li>
+  </ul>
+  <!-- /pankuzu-group -->
 </div>
 
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/10/28/go-rest-api/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/10/28/go-rest-api/"><img src="/images/2014-10-28-go-rest-api/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        28th.
+<div class="wrap content-body-group clr">
+
+  <div class="content-main-group"><section>
+    <h1 class="basic">最新記事一覧</h1>
+
+    <div class="section-master-group top-information-group clr">
+      <ul>
         
-        Oct. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/10/28/go-rest-api/">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</a></div>
-      <div class="post-content">３行で言うと
-
-
-herokuが作ってる prmd を使って、JSON SchemaからAPIドキュメントを出力したよ！
-スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！
-Goのバリデーション用のライブラリも作ったよ！
-
-
-
-今回作ったものの概要とサンプルコード
-
-概要
-
-以前から、APIを開発する上で、以下のようなことが課題となっていました。
-
-
-そもそもドキュメント書くのがつらい
-それもあって、ドキュメントより先にコードが変わってしまう
-ドキュメントと実装の状況の違いが把握しづらい
-
-
-
-また、ロジックがそんなに複雑ではないAPIでは、実装の作業は
-
-
-リクエストデータのバリデーション
-出力データの整形 (フィルタリング)
-
-
-
-の２つの作業が大きな割合を占めます。
-
-APIの定義ファイルからドキュメントと、バリデーションや出力データ整形のコードを自動生成できれば、大幅に効率が上がると思い実装してみました。
-
-今回実装した仕組みの全体の処理の流れは以下の様になっています。
-
-
-prmd を使って、schema.json (JSON Hyper- &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/10/28/go-rest-api/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/10/07/nexmo/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/10/07/nexmo/"><img src="/images/2014-10-07-nexmo/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        07th.
         
-        Oct. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/10/07/nexmo/">SMS送信サービスのNexmoを利用する</a></div>
-      <div class="post-content">概要
-
-ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。
-今回、SMS送信サービスのNexmoを利用してみたので紹介します。
-
-SMS送信サービス
-
-SMS送信サービスなどでGoogle検索を行うと、様々なサービスが見つかります。
-送るキャリアによって料金が異なったりしますが、おおよそ１通6円〜10円前後となっています。
-
-今回は、Lineやカカオトークで採用されているNexmoを利用したいと思います。
-値段は2014/10/03現在、どのキャリア宛でも1通、0.0631ドルとなっています。
-
-
-NexmoのSMS送信APIを使用する
-
-NexmoのSMS送信APIは非常にシンプルです。
-Nexmo SMS送信APIドキュメント
-によると、指定されたURLにパラメータをつけてGETかPOSTをするだけで良さそうです。
-その際、Nexmoに登録した際に発行されるKEY、SECRET、送信元として使用する電話番号が必要になります。
-
-Node.jsでAPIを使用して送信する場合のサンプルが以下です。
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/10/07/nexmo/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/09/29/collaborative-realtime-markdown/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/09/29/collaborative-realtime-markdown/"><img src="/images/2014-09-29-collaborative-realtime-markdown/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        29th.
         
-        Sep. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a></div>
-      <div class="post-content">Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io
-
-こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。
-
-今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
-ドキュメントのデファクトスタンダードとなっています。
-
-そんなMarkdownをリアルタイムで一緒に編集できるサービスはないものかと
-色々探してみたところ、Socrates (→GitHubリポジトリ) というサービスが
-そこそこハマったので紹介してみようと思います。
-
-Socrates のいいところ
-
-「リアルタイムでMarkdownを編集したい」という要件はほぼ満たしています。
-また、リアルタイムでマークアップした結果のプレビューもしてくれるので、
-微妙な記法におっかなびっくりしながら編集する目にも遭わなくて済みます。
-
-Markdownの記法についても、ヘッダ、罫線、強調、リンク、画像などなど基本的なところは押さえているようです。
-
-
-
-また、ソースがGithubで公開されているため、cloneして試すことができます。
-最近は、 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/09/29/collaborative-realtime-markdown/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/09/23/current-test-server/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/09/23/current-test-server/"><img src="/images/2014-09-22-current-test-server/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        23th.
+        <li><a href="/blog/2014/12/17/rubymotion-64bit/">
+          <span class="date">2014.12.17</span>
+          <span class="comment">RubyMotion で 64bit アプリに対応する</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
         
-        Sep. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/09/23/current-test-server/">Web制作のテストサーバー運用を自動化した話</a></div>
-      <div class="post-content">テストサーバー運用意外と手間かかる問題
-
-ワカルでは、自社サービスを行うかたわら、お客様のWebサイト改善のお手伝いを行っています。
-外部のミーティングでお客様にサイトなどの制作物を見ていただくなどのシーンも多く、認証付きで公開できるテストサーバーを運用しています。
-しかし、プロジェクトごとにテストサーバーを構成するのはなかなかのコストでした。
-
-そこでワカルでは、GitHubリポジトリと連携し、
-
-
-テスト環境の自動デプロイ
-テストサーバーの追加の自動化
-
-
-
-といったことを行っています。
-
-今回は自動化していった手順をご紹介したいと思います。
-流行りの仮想化とかとはまた違う地道なお話です。
-
-利用したサービス、ミドルウェア
-
-利用した環境は以下のとおりです。
-
-
-ソースコード管理: github
-インフラ: Amazon EC2, Route53, ELB
-ミドルウェア関係: Apache, PHP, MySQL
-自動化スクリプト: Fabric (python)
-
-
-
-最新ソースが反映されるサーバーを構築する
-
-まずは手で効率化していくところから、徐々に自動化していきました &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/09/23/current-test-server/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/09/16/zcookies/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/09/16/zcookies/"><img src="/images/2014-09-16-zcookies/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        16th.
         
-        Sep. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/09/16/zcookies/">cookieに効率的にデータを格納するzcookiesを作りました</a></div>
-      <div class="post-content">cookieに効率的にデータを格納するzcookiesを作ったので使い方と仕組みについて紹介しようとおもいます。
-
-モチベーション
-
-あるとき、sessionStorageを使って一時的にデータを保存しておくようなウェブページを作っていました。
-現状ではIE8以上ならsessionStorageを使うことができるので特に問題ないだろうと高をくくっていたのですが、実はsafariのプライベートブラウズモードではsessionStorage含め、Web Storage全般が使えないということがわかりました。
-
-次点の解決策としてcookieを使うことを検討したのですが、いわゆる4kB制限があり作っているウェブページもその制限に引っかかる恐れがありました(特に日本語とか保存しようとすると数倍の容量を食いますからね)。
-
-そこで、オブジェクトを圧縮してcookieに保存できるような仕組みを作ることにしました。
-
-使い方
-
-zcookiesの使い方は簡単です。以下の例を見て下さい。
-
-1
-2
-zcookies.set(&#39;foo&#39;, {a: 1, b: &#39;こんにちは世界 &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/09/16/zcookies/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/09/10/camp/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/09/10/camp/"><img src="/images/2014-09-10-camp/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        10th.
+        <li><a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/">
+          <span class="date">2014.11.12</span>
+          <span class="comment">Sublime Text, Atomで使えるAngularJSプラグインを作りました</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
         
-        Sep. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/09/10/camp/">wacul で開発合宿を行いました</a></div>
-      <div class="post-content">合宿！
-
-wacul のプログラマーチームは、それぞれ持っている技術の範囲が少しずつ違います。
-そこで、お互いがお互いの知識を補えるように、ハッカソン的なもの（wacul ハッカソン＝ワッカソン）を開いたりしてきましたが、
-ついにオフィスから一歩踏み出して、開発合宿に行ってきました。
-
-合宿先
-
-wacul のメンバーは東京都内在住だったため、初めての開発合宿ということもあって極端な遠隔地は避け、静岡県の熱海に行ってきました。
-泊まりといえば温泉地！夏といえば海！というのも判断材料です。
-
-新幹線でおおよそ一時間半程度、片道四千円弱と、ほどよく手軽な旅程でした。
-
-滞在期間
-
-初めての合宿ということで、様子を見るためにも今回は少し短めに、1泊だけとしました。
-現地に土曜日の午後入り、翌日午前中にチェックアウトだったので、いささか慌ただしくなりました。
-開発合宿としては、金曜日の夜から日曜日の朝など、連泊できる方が都合がいいかと思います。
-
-宿
-
-宿は グランビュー熱海 というコンドミニアム。
-今回コンドミニアムというものを初めて利用しましたが、四・ &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/09/10/camp/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/09/01/geoip/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/09/01/geoip/"><img src="/images/2014-09-01-geoip/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        01th.
         
-        Sep. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/09/01/geoip/">どこの地域からアクセスされているのか、IPから検索！</a></div>
-      <div class="post-content">用途
-
-関東からのアクセスと九州からのアクセスでそれぞれ広告を出し分けたい、など、サイト訪問者の地域に応じたコンテンツを提供したい場合があります。
-訪問者のIPアドレスからアクセス元の地域を調べることで、これを実現できます。
-
-JavaScriptによる運用
-
-JavaScriptからajaxでAPIを呼び、地域情報を取得することを考えます。
-
-例えばPHPだと、自前でAPIサーバーを用意する場合はGeoIP というライブラリがあるようです。
-
-ですが、今回は簡単に試すため、外部のサービスを利用したいと思います。
-GeoIP APIなどで検索するといろいろ出てきますが、
-今回はTeliizeのAPIを使ってみます。
-使い方は非常に簡単で、指定されたURLにgetするだけで良いです。
-
-例えば以下のようになります。
-
-1
-2
-3
-4
-5
-6
-  $.getJSON(&quot;http://www.telize.com/geoip?callback=?&quot;, function(geo) {
-    if(geo &amp;&amp; geo.region){ // &hellip;</div>
-    </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/09/01/geoip/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
-
-  </div>
-  
-  
-  <div class="post-indexes">
-    <a href="/blog/2014/08/22/go/" class="mask"></a>
-<div class="post-cell">
-  <div class="post-cell-inner">
-    <div class="post-image"><a href="/blog/2014/08/22/go/"><img src="/images/2014-08-22-go/title.jpg" height="250"/></a></div>
-    <div class="post-info">
-      <div class="post-date">
-        22th.
+        <li><a href="/blog/2014/10/28/go-rest-api/">
+          <span class="date">2014.10.28</span>
+          <span class="comment">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
         
-        Aug. 2014.
-      </div>
-      <div class="post-title"><a href="/blog/2014/08/22/go/">これからGoを始める人のためのTips集</a></div>
-      <div class="post-content">こんにちわ。最近業務でGoを書いているのですが、3,4週間たち、だいぶ環境にも慣れてきたので、これからGoを初めようと思っている人向けにTipsを書きたいと思います。
-
-間違いや改善点などあれば、 @tutuming まで教えていただけると大変ありがたいです。
-
-インストール と設定 (OSX)
-
-http://golang.org/dl/
-から、インストーラー (go1.3.1.darwin-amd64-osx10.8.pkg など) を選んで最新版をインストールしたら大丈夫です。自分の環境にあわせたインストーラ選んでください。
-
-homebrewを使っている人は
-
-1
-brew install go
-
-
-
-でもインストールできます。
-
-$GOPATH とプロジェクトの作り方
-
-Go のパッケージ管理には、 go get コマンドを使います。
-go get github.com/aaa/bbb とすると、 github.com/aaa/bbb で公開されているgoライブラリまたは、実行ファイルがローカルにダウンロードされます。
-
-インストール後、なにも設定せずに、 go get &hellip;</div>
+        
+        <li><a href="/blog/2014/10/07/nexmo/">
+          <span class="date">2014.10.07</span>
+          <span class="comment">SMS送信サービスのNexmoを利用する</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+        
+        <li><a href="/blog/2014/09/29/collaborative-realtime-markdown/">
+          <span class="date">2014.09.29</span>
+          <span class="comment">Markdownを複数人でリアルタイム編集できる socrates.io </span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+        
+        <li><a href="/blog/2014/09/23/current-test-server/">
+          <span class="date">2014.09.23</span>
+          <span class="comment">Web制作のテストサーバー運用を自動化した話</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+        
+        <li><a href="/blog/2014/09/16/zcookies/">
+          <span class="date">2014.09.16</span>
+          <span class="comment">cookieに効率的にデータを格納するzcookiesを作りました</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+        
+        <li><a href="/blog/2014/09/10/camp/">
+          <span class="date">2014.09.10</span>
+          <span class="comment">wacul で開発合宿を行いました</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+        
+        <li><a href="/blog/2014/09/01/geoip/">
+          <span class="date">2014.09.01</span>
+          <span class="comment">どこの地域からアクセスされているのか、IPから検索！</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+        
+        <li><a href="/blog/2014/08/22/go/">
+          <span class="date">2014.08.22</span>
+          <span class="comment">これからGoを始める人のためのTips集</span>
+          <span class="icon arrow-next"></span>
+        </a></li>
+        
+      </ul>
     </div>
-    <div style="clear:both;"></div>
-    <a href='/blog/2014/08/22/go/'><div class="post-more"><img src="/images/more.png"/></div></a>
-  </div>
-</div>
 
-  </div>
-  
-  <div class="pagination">
+
     
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+    <div class="section-master-group">
+      <div class="section-group pager-group">
+        <ul>
+          
+          
+          <li><a class="next" href="../../page/2/">古い記事</a></li>
+          
+        </ul>
+        <!-- /section-master-group -->
+      </div>
+    </div>
     
-    <a href="/blog/archives">過去の記事</a>
-  </div>
+
+  </section></div>
+
+  <!-- /warp clr -->
 </div>
 
+      <!-- /body-group -->
     </div>
+
+    <div class="sp-group"><nav><div class="wrap clr">
+	<ul class="footer-nav-group">
+		<li class="corporate"><a href="http://wacul.co.jp">コーポレートサイト</a></li>
+		
+		
+		<li class="programmer"><a href="/category/programmer/">プログラマブログ</a></li>
+		
+		
+	</ul>
+</div></nav></div>
+
+<footer><div class="footer-group"><div class="wrap clr">
+	<div class="address-group clr">
+		<a href="http://wacul.co.jp/" class="logo">株式会社wacul</a>
+		<p><a href="mailto:info@wacul.co.jp" class="email">info@wacul.co.jp</a><a href="tel:0338680720" class="tel">03-3868-0720</a><span class="address">〒113-0033 <span class="nowrap">東京都文京区本郷3-40-10 2F</span></span></p>
+	<!-- /address-group -->
+	</div>
+
+	<div class="clr">
+		<ul class="link-group">
+			
+			
+			<li><a href="/category/programmer/">プログラマブログ</a></li>
+			
+			
+		</ul>
+		<p class="copyright">Copyright &copy; WACUL INC. All Rights Reserved.</p>
+	</div>
+<!-- /footer-group -->
+</div></div></footer>
+
+<a href="#pagetop" class="link-pagetop"><span class="icon arrow-pagetop">ページトップへ</span></a>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23460271-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- /Google Analytics -->
+
+
+    <div class="display-small"><!-- js / check window size --></div>
+    <!-- /wrap-master -->
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; WACUL INC. All Rights Reserved.
-</p>
-
-</footer>
-  
-
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
 </body>
 </html>

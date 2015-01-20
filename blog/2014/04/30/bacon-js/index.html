@@ -1,159 +1,129 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Canvasのお絵かきに bacon.js を使ってみた  - The Wacul Blog</title>
-  <meta name="author" content="WACUL INC.">
-
-  
-  <meta name="description" content="イベント処理の憂鬱とbacon.js 業務でちょっとしたお絵かきツールをjsで作る機会がありました。
-マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。 &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="/stylesheets/post.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="The Wacul Blog" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-
-  <meta property="og:title" content="Canvasのお絵かきに bacon.js を使ってみた - The Wacul Blog" />
-  <meta property="og:type" content="article" />
-  <meta property="og:description" content="イベント処理の憂鬱とbacon.js 業務でちょっとしたお絵かきツールをjsで作る機会がありました。
-マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。 &hellip;" />
-  <meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/" />
-  
-  <meta property="og:image" content="http://blog.wacul.co.jp/images/2014-04-30-bacon-js/title.jpg" />
-  
-  <meta property="og:site_name" content="The Wacul Blog" />
-  
-            
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@wacul_jp">
-
-  
-  <meta name="twitter:creator" content="tutuming">
-  
-
-  <meta name="twitter:title" content="Canvasのお絵かきに bacon.js を使ってみた - The Wacul Blog" />
-  <meta name="twitter:description" content="イベント処理の憂鬱とbacon.js 業務でちょっとしたお絵かきツールをjsで作る機会がありました。
-マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。 &hellip;" />
-
-  <meta name="twitter:image" content="http://blog.wacul.co.jp/images/2014-04-30-bacon-js/title.jpg" />
+<html lang="ja">
 
 
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
-<script>
-$(function(){
-  $(document.links).filter(function() {
-      return this.hostname != window.location.hostname;
-  }).attr('target', '_blank');
-});
-</script>
+<head prefix="og: http://ogp.me/ns#">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  
+	<meta name="keywords" content="">
 
-  
-<noscript>
-<iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
-        height="0" width="0" style="display:none;visibility:hidden">
-</iframe>
-</noscript>
-<script>
-  (
-    function(w, d, s, l, i) {
-      w[l] = w[l] || [];
-      w[l].push({
-        'gtm.start': new Date().getTime(),
-        event:'gtm.js'
-      });
-      var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true;
-      j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    }
-  )
-  (window, document, 'script', 'dataLayer', 'GTM-WVB25R');
-</script>
+	<meta property="og:site_name" content="The Wacul Blog">
+
+	<title>Canvasのお絵かきに bacon.js を使ってみた | The Wacul Blog</title>
+	<meta property="og:title" content="Canvasのお絵かきに bacon.js を使ってみた | The Wacul Blog">
 
 
+
+	<meta name="description" content="株式会社ワカルのプログラマブログ">
+	<meta property="og:description" content="株式会社ワカルのプログラマブログ">
+
+
+
+	<meta property="og:image" content="http://blog.wacul.co.jp/images/common/ogp.png">
+	<meta property="og:url" content="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css" href="/stylesheets/common.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/layout.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/sp_layout.css" media="only screen and (max-width: 640px)">
+
+	<!--[if IE 7]><link href="/stylesheets/ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+	<!--[if lte IE 8]><link href="/stylesheets/ie8lte.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+	<script type="text/javascript">
+	<!--
+	var br = navigator.userAgent.toLowerCase();
+	if (br.indexOf("iphone") != -1 ) {
+		document.write('<link rel="stylesheet" type="text/css" href="/stylesheets/sp_layout.css">');
+	};
+	//-->
+	</script>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<script type="text/javascript" src="/javascripts/jquery.scrollTo.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.scrollchaser.js"></script>
+	<script type="text/javascript" src="/javascripts/jQueryAutoHeight.js"></script>
+	<script type="text/javascript" src="/javascripts/lodash.compat.min.js"></script>
+	<script type="text/javascript" src="/javascripts/moment.min.js"></script>
+	<script type="text/javascript" src="/javascripts/main.js"></script>
+
+	<script type="text/javascript" src="/javascripts/css_browser_selector.js"></script>
+	<script type="text/javascript" src="/javascripts/common.js"></script>
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">The Wacul Blog</a></h1>
-  
-    <h2>おとなになるか、プログラマーになるか</h2>
-  
-</hgroup>
 
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
+<body class="blog">
+  <a name="pagetop" id="pagetop"></a>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Canvasのお絵かきに bacon.js を使ってみた </h1>
-    
-    
-      <p class="meta">
-        
+  <div class="sp-group sp-header-menu-group">
+	<ul>
+		<li><a href="http://wacul.co.jp">
+			コーポレートサイト
+			<span class="icon arrow-next"></span>
+		</a></li>
+		
+		
+		<li><a href="/category/programmer/">
+			プログラマブログ
+			<span class="icon arrow-next"></span>
+		</a></li>
+		
+		
+	</ul>
+<!-- /sp-header-menu-group -->
+</div>
 
 
+  <div class="wrap-master">
+
+    <header><div class="header-group"><div class="wrap clr">
+	
+	
+	<p class="logo-text">プログラマブログ</p>
+	
+	
+	<p class="logo-bywacul">by wacul</p>
+
+	<ul class="link-group">
+		<li><a href="http://wacul.co.jp">コーポレートサイト</a></li>
+	</ul>
+	<a href="#" class="sp-group menu"><span class="icon sp-menu">menu</span></a>
+<!-- /header-group -->
+</div></div></header>
 
 
+    <div class="body-group">
+      
 
 
+<div class="pankuzu-group">
+  <ul class="wrap clr">
+    <li><a href="/category/programmer/">プログラマ</a></li>
+    <li>Canvasのお絵かきに bacon.js を使ってみた</li>
+  </ul>
 
+</div>
 
-  
+<div class="wrap content-body-group clr">
 
+  <div class="content-main-group"><section>
+    <h1 class="basic">
+      <span class="aside line">2014.04.30</span>Canvasのお絵かきに bacon.js を使ってみた</h1>
 
-<time datetime="2014-04-30T19:00:00+09:00" pubdate data-updated="true">Apr 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><h3>イベント処理の憂鬱とbacon.js</h3>
+    <div class="section-master-group blog-post-group">
+      <h3>イベント処理の憂鬱とbacon.js</h3>
 
 <p>業務でちょっとしたお絵かきツールをjsで作る機会がありました。<br/>
 マウスのイベントを拾ってcanvasに描画する、それだけの処理なのですが、イベントのハンドリングとペンの状態などが絡むと、結構メンテがしづらいソースになってしまいます。</p>
 
 <p>これを綺麗に書く方法はないか、調べている中で、<a href="http://baconjs.github.io" target="_blank">bacon.js</a> というライブラリを見つけました。試してみたところなかなか良さそうだったのでご紹介します。</p>
 
-<p>bacon.js はFRP(Functional Reactive Programming) という概念をjsで実装したもので、僕なりの理解だと、</p>
+<p>bacon.js はFRP(Functional Reactive programmer) という概念をjsで実装したもので、僕なりの理解だと、</p>
 
 <ul>
 <li>変化するイベントや値 (EventStream, Property) をオブジェクトとして扱うことができる</li>
@@ -165,7 +135,7 @@ $(function(){
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//例: c は a + b </span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//例: c は a + b</span>
 </span><span class='line'><span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">combine</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span> <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="p">})</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -442,164 +412,276 @@ option の値を、太さは数値、色はrgb値の文字列に値を変換し�
 パーツ単位で、特に今回のようなお絵かきやソケット通信などのイベントが主役の部分については、うまく抽象化できて可読性、メンテ性の高いコードが書けるなという印象をうけました。</p>
 
 <p>面白いので、みなさんもぜひ使ってみてください。</p>
-</div>
 
-
-  <footer>
-    <p class="meta">
-      
-
-
-    </p>
-
-    
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/" data-via="" data-counturl="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-
-    
-  
-
-
-
-
-  
-    
-  
-
-  
-
-  
-
-  
-
-
-<div class="author">
-  <div class="author-image">
-    <img src="/images/author/tutuming.png" />
-  </div>
-  <div class="author-abstract">
-    <h1>この記事を書いたひと tutuming</h1>
-    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
-    <p class="account">
-      
-        <a href="https://github.com/tutuming"><img src="/images/icon/github.png" /></a>
-      
-      
-        <a href="https://twitter.com/tutuming"><img src="/images/icon/twitter.png" /></a>
-      
-      
-        <a href="https://facebook.com/tutuming"><img src="/images/icon/facebook.png" /></a>
-      
-    </p>
-    
-  </div>
-</div>
-
-
-
-    <div class="company">
-  <h1>ワカルでは、プログラマを募集しています。</h1>
-  <p>現在はプロダクトとして、課題発見から改善提案まで自動で行うWeb改善プラットフォーム「<a href="http://wacul.co.jp/services/sure">Sure!</a>」を開発中です。</p>
-  <a class="contact-link" href="http://wacul.co.jp/recruiting/programmer.html" target="_blank">ワカルの採用情報へ</a>
-</div>
-
-
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2014/03/10/mamp_wimax/" title="Previous Post: WiMAX接続のMacのMAMP環境でメールが送信できない">WiMAX接続のMacのMAMP環境でメールが送信できない</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2014/05/07/nslayoutconstraint/" title="Next Post: iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)">iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</a>
-      
-    </p>
-  </footer>
-</article>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2014/12/17/rubymotion-64bit/">RubyMotion で 64bit アプリに対応する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/">Sublime Text, Atomで使えるAngularJSプラグインを作りました</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/go-rest-api/">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/07/nexmo/">SMS送信サービスのNexmoを利用する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/09/29/collaborative-realtime-markdown/">Markdownを複数人でリアルタイム編集できる socrates.io </a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
-  
-</aside>
-
-
+      <!-- /section-master-group blog-post -->
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; WACUL INC. All Rights Reserved.
-</p>
 
-</footer>
+    <div class="section-master-group section-blog-aside-master-group">
+      <div class="section-group social-btn-group">
+        <ul>
+          <li class="facebok">
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.0";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+            <div class="fb-like" data-href="http://blog.wacul.co.jp/blog/2014/04/30/bacon-js/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
+          </li>
+          <li class="pocket">
+            <a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a>
+            <script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+          </li>
+          <li class="hatena">
+            <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="simple-balloon" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+          </li>
+          <li class="twitter">
+            <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+            </script>
+          </li>
+        </ul>
+        <!-- /social-btn-group -->
+      </div>
+
+      
   
 
 
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+  
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+
+<div class="section-group writer-group">
+  <div class="pic-group"><img src="/images/member/tutuming.png" width="100" height="100"></div>
+  <h3><span><span class="aside">この記事を書いた人</span><span class="name">tutuming</span></span></h3>
+  <div class="text-group">
+    <p>株式会社ワカルの技術責任者です。フロントエンドからバックエンドまで、ひと通りやってます。最近の興味はチームづくりと、パンづくりです。</p>
+    <ul class="icon-link-group">
+
+      
+      <li><a href="https://github.com/tutuming"      class="icon-link github">github</a></li>
+      
+      
+      <li><a href="https://facebook.com/tutuming"  class="icon-link facebook">facebook</a></li>
+      
+      
+      <li><a href="https://twitter.com/tutuming"    class="icon-link twitter">twitter</a></li>
+      
+      
+    </ul>
+  </div>
+  <!-- /section-group h3 pic-text-group -->
+</div>
+
+
+      
+      
+      <div class="section-group conversion-group">
+        <p class="read">waculでは、プログラマを募集しています。</p>
+        <p class="aside">現在はプロダクトとして、課題発見から改善提案まで自動で行うWeb改善プラットフォーム「<a href="http://wacul.co.jp/services/sure/">Sure!</a>」を開発中です。</p>
+        <p><a href="http://wacul.co.jp/recruiting/" class="btn basic">
+          waculの採用情報へ
+          <span class="icon arrow-btn"></span>
+        </a></p>
+        <!-- /section-master-group -->
+      </div>
+      
+
+      
+      <div class="section-group pager-group">
+        <ul>
+          
+          <li><a class="prev" href="/blog/2014/05/07/nslayoutconstraint/"><span class="in-group"><span class="date">2014.05.07</span><br>iOSアプリで Programmable な自動レイアウト(NSLayoutConstraint)</span></a></li>
+          
+          
+          <li><a class="next" href="/blog/2014/03/10/mamp_wimax/"><span class="in-group"><span class="date">2014.03.10</span><br>WiMAX接続のMacのMAMP環境でメールが送信できない</span></a></li>
+          
+        </ul>
+        <!-- /section-master-group -->
+      </div>
+      
+      
+      <!-- /section-master-group  -->
+    </div>
+
+    <!-- /content-main-group -->
+  </section></div>
+
+
+  <div class="content-nav-wrap">
+    <div class="content-nav-group">
+      <!-- <p><a href="/contact/" class="btn basic">
+		お問い合わせ
+		<span class="icon arrow-btn"></span>
+</a></p>
+ -->
+
+      
+        
+<!--
+pageCategories = context.environments.first['page']['categories']
+if pageCategories.nil?
+target = context.environments.first['page']['category']
+else
+target = @category || (pageCategories||[]).first
+end
+-->
+
+<ul class="link-group">
+  
+  
+  <li><a href="/blog/2014/12/17/rubymotion-64bit/">
+    <span class="date">2014.12.17</span>
+    <span class="text">RubyMotion で 64bit アプリに対応する</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/">
+    <span class="date">2014.11.12</span>
+    <span class="text">Sublime Text, Atomで使えるAngularJSプラグインを作りました</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/10/28/go-rest-api/">
+    <span class="date">2014.10.28</span>
+    <span class="text">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/10/07/nexmo/">
+    <span class="date">2014.10.07</span>
+    <span class="text">SMS送信サービスのNexmoを利用する</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/09/29/collaborative-realtime-markdown/">
+    <span class="date">2014.09.29</span>
+    <span class="text">Markdownを複数人でリアルタイム編集できる socrates.io </span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  
+</ul>
+
+<ul class="link-blog-group">
+  
+  
+  <li><a href="/category/programmer/">プログラマブログ</a></li>
+  
+  
+</ul>
 
 
 
 
 
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
+      
+
+      <!-- /content-nav-group -->
+    </div>
+    <!-- /content-nav-wrap -->
+  </div>
+  <!-- /content-body-group -->
+</div>
+
+      <!-- /body-group -->
+    </div>
+
+    <div class="sp-group"><nav><div class="wrap clr">
+	<ul class="footer-nav-group">
+		<li class="corporate"><a href="http://wacul.co.jp">コーポレートサイト</a></li>
+		
+		
+		<li class="programmer"><a href="/category/programmer/">プログラマブログ</a></li>
+		
+		
+	</ul>
+</div></nav></div>
+
+<footer><div class="footer-group"><div class="wrap clr">
+	<div class="address-group clr">
+		<a href="http://wacul.co.jp/" class="logo">株式会社wacul</a>
+		<p><a href="mailto:info@wacul.co.jp" class="email">info@wacul.co.jp</a><a href="tel:0338680720" class="tel">03-3868-0720</a><span class="address">〒113-0033 <span class="nowrap">東京都文京区本郷3-40-10 2F</span></span></p>
+	<!-- /address-group -->
+	</div>
+
+	<div class="clr">
+		<ul class="link-group">
+			
+			
+			<li><a href="/category/programmer/">プログラマブログ</a></li>
+			
+			
+		</ul>
+		<p class="copyright">Copyright &copy; WACUL INC. All Rights Reserved.</p>
+	</div>
+<!-- /footer-group -->
+</div></div></footer>
+
+<a href="#pagetop" class="link-pagetop"><span class="icon arrow-pagetop">ページトップへ</span></a>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23460271-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- /Google Analytics -->
 
 
-
-
-
+    <div class="display-small"><!-- js / check window size --></div>
+    <!-- /wrap-master -->
+  </div>
 </body>
 </html>

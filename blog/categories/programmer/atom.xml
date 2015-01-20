@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: programmer | The Wacul Blog]]></title>
+  <link href="http://blog.wacul.co.jp/blog/categories/programmer/atom.xml" rel="self"/>
+  <link href="http://blog.wacul.co.jp/"/>
+  <updated>2015-01-20T19:09:46+09:00</updated>
+  <id>http://blog.wacul.co.jp/</id>
+  <author>
+    <name><![CDATA[WACUL INC.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RubyMotion で 64bit アプリに対応する]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit/"/>
+    <updated>2014-12-17T17:40:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/12/17/rubymotion-64bit</id>
+    <content type="html"><![CDATA[<p>こんにちは。すっかりRubyMotionでのiOSアプリ開発にどっぷりのkyohです。
+最近の趣味はダイエットですが、なかなか成果が出ません。:(</p>
+
+<h2>急に 64bit が来たので</h2>
+
+<p>世の中、だいぶ64bit環境が普及してきたこともあり、
+Appleは2015年2月から、新しいアプリの申請（更新含む）において64bit対応したアプリのみを受け付けるようになります。</p>
+
+<p><a href="https://developer.apple.com/news/?id=10202014a">64-bit and iOS 8 Requirements for New Apps</a></p>
+
+<p>これに合わせ、弊社サービスの「<a href="http://clulu.com/">Clulu</a>」も64bit対応を行いました。</p>
+
+<p>およその32bit &ndash; 64bit間の差異はRubyMotionが吸収してくれる（便利！）のですが、
+どうしたって一部はソース上での対応が必要です。
+その最中、思わぬところで躓き、親切にもRubyMotionのContributorの方に丁寧に教えていただけたので、
+簡単な解説でも書いてみようと思います。</p>
+
+<h2>64bit対応① まずはターゲットを追加する！</h2>
+
+<p>何はともあれ、ビルドターゲットに64bit環境を追加します。
+RubyMotionの場合、Rakefileで次のように指定するだけです。</p>
+
+<p><code>ruby
+app.archs['iPhoneOS'] &lt;&lt; 'arm64'
+app.archs['iPhoneSimulator'] &lt;&lt; 'x86_64'
+</code></p>
+
+<p>これで</p>
+
+<p><code>bash
+rake clean
+rake
+</code></p>
+
+<p>とすれば、ターゲットが追加されます。</p>
+
+<h3>ところがどっこい。</h3>
+
+<p>RubyMotion 2.38 までで開発ターゲットをiPadにしている場合、
+<strong> iOS Simulatorが64bitモードで起動しない </strong>
+というバグがありました。</p>
+
+<p>どうやら、<code>app.archs['iPhoneSimulator'] &lt;&lt; 'x86_64'</code> としても、<code>app.archs</code> 内に <code>x86</code> が入っている限り、iOS Simulator が32bitモードで起動してしまうようです。</p>
+
+<p>困り果ててTwitterで呟いたところ、RubyMotionのContributorの方が丁寧に教えてくれました。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> iPhoneアプリでx86_64が含まれていればシミュレータが64bitで起動するのですが、iPadでは違うということを確認しました。調査してみます。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540677981249622016">2014, 12月 5</a></blockquote>
+
+
+<script async src="http://blog.wacul.co.jp//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>そのため、iOS Simulatorの起動を64bitモードで起動するために環境変数の指定を追加する必要があります。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> Rakefileに&#10;ENV[‘device_name’] = ‘iPad Air’&#10;を追加する方が良かったかも。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540691881256964096">2014, 12月 5</a></blockquote>
+
+
+<script async src="http://blog.wacul.co.jp//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p><code>ruby
+app.archs['iPhoneOS'] &lt;&lt; 'arm64'
+app.archs['iPhoneSimulator'] &lt;&lt; 'x86_64'
+ENV['device_name'] = 'iPad Air'
+</code></p>
+
+<p>ただし、この不具合は最新のRubyMotion 3.0では（<a href="https://twitter.com/watson1978">@watson1978</a>さんの修正により）
+Fixされているようです。</p>
+
+<h2>64bit対応② ポインタを使用している箇所で不具合が起きないか確認する</h2>
+
+<p>今回私が直面したのは、UIGraphics/CGContext でポインタを使った処理でのこと。</p>
+
+<p>```ruby</p>
+
+<h1>点線を引く！</h1>
+
+<p>context = UIGraphicsGetCurrentContext()
+UIColor.blackColor.setStroke
+CGContextSetLineWidth(context, 1)
+lengths = Pointer.new(:float, 2) # :float
+lengths[0] = 2
+lengths[1] = 1
+CGContextSetLineDash(context, 0.0, lengths, 2)</p>
+
+<p>CGContextMoveToPoint(context, 100, 100)
+CGContextAddLineToPoint(context, 200, 200)
+CGContextStrokePath(context)
+```</p>
+
+<p>CGFloatは、32bit環境では32bit小数点数、64bit環境では64bit小数点数となっているため、
+64bit環境でこいつを動かすと、<code>CGContextSetLineDash(context, 0.0, lengths, 2)</code> のところでコケます。</p>
+
+<p>64bit環境に対応するためには、Pointerが指すオブジェクトの型をdoubleにしてやる必要があります。</p>
+
+<p><code>
+lengths = Pointer.new(:double, 2) # :double
+</code></p>
+
+<p>どうしても64bitと32bitを両立させたい！という場合（そんなのあるのか？）は、この両者を並立させることもできます。
+こちらも件の@watson1978さんから情報をいただきました。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/kyoh86">@kyoh86</a> CGFloatは32bitと64bitでサイズが違うので <a href="https://t.co/dR2f0SdKAw">https://t.co/dR2f0SdKAw</a> みたいな感じで切り分けて適切な型でPointerを作ってください。</p>&mdash; watson (@watson1978) <a href="https://twitter.com/watson1978/status/540488987203235840">2014, 12月 4</a></blockquote>
+
+
+<script async src="http://blog.wacul.co.jp//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>つまり、先の例で言えば</p>
+
+<p><code>ruby
+CGFloat_Type = CGSize.type[/(f|d)/]
+lengths = Pointer.new(CGFloat_Type, 2) # :float/:double
+</code></p>
+
+<p>こんな感じですね。</p>
+
+<h2>さいごに</h2>
+
+<p>RubyMotionでの64bit環境対応はそう難しくはありません。
+今回のような事態に巻き込まれることも極稀にあるようですが・・・。
+Appleの設けた来年2月までの期限に向けて、早々に取り掛かってみるのも悪く無いと思います。</p>
+
+<p>ともあれ、今回のトラブルで丁寧にご対応くださった上、この記事への引用をご了承くださった
+<a href="https://twitter.com/watson1978/">@watson1978</a>様には厚く御礼申し上げます。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sublime Text, Atomで使えるAngularJSプラグインを作りました]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/"/>
+    <updated>2014-11-12T19:25:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users</id>
+    <content type="html"><![CDATA[<p>CoffeeScriptでAngularJSを書いている開発者、特にSublime TextやAtomを使っている人向けのプラグインを作ったので紹介します。</p>
+
+<h2>どんなプラグイン？</h2>
+
+<p>このプラグインは <strong>インラインテンプレートのハイライト機能</strong>を提供します(ちょっとしたスニペットもあります)。
+WebStormのLanguage Injection(図2)や、Github Flavored Markdownのコード部分がハイライトされるアレの簡易版です。</p>
+
+<p><a href="/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime.gif"><img src="/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime.gif" alt="sublime sample" /></a><br>
+Sublime Textでのプラグイン動作例(テンプレート内での補完は<a href="https://github.com/angular-ui/AngularJS-sublime-package">angular-ui/AngularJS-sublime-package</a>が使われています)</p>
+
+<p><a href="/images/2014-11-12-angular-plugin-for-sublime-atom-users/webstorm.gif"><img src="/images/2014-11-12-angular-plugin-for-sublime-atom-users/webstorm.gif" alt="webstorm sample" /></a><br>
+WebStromのLanguage Injection動作例</p>
+
+<h2>インストール</h2>
+
+<h3>Sublime Text</h3>
+
+<p>Package Installから <code>CoffeeAngular Syntax</code> を検索してインストールします。</p>
+
+<p><a href="/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime_install.gif"><img src="/images/2014-11-12-angular-plugin-for-sublime-atom-users/sublime_install.gif" alt="sublime install sample" /></a></p>
+
+<h3>Atom</h3>
+
+<p>設定画面から <code>Language Coffee Script Angular</code> を検索してインストールするか、ターミナルから<code>apm install language-coffee-script-angular</code>して下さい。</p>
+
+<p><a href="/images/2014-11-12-angular-plugin-for-sublime-atom-users/atom_install.png"><img src="/images/2014-11-12-angular-plugin-for-sublime-atom-users/atom_install.png" alt="atom install sample" /></a></p>
+
+<h2>使い方(共通)</h2>
+
+<p>言語モードにCoffeeScript (Angular.js)が追加されているのでそれを選択します。
+すると以下図のようなコードのテンプレート部分がハイライトされます。</p>
+
+<p><a href="/images/2014-11-12-angular-plugin-for-sublime-atom-users/run.gif"><img src="/images/2014-11-12-angular-plugin-for-sublime-atom-users/run.gif" alt="run plugin" /></a></p>
+
+<h2>まとめ</h2>
+
+<p>Sublime TextとAtom用のCoffeeScript+AngularJSプラグインを作りました。
+結構ユーザ層が限定的ではありますがCoffeeでAngularな人は是非使ってみてください。</p>
+
+<h2>レポジトリ</h2>
+
+<ul>
+<li><a href="https://github.com/ukyo/CoffeeAngular.tmLanguage">github.com/ukyo/CoffeeAngular.tmLanguage(Sublime)</a></li>
+<li><a href="https://github.com/ukyo/language-coffee-script">github.com/ukyo/language-coffee-script(Atom)</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/"/>
+    <updated>2014-10-28T00:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api</id>
+    <content type="html"><![CDATA[<h2>３行で言うと</h2>
+
+<ul>
+<li>herokuが作ってる <a href="https://github.com/interagent/prmd">prmd</a> を使って、JSON SchemaからAPIドキュメントを出力したよ！</li>
+<li>スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！</li>
+<li>Goの<a href="https://github.com/wcl48/valval">バリデーション用のライブラリ</a>も作ったよ！</li>
+</ul>
+
+
+<h2>今回作ったものの概要とサンプルコード</h2>
+
+<h3>概要</h3>
+
+<p>以前から、APIを開発する上で、以下のようなことが課題となっていました。</p>
+
+<ul>
+<li>そもそもドキュメント書くのがつらい</li>
+<li>それもあって、ドキュメントより先にコードが変わってしまう</li>
+<li>ドキュメントと実装の状況の違いが把握しづらい</li>
+</ul>
+
+
+<p>また、ロジックがそんなに複雑ではないAPIでは、実装の作業は</p>
+
+<ul>
+<li>リクエストデータのバリデーション</li>
+<li>出力データの整形 (フィルタリング)</li>
+</ul>
+
+
+<p>の２つの作業が大きな割合を占めます。</p>
+
+<p>APIの定義ファイルからドキュメントと、バリデーションや出力データ整形のコードを自動生成できれば、大幅に効率が上がると思い実装してみました。</p>
+
+<p>今回実装した仕組みの全体の処理の流れは以下の様になっています。</p>
+
+<ul>
+<li><a href="https://github.com/interagent/prmd">prmd</a> を使って、schema.json (JSON Hyper-Schemaドキュメント) を生成  <code>prmd combine</code></li>
+<li>schema.json から、APIドキュメント (schema.md) を生成 <code>prmd doc</code></li>
+<li>schema.json から、Goのサーバー側実装を生成 (独自実装)</li>
+</ul>
+
+
+<p><img src="/images/2014-10-28-go-rest-api/overview.png" alt="概要" /></p>
+
+<h3>サンプルコード</h3>
+
+<p>今回の記事のサンプルコードは
+<a href="https://github.com/wcl48/go-api-generation-sample">https://github.com/wcl48/go-api-generation-sample</a>
+にあります。</p>
+
+<p>サンプルプロジェクト内のディレクトリ、ファイルは以下の様な構成です</p>
+
+<p>```
+Cakefile            # ビルドタスク定義
+README.md
+bin/                # ビルド用スクリプト
+package.json
+templates/          # 共通 go ファイル(自動生成時にパッケージ名だけ変えてコピーされる)
+test/               # テスト用のスキーマ定義</p>
+
+<pre><code>gen/            # 生成されたGoパッケージの出力先
+meta.yml        # prmd メタ情報
+overview.md     # ドキュメントのトップに挿入されるマークダウン
+schema.json     # prmd で出力される schemaファイル
+schema.md       # prmd で出力されるドキュメント
+schemata/       # prmd で使うスキーマ定義
+</code></pre>
+
+<p>test-build.sh       # ビルド用スクリプト
+```</p>
+
+<h2>APIの定義 : JSON Hyper-Schema</h2>
+
+<p>Rest API を定義するための仕様はいくつか世の中にあって、代表的なものとしては</p>
+
+<ul>
+<li>JSON Hyper-Schema  <a href="http://json-schema.org/">http://json-schema.org/</a></li>
+<li>RAML <a href="http://raml.org/">http://raml.org/</a></li>
+<li>apiblueprint <a href="http://apiblueprint.org/">http://apiblueprint.org/</a></li>
+</ul>
+
+
+<p>を見つけました。</p>
+
+<p>そこそこ世の中に浸透している「JSON Schema」に対する拡張であり、関連ライブラリなども豊富なことから、今回は JSON Hyper-Schema を選択しました。</p>
+
+<h2>ドキュメンテーション: prmd by heroku</h2>
+
+<p><a href="https://www.heroku.com/">heroku</a> が作っている、 <a href="https://github.com/interagent/prmd">prmd</a> というツールがあります。prmd を使うと、APIの定義をファイルを分割して管理でき、JSON Hyper-Schema の生成とバリデーション、ドキュメントの生成が行えます。</p>
+
+<p><a href="https://devcenter.heroku.com/articles/platform-api-reference">herokuのAPIドキュメント</a> もこのツールをベースに生成されているようです。  <a href="https://devcenter.heroku.com/articles/platform-api-reference#schema">元のスキーマ定義</a> も公開されています。</p>
+
+<p>サンプルコードでは、生成されたドキュメントが、 <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/schema.md">test/schema.md</a> にあります。 元のスキーマ定義は、 <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/schemata/hoge.yaml">test/schemata/hoge.yaml</a>  です。</p>
+
+<h2>どんなGoのコードを生成するか</h2>
+
+<p>ドキュメントは無事生成できたので、次にGoのコードの生成について考えます。</p>
+
+<p>要件としては、概ね以下のようなものとしました。</p>
+
+<ul>
+<li>利用するライブラリは、標準ライブラリの net/http と Gorilla</li>
+<li>自動生成するコードは、手書きコードとパッケージレベルで分離する。
+
+<ul>
+<li>つまり、生成したコードは人の手でいじることなく、再生成が任意に実行できるように保つ</li>
+</ul>
+</li>
+<li>対応するURLをあとで変更できる</li>
+<li>リクエスト、レスポンスのオブジェクトに型つきでアクセスできる</li>
+<li>リクエストオブジェクトのバリデーションを行う</li>
+</ul>
+
+
+<h3>リクエスト、レスポンスオブジェクトの定義</h3>
+
+<p>リクエスト、レスポンスオブジェクトは単純に、json schemaのオブジェクト定義を、Goの構造体の定義に変換するだけです。<br/>
+サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/structs.go">test/gen/struct.go</a></p>
+
+<h3>ロジックの注入</h3>
+
+<p>APIロジック部分の実装は、自動生成されたコードにハンドラを登録する形にしました。ハンドラは次のような定義を生成しています。(サンプルでは、<code>POST /hoge</code> というAPIを定義しています)</p>
+
+<p>```go
+type HogePostParamDataHandler func(</p>
+
+<pre><code>vars map[string]string,        // URLに含まれる、idなどのマップ
+param HogePostParam,           // リクエストオブジェクト
+r *http.Request) (Hoge, error) // レスポンスオブジェクトを返す
+</code></pre>
+
+<p>```</p>
+
+<p>実装した関数を登録するには、次の関数を呼び出します。</p>
+
+<p>```go
+func InjectHogePost(</p>
+
+<pre><code>router *mux.Router,                                 // gorilla.mux のルーターオブジェクト
+dh HogePostParamDataHandler,                        // ハンドラの実装
+middleware func(http.HandlerFunc) http.HandlerFunc, // ミドルウェア
+</code></pre>
+
+<p>)
+```</p>
+
+<p>サンプルコード詳細: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/hoge.go">test/gen/hoge.go</a></p>
+
+<h3>リクエストのバリデーション</h3>
+
+<p>JSON Schemaには、オブジェクトのバリデーションを記述する仕様が用意されています。
+( <a href="http://json-schema.org/latest/json-schema-validation.html">http://json-schema.org/latest/json-schema-validation.html</a> )
+こいつら、Goのバリデーションコードを生成します。</p>
+
+<p>オブジェクトをバリデーションするのにちょうどいいライブラリがなかったため、この部分については、バリデーションを定義するためのライブラリを作りました。</p>
+
+<p><a href="https://github.com/wcl48/valval">wcl48/valval</a></p>
+
+<p>特徴として</p>
+
+<ul>
+<li>バリデータの定義を使いまわせる</li>
+<li>ネストしたオブジェクトもバリデーションできる</li>
+<li>バリデータの中身はただの関数 ( <code>func(interface{}) error</code> )</li>
+<li>構造体と、 <code>map[string]interface{}</code> の両方をバリデーションできる</li>
+</ul>
+
+
+<p>を備えています（実装がもうちょっと落ち着いたら別記事であげたいと思います）</p>
+
+<p>バリデータとして、次のような感じで出力します。</p>
+
+<p>```go
+var HogePostValidator = valval.Object(valval.M{</p>
+
+<pre><code>"Name": valval.String(),
+"Code": valval.String(
+    valval.MinLength(8),
+    valval.MaxLength(16),
+    valval.Regexp(regexp.MustCompile(`^[a-z0-9]+$`)),
+),
+"Email": valval.String(
+    validateEmail,
+),
+// ...長いので省略
+</code></pre>
+
+<p>}).Self(</p>
+
+<pre><code>valval.RequiredFields("Email", "Name"),
+</code></pre>
+
+<p>)
+```</p>
+
+<p>サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/validators.go">test/gen/validators.go</a></p>
+
+<p>リクエストの中身(POSTなら r.Bodyに入っているJSON)を構造体に組み立た後、</p>
+
+<p>```go
+if err := HogePostValidator.Validate(&amp;reqData); err != nil {</p>
+
+<pre><code>SendError(w, validateError2APIError(err))
+return
+</code></pre>
+
+<p>}
+```</p>
+
+<p>のようにして、バリデーションしています。<br/>
+サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/hoge.go#L57">test/gen/hoge.go</a></p>
+
+<p>リクエストだけから判断できるエラーについては、自動生成側でバリデーションしてしまうことで、ロジック側のコード量をかなり抑えることができます。</p>
+
+<h2>Goのコードを自動生成する時の細かいTips</h2>
+
+<p>Goのコードを生成するときには幾つかポイントがあります。</p>
+
+<h3>適当に出力して、 go fmt</h3>
+
+<p>構文エラーのチェックと、フォーマットを自動でしてくれます。 改行だけ注意してコードを吐き出せばよしなにやってくれます。</p>
+
+<h3>使わない可能性があるimportは、_に代入しておく</h3>
+
+<p>例えば、 regexp を使う場合と使わない場合があるコードを出力するとき、import して使用していないものがあるとコンパイルエラーになります。
+ちゃんとフラグ立てて出力するか、goimport など使えば綺麗になりますが、</p>
+
+<p>```go
+import (</p>
+
+<pre><code>...
+"regexp"
+...
+</code></pre>
+
+<p>)</p>
+
+<p>var _ = regexp.Compile
+```</p>
+
+<p>のように出力してしまえば良いです。<br/>
+これは、 <a href="https://code.google.com/p/google-api-go-client/source/browse/calendar/v3/calendar-gen.go">Google APIのGoクライアントのコード</a> をみて参考にしました。</p>
+
+<h2>まとめ</h2>
+
+<p>JSON Hyper-Schema から、APIのドキュメンテーション、Goのソースコードを生成することで、かなり効率のよいAPIの開発ができるようになりました。<br/>
+静的な型付け言語とコード自動生成の組み合わせは、生成 → コンパイル（型と実装のチェック） → 修正 というサイクルが高速で回せるため、とても強力です。</p>
+
+<p>まだ取り組み始めたばかりなので、これからどんどん改善していきたいと思います！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SMS送信サービスのNexmoを利用する]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/"/>
+    <updated>2014-10-07T12:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/10/07/nexmo</id>
+    <content type="html"><![CDATA[<h2>概要</h2>
+
+<p>ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。<br/>
+今回、SMS送信サービスの<a href="https://jp.nexmo.com/">Nexmo</a>を利用してみたので紹介します。</p>
+
+<h2>SMS送信サービス</h2>
+
+<p><a href="https://www.google.co.jp/search?q=SMS%E9%80%81%E4%BF%A1%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9">SMS送信サービス</a>などでGoogle検索を行うと、様々なサービスが見つかります。<br/>
+送るキャリアによって料金が異なったりしますが、おおよそ１通6円〜10円前後となっています。</p>
+
+<p>今回は、Lineやカカオトークで採用されている<a href="https://jp.nexmo.com/">Nexmo</a>を利用したいと思います。
+値段は2014/10/03現在、どのキャリア宛でも1通、0.0631ドルとなっています。<br/>
+<img src="http://blog.wacul.co.jp/images/2014-10-07-nexmo/price.png" alt="値段" /></p>
+
+<h2>NexmoのSMS送信APIを使用する</h2>
+
+<p>NexmoのSMS送信APIは非常にシンプルです。
+<a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a>
+によると、指定されたURLにパラメータをつけてGETかPOSTをするだけで良さそうです。<br/>
+その際、Nexmoに登録した際に発行されるKEY、SECRET、送信元として使用する電話番号が必要になります。</p>
+
+<p>Node.jsでAPIを使用して送信する場合のサンプルが以下です。</p>
+
+<p>```js
+var request = require(&lsquo;request&rsquo;);</p>
+
+<p>request.post(&lsquo;<a href="https://rest.nexmo.com/sms/json">https://rest.nexmo.com/sms/json</a>&rsquo;, {form: {
+  api_key: &lsquo;xxxxxxx&rsquo;,     //Nexmoで発行されたKEY
+  api_secret: &lsquo;xxxxxxxx&rsquo;, //Nexmoで発行されたSECRET
+  from: &lsquo;xxxxxxxxx&rsquo;,      //Nexmoで購入した電話番号
+  to: &lsquo;81xxxxxxxxxx&rsquo;,     //送信先電話番号。日本の場合は81で始め、先頭の0は取る。例: 09012345678なら819012345678
+  text: &lsquo;テスト送信。日本語もOK&rsquo;,
+  type: &lsquo;unicode&rsquo;         //日本語を送る際は typeを unicode にする必要があります
+}}, function(err, res, body){
+  if(err || res.statusCode != 200){</p>
+
+<pre><code>console.log('error');
+return;
+</code></pre>
+
+<p>  }</p>
+
+<p>  //jsonでレスポンスが返ってくる
+  var msg = JSON.parse(body);
+  for(var i = 0; i &lt; msg[&lsquo;message-count&rsquo;]; i++){</p>
+
+<pre><code>//メッセージのステータスを確認する。パラメータ誤りや送信先誤りの場合、エラーとして検出される
+if(msg.messages[i].status != '0'){
+  console.log("error code:" + msg.messages[i].status);
+  return;
+}
+</code></pre>
+
+<p>  }
+});
+```</p>
+
+<p>日本語を送る際に、送信パラメータの type に unicode を指定しないといけないのが注意です。<br/>
+au、ドコモ、ソフトバンク宛に試したところ、無事届くことが確認できました。</p>
+
+<h2>まとめ</h2>
+
+<p>今回はSMS送信サービスとして、Lineなどで利用実績のあるNexmoを利用しました。<br/>
+Nexmoの提供しているSMS送信APIはシンプルで使いやすいと思います。<br/>
+現在、SMSは1通数円程度かかるため、大量に送信する場合は、コストを考慮する必要があります。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://jp.nexmo.com/">Nexmo</a></li>
+<li><a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Markdownを複数人でリアルタイム編集できる socrates.io ]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/"/>
+    <updated>2014-09-29T22:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown</id>
+    <content type="html"><![CDATA[<h2>Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io</h2>
+
+<p>こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。</p>
+
+<p>今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
+ドキュメントのデファクトスタンダードとなっています。</p>
+
+<p>そんなMarkdownをリアルタイムで一緒に編集できるサービスはないものかと
+色々探してみたところ、<a href="http://socrates.io/">Socrates</a> (<a href="https://github.com/segmentio/socrates">→GitHubリポジトリ</a>) というサービスが
+そこそこハマったので紹介してみようと思います。</p>
+
+<h3>Socrates のいいところ</h3>
+
+<p>「リアルタイムでMarkdownを編集したい」という要件はほぼ満たしています。
+また、リアルタイムでマークアップした結果のプレビューもしてくれるので、
+微妙な記法におっかなびっくりしながら編集する目にも遭わなくて済みます。</p>
+
+<p>Markdownの記法についても、ヘッダ、罫線、強調、リンク、画像などなど基本的なところは押さえているようです。</p>
+
+<p><a href="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png"><img src="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png" width="440" height="384" alt="Socrates画面キャプチャ" /></a></p>
+
+<p>また、ソースがGithubで公開されているため、cloneして試すことができます。
+最近は、OSSも当たり前になってきましたね。</p>
+
+<h3>Socrates をどう使うのか</h3>
+
+<p>Socrates.io は、リアルタイムの共有とプレビューのみに特化した「エディタ」なので、
+外部に保存したりエクスポートしたりはできません。
+データは LocalStorage に保存されているので、キャッシュクリアなどをすると消えてしまいます。</p>
+
+<p>保存については GitHub なりローカルなり、他を利用するようにして、
+「一緒に編集したい」というシーンに対してここへコピー＆ペーストして使う、
+というのが良い活用方法と言えるでしょう。</p>
+
+<h3>Socrates の残念なところ（2014/09/24時点）</h3>
+
+<p>とはいえ、このサービスにもいくらか改善の余地はありそうです。</p>
+
+<ul>
+<li><p>デフォルトのプレビュースタイルが、若干見にくい。<br/>
+引用の入れ子など、ちょっと発展的なことをするとスタイリッシュじゃない。</p>
+
+<p>Chrome 拡張の <a href="https://chrome.google.com/webstore/detail/stylish/fjnbnpbmkenffdnngjfgmeleoegfcffe?hl=ja">Stylish</a> を使って、
+世に出回っている GitHub css を適用するのがベターでしょう。</p></li>
+<li><p>2年間放置されてる。<br/>
+・・・いつ消えてもおかしくないですね。</p></li>
+<li><p>ビュー専用モード・編集専用モードに入ると、戻るリンクがない。<br/>
+画面上部の「目玉」アイコンや「ペン」アイコンをクリックすると、
+それぞれビュー専用／編集専用モードに入りますが、戻るリンクがない。
+URL直打ちで元のページに戻るしかないのが残念。</p>
+
+<p>こちらも前述のChrome拡張で、目玉アイコン・ペンアイコンを非表示にしちゃってます。</p></li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<p>Markdown × Webサービスでリアルタイムコラボレーション、イイね！</p>
+]]></content>
+  </entry>
+  
+</feed>

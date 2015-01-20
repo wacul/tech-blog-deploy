@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: golang | The Wacul Blog]]></title>
+  <link href="http://blog.wacul.co.jp/blog/categories/golang/atom.xml" rel="self"/>
+  <link href="http://blog.wacul.co.jp/"/>
+  <updated>2015-01-20T19:09:46+09:00</updated>
+  <id>http://blog.wacul.co.jp/</id>
+  <author>
+    <name><![CDATA[WACUL INC.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[これからGoを始める人のためのTips集]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2014/08/22/go/"/>
+    <updated>2014-08-22T19:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2014/08/22/go</id>
+    <content type="html"><![CDATA[<p>こんにちわ。最近業務でGoを書いているのですが、3,4週間たち、だいぶ環境にも慣れてきたので、これからGoを初めようと思っている人向けにTipsを書きたいと思います。</p>
+
+<p>間違いや改善点などあれば、 <a href="http://twitter.com/tutuming">@tutuming</a> まで教えていただけると大変ありがたいです。</p>
+
+<h2>インストール と設定 (OSX)</h2>
+
+<p><a href="http://golang.org/dl/">http://golang.org/dl/</a>
+から、インストーラー (<code>go1.3.1.darwin-amd64-osx10.8.pkg</code> など) を選んで最新版をインストールしたら大丈夫です。自分の環境にあわせたインストーラ選んでください。</p>
+
+<p>homebrewを使っている人は</p>
+
+<p><code>sh
+brew install go
+</code></p>
+
+<p>でもインストールできます。</p>
+
+<h2><code>$GOPATH</code> とプロジェクトの作り方</h2>
+
+<p>Go のパッケージ管理には、 <code>go get</code> コマンドを使います。<br/>
+<code>go get github.com/aaa/bbb</code> とすると、 github.com/aaa/bbb で公開されているgoライブラリまたは、実行ファイルがローカルにダウンロードされます。</p>
+
+<p>インストール後、なにも設定せずに、 <code>go get  hogehoge</code> すると、</p>
+
+<p><code>
+package github.com/davecgh/go-spew/spew: cannot download, $GOPATH not set. For more details see: go help gopath
+</code></p>
+
+<p>というエラーで怒られると思います。 GOPATH を設定しろと言っていますね。<br/>
+これをどこに設定するか少し迷うと思います。</p>
+
+<h3><code>$GOPATH</code> の２つの役割</h3>
+
+<p><code>GOPATH</code> には２つ役割があります。</p>
+
+<ol>
+<li>ビルド時のインポートパスとして、<code>GOPATH</code> に指定したすべてのディレクトリを参照する(コロン区切り)</li>
+<li><code>go get</code> コマンドで外部パッケージを読み込んだ時、 <code>GOPATH</code> の先頭のディレクトリにダウンロードする</li>
+</ol>
+
+
+<p>そして、公式ドキュメントにもありますが、Goで自分のプロジェクトを書く時にも、このGOPATHの下で書くのが良いとされています。
+例えば、自分が githubでソースコードを管理していて、ユーザー名が foo、リポジトリが bar だったら
+<code>$GOPATH/src/github.com/foo/bar</code> というディレクトリを作ってそこで作業します。</p>
+
+<p>ここで、GOPATHに一つのディレクトリを指定して作業してしまうと、サードパーティのライブラリと、自分の作ったソースコードが混ざってしまって煩雑です。</p>
+
+<p>1, 2 の性質を考慮して、GOPATHを複数指定し</p>
+
+<p><code>sh
+export GOPATH=$HOME/go/third-party:$HOME/go/my-project
+export PATH=$HOME/go/third-party/bin:$HOME/go/my-project/bin:$PATH # binをPATHに追加するのも忘れずに
+</code></p>
+
+<p>などとしておけば、<code>go get</code> でインストールしたライブラリは、 <code>~/go/third-party</code> にインストールし、自分のプロジェクトは、 <code>~/go/my-project</code> の下で管理できます。</p>
+
+<p>僕はいまのところこのやり方がしっくりきています。</p>
+
+<p>参考: <a href="http://golang.org/doc/code.html">http://golang.org/doc/code.html</a></p>
+
+<h2><code>go-fmt</code> を使おう</h2>
+
+<p>goには、<code>gofmt</code> という、ソースコードをコード規約に沿った形に整形するコマンドがついています。
+エディタの設定で、保存時に自動で走らせるようにしておくと良いです。</p>
+
+<p>この<code>gofmt</code>コマンドには、<code>-r</code>オプションという、ソースコードをパターンで書き換えるコマンドが用意されています。プロジェクト内の全部の関数名を変えたいときなど、リファクタリングに便利です。</p>
+
+<p>```sh</p>
+
+<h1>-d オプションで、diffを表示してくれる</h1>
+
+<p>$ gofmt -d -r &lsquo;Zen2han &ndash;> Zen2Han&rsquo; .
+diff util/util.go gofmt/util/util.go
+&mdash;&ndash; /var/folders/cy/nds3c8y97nsb8p6l416w5<strong>w0000gn/T/gofmt327353297     2014-08-14 19:29:31.000000000 +0900
++++ /var/folders/cy/nds3c8y97nsb8p6l416w5</strong>w0000gn/T/gofmt979152124     2014-08-14 19:29:31.000000000 +0900
+@@ -24,7 +24,7 @@
+ }</p>
+
+<p> // 全角英数字を半角に変換する
+-func Zen2han(src string) string {
++func Zen2Han(src string) string {</p>
+
+<pre><code>    retbuf := make([]rune, 0, utf8.RuneCountInString(src))
+    for _, ch := range src {
+            if ch &gt;= 0xFF21 &amp;&amp; ch &lt;= 0xFF3A {
+</code></pre>
+
+<p>@@ -60,5 +60,5 @@
+ }</p>
+
+<p> func NormalizeStr(src string) string {
+&ndash;       return Hiragana2Katakana(Zen2han(src))
++       return Hiragana2Katakana(Zen2Han(src))
+ }</p>
+
+<h1>実際に書き換えるには、 -w オプション</h1>
+
+<p>$ gofmt -w -r &lsquo;Zen2han &ndash;> Zen2Han&rsquo; .
+```</p>
+
+<p>参考: <a href="https://golang.org/cmd/gofmt/">https://golang.org/cmd/gofmt/</a></p>
+
+<h2>その他、開発に便利なライブラリ</h2>
+
+<h3>go-spew</h3>
+
+<p><a href="https://github.com/davecgh/go-spew">https://github.com/davecgh/go-spew</a></p>
+
+<p>標準パッケージの<code>fmt.Printf</code> 関数でも <code>%v</code> で構造体の中身を覗けるのですが、オブジェクトがインデントされずに１行に収まり、中身を確認しづらいです。 go-spew を使うと、もうちょっといいかんじにフォーマットしてくれます(pythonのpprintみたいな感じ)。</p>
+
+<p>サンプル</p>
+
+<p>```go
+package main</p>
+
+<p>import (</p>
+
+<pre><code>"fmt"
+
+"github.com/davecgh/go-spew/spew"
+</code></pre>
+
+<p>)</p>
+
+<p>func main() {</p>
+
+<pre><code>a := struct {
+    A []string
+    n int
+}{
+    A: []string{"a", "b", "c"},
+    n: 123,
+}
+
+fmt.Println("--- fmt.Printf ---")
+fmt.Printf("%#v\n", a)
+fmt.Println("--- spew.Dump ---")
+spew.Dump(a)
+</code></pre>
+
+<p>}
+```</p>
+
+<p>実行結果</p>
+
+<p><code>text
+--- fmt.Printf ---
+struct { A []string; n int }{A:[]string{"a", "b", "c"}, n:123}
+--- spew.Dump ---
+(struct { A []string; n int }) {
+ A: ([]string) (len=3 cap=3) {
+  (string) (len=1) "a",
+  (string) (len=1) "b",
+  (string) (len=1) "c"
+ },
+ n: (int) 123
+}
+</code></p>
+
+<h3>goconvey</h3>
+
+<p><a href="http://goconvey.co/  ">http://goconvey.co/  </a>
+github: <a href="https://github.com/smartystreets/goconvey">https://github.com/smartystreets/goconvey</a></p>
+
+<p>BDD支援ライブラリですが、<code>goconvey</code> コマンドを起動しておくと、ファイルの更新を検知して、ブラウザでテスト結果を出力してくれます。</p>
+
+<p>ブラウザでの結果確認自体は、goconveyを使ってテストを書かなくても使えるので、プロジェクトの途中からでも導入しやすいですね。</p>
+
+<p><img src="/images/2014-08-22-go/goconvey.png" alt="" /></p>
+
+<h2>まとめ: Go楽しいです</h2>
+
+<p>まだ色々と試行錯誤中ですが、Go楽しいですので、やりましょう。</p>
+]]></content>
+  </entry>
+  
+</feed>

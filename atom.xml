@@ -4,7 +4,7 @@
   <title><![CDATA[The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2015-01-06T15:27:38+09:00</updated>
+  <updated>2015-01-20T19:09:46+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -225,7 +225,7 @@ WebStromのLanguage Injection動作例</p>
   <entry>
     <title type="html"><![CDATA[JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する]]></title>
     <link href="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/"/>
-    <updated>2014-10-28T15:00:00+09:00</updated>
+    <updated>2014-10-28T00:00:00+09:00</updated>
     <id>http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api</id>
     <content type="html"><![CDATA[<h2>３行で言うと</h2>
 
@@ -824,7 +824,7 @@ URL直打ちで元のページに戻るしかないのが残念。</p>
 </span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;master&quot;</span><span class="p">,</span>                 <span class="c1">// branch名</span>
 </span><span class='line'>    <span class="s2">&quot;sites&quot;</span><span class="o">:</span> <span class="p">[{</span>                       <span class="c1">// このブランチの中でたてたいサイトを配列で指定</span>
 </span><span class='line'>      <span class="s2">&quot;documentRoot&quot;</span><span class="o">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>         <span class="c1">// リポジトリの中でサーバーのルートにするディレクトリ</span>
-</span><span class='line'>      <span class="s2">&quot;subDomain&quot;</span><span class="o">:</span> <span class="s2">&quot;hoge&quot;</span><span class="p">,</span>            <span class="c1">// 使用したいサブドメイン この場合は hoge.abc.testserver.jp </span>
+</span><span class='line'>      <span class="s2">&quot;subDomain&quot;</span><span class="o">:</span> <span class="s2">&quot;hoge&quot;</span><span class="p">,</span>            <span class="c1">// 使用したいサブドメイン この場合は hoge.abc.testserver.jp</span>
 </span><span class='line'>      <span class="s2">&quot;basicAuth&quot;</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>             <span class="c1">// basic認証の利用</span>
 </span><span class='line'>      <span class="s2">&quot;auths&quot;</span><span class="o">:</span> <span class="p">[{</span>                     <span class="c1">// 認証用のパスワードを配列で指定</span>
 </span><span class='line'>         <span class="s2">&quot;user&quot;</span><span class="o">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span>               <span class="c1">// basic認証 ユーザー名</span>
@@ -965,7 +965,7 @@ URL直打ちで元のページに戻るしかないのが残念。</p>
 <tr>
 <td> Alice&rsquo;s Adventures in Wonderland(上から4017字) </td>
 <td align="right"> 2616 </td>
-<td align="right"> 5797 </td>
+<td align="right"> 5797</td>
 </tr>
 </tbody>
 </table>
@@ -1583,7 +1583,7 @@ ngModelディレクティブより後に実行させたいので0以下の数値
 </ul>
 
 
-<p>unityで作ったゲームの紹介  <br/>
+<p>unityで作ったゲームの紹介
 unityで物理エンジンのテストやフェードイン・アウトエフェクトについて実装</p>
 
 <p>以上、waculでは毎月1回、ハッカソンを行っています。<br/>
@@ -2418,34 +2418,34 @@ Googleカレンダーでは以下のURLにある「Recurring events」の項目�
 <tr>
 <th> プロパティ名 </th>
 <th> 詳細 </th>
-<th> 型 </th>
+<th> 型</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td> <code>$dirty</code> </td>
 <td> formに一回以上何かしらの入力を行った </td>
-<td> <code>boolean</code> </td>
+<td> <code>boolean</code></td>
 </tr>
 <tr>
 <td> <code>$pristine</code> </td>
 <td> formに全く入力を行っていない(<code>$dirty</code>の逆) </td>
-<td> <code>boolean</code> </td>
+<td> <code>boolean</code></td>
 </tr>
 <tr>
 <td> <code>$valid</code> </td>
 <td> formの値が正しい </td>
-<td> <code>boolean</code> </td>
+<td> <code>boolean</code></td>
 </tr>
 <tr>
 <td> <code>$invalid</code> </td>
 <td> formの値が誤っている </td>
-<td> <code>boolean</code> </td>
+<td> <code>boolean</code></td>
 </tr>
 <tr>
 <td> <code>$error</code> </td>
 <td> さらに詳細なエラー情報。上の例でいうところの<code>foo.firstName.$error.required</code>。この他に<code>email</code>や<code>maxlength</code>などがデフォルトで使えます。 </td>
-<td> <code>Object</code> </td>
+<td> <code>Object</code></td>
 </tr>
 </tbody>
 </table>

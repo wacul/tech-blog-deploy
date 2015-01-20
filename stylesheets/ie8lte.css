@@ -1,0 +1,19 @@
+@charset "UTF-8";
+/* background-image ratina対応 */
+/* メディアクエリの設定 */
+/* lte ie8
+--------------------------------------------------------- */
+/* line 9, ../../sass/ie8lte.scss */
+.warp {
+  width: 980px;
+}
+
+/* line 12, ../../sass/ie8lte.scss */
+div.content-main {
+  width: 720px;
+}
+
+/* line 15, ../../sass/ie8lte.scss */
+div.content-nav {
+  width: 175px;
+}

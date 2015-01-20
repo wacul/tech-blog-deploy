@@ -1,0 +1,10 @@
+@charset "UTF-8";
+/* background-image ratina対応 */
+/* メディアクエリの設定 */
+/* ie7
+--------------------------------------------------------- */
+/* line 10, ../../sass/ie7.scss */
+.content-main h1.title, .content-main h2.title {
+  font-weight: bold;
+  color: black;
+}

@@ -1,0 +1,196 @@
+@charset "UTF-8";
+/* background-image ratina対応 */
+/* メディアクエリの設定 */
+/* wufoo
+--------------------------------------------------------- */
+/* line 9, ../../sass/wuhoo.scss */
+body, input, select, textarea, button {
+  font-family: "HelveticaNeue", "Helvetica", "ヒラギノ角ゴ", "ヒラギノ角ゴ Pro", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif !important;
+  font-weight: 300 !important;
+}
+
+@media only screen and (max-width: 620px) {
+  /* line 14, ../../sass/wuhoo.scss */
+  body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  /* line 21, ../../sass/wuhoo.scss */
+  form li.notranslate div {
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  /* line 29, ../../sass/wuhoo.scss */
+  form li.buttons {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  /* line 32, ../../sass/wuhoo.scss */
+  form li.buttons div {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 0 !important;
+    width: 100%;
+    display: block;
+  }
+}
+/* line 44, ../../sass/wuhoo.scss */
+label {
+  font-size: 14px !important;
+}
+@media only screen and (max-width: 620px) {
+  /* line 44, ../../sass/wuhoo.scss */
+  label {
+    width: 100% !important;
+  }
+}
+
+/* line 53, ../../sass/wuhoo.scss */
+input,
+textarea,
+select {
+  outline: none !important;
+  font: inherit !important;
+  -webkit-text-size-adjust: none !important;
+  -webkit-box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+}
+@media only screen and (max-width: 620px) {
+  /* line 53, ../../sass/wuhoo.scss */
+  input,
+  textarea,
+  select {
+    width: 100% !important;
+  }
+}
+
+/* line 66, ../../sass/wuhoo.scss */
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent !important;
+  background-color: #fff;
+  border: solid 1px #a0a0a0 !important;
+  padding: 7px 4px 6px !important;
+  vertical-align: middle;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* line 75, ../../sass/wuhoo.scss */
+select {
+  -webkit-tap-highlight-color: transparent !important;
+  background-color: #fff;
+  border: solid 1px #a0a0a0 !important;
+  padding: 5px 4px 4px !important;
+  vertical-align: middle;
+}
+
+/* line 87, ../../sass/wuhoo.scss */
+input:active,
+textarea:active,
+select:active,
+input:focus,
+textarea:focus,
+select:focus {
+  background-color: #ffe !important;
+  border: solid 1px #aaa;
+}
+
+/* line 94, ../../sass/wuhoo.scss */
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+  filter: alpha(opacity=80);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+  opacity: 0.8;
+}
+
+/* line 100, ../../sass/wuhoo.scss */
+input[type="submit"]:active,
+input[type="reset"]:active,
+input[type="button"]:active {
+  -webkit-transform: scale(0.95, 0.95);
+  -moz-transform: scale(0.95, 0.95);
+  -ms-transform: scale(0.95, 0.95);
+  -o-transform: scale(0.95, 0.95);
+  transform: scale(0.95, 0.95);
+}
+
+/* line 103, ../../sass/wuhoo.scss */
+input[type="submit"] {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  -webkit-appearance: none;
+  background-color: #21a499;
+  border: none;
+  padding-left: 34px;
+  padding-right: 34px;
+  width: 200px;
+  height: 64px;
+  line-height: 64px;
+  font-size: 14px;
+  font-weight: normal;
+  color: #fff;
+  text-align: center;
+  text-decoration: none !important;
+  position: relative;
+  overflow: hidden;
+}
+@media only screen and (max-width: 620px) {
+  /* line 103, ../../sass/wuhoo.scss */
+  input[type="submit"] {
+    padding: 15px 30px 13px;
+    min-width: 100px;
+    max-width: 100%;
+    width: 100% !important;
+    height: auto;
+    line-height: normal;
+    display: block;
+  }
+}
+
+/* line 140, ../../sass/wuhoo.scss */
+.req {
+  font-size: 0px;
+}
+
+/* line 144, ../../sass/wuhoo.scss */
+.req:after {
+  content: "必須";
+  font-size: 10px;
+}
+
+/* line 149, ../../sass/wuhoo.scss */
+form header {
+  display: none !important;
+}
+
+/* line 156, ../../sass/wuhoo.scss */
+a:link,
+a:visited,
+a:active,
+a:hover {
+  color: #21a499;
+}
+
+/* line 160, ../../sass/wuhoo.scss */
+a:link {
+  text-decoration: none;
+}
+
+/* line 163, ../../sass/wuhoo.scss */
+a:hover {
+  text-decoration: underline;
+}
