@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programmer | The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/blog/categories/programmer/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2015-01-29T18:56:57+09:00</updated>
+  <updated>2015-02-11T19:30:02+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,57 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Markdownを簡単にリアルタイムに共有するShare!をリリースしました]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2015/02/11/share/"/>
+    <updated>2015-02-11T19:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2015/02/11/share</id>
+    <content type="html"><![CDATA[<h2>はじめに</h2>
+
+<p>最近、株式会社waculでは月に1度に開発合宿と称し、プログラマチームで業務とは別の開発を行っています。
+今回ご紹介させていただく<a href="http://shareapp.wacul.jp">Share!</a>は1月、2月の開発合宿で実装したアプリケーションです。</p>
+
+<h2>Share!とは</h2>
+
+<p>ミーティング中に書いている議事録を参加者全体に共有したいケースがよくありました。
+今までそういったケースではGoogleドライブのドキュメントを作成し、そこで共有していました。
+しかし、ドキュメントでは以下のような問題がありました。</p>
+
+<ul>
+<li>普段使っているエディタを使えない</li>
+<li>スタイルを整えるのが手間</li>
+<li>ドキュメントを作って共有するというステップが面倒</li>
+</ul>
+
+
+<p>そこで我々はこれらを解決するため、ローカルで作成したMarkdown形式のテキストファイルを簡単にリアルタイムに共有するアプリケーションの開発を行いました。</p>
+
+<h2>Share!の動作</h2>
+
+<p>テキストを共有する側は専用のアプリケーションをダウンロードする必要があります。
+アプリケーションを起動すると、以下のような画面が表示されるので、ここにテキストファイルをドラッグアンドドロップします。</p>
+
+<p><img src="http://blog.wacul.co.jp/images/2015-02-11-share/dragdrop.png" alt="share drag and drop" /></p>
+
+<p>そうすると、ブラウザが自動的に立ち上がり、ドラッグアンドドロップしたファイルが表示されます。</p>
+
+<p><img src="http://blog.wacul.co.jp/images/2015-02-11-share/browser.png" alt="share browser" /></p>
+
+<p>このとき、ユニークなランダムなURLが割り振られるので、このURLを共有したい相手に伝えます。
+共有された側は共同編集を行うことはできませんが、リアルタイムに共有した側の編集状況を見ることができます。</p>
+
+<h2>Download</h2>
+
+<p>アプリケーションは以下からダウンロードできます。</p>
+
+<ul>
+<li>Windows版 <a href="/zip/2015-02-11-share/share-win64.zip">Download</a></li>
+<li>Mac版 <a href="/zip/2015-02-11-share/share-osx64.zip">Download</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyMotion で 64bit アプリに対応する]]></title>
@@ -536,72 +587,6 @@ Nexmoの提供しているSMS送信APIはシンプルで使いやすいと思い
 <li><a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Markdownを複数人でリアルタイム編集できる socrates.io ]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown/"/>
-    <updated>2014-09-29T22:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/09/29/collaborative-realtime-markdown</id>
-    <content type="html"><![CDATA[<h2>Markdown ＋ リアルタイムで一緒に編集 ＝ Socrates.io</h2>
-
-<p>こんにちは。弊社大津に勧められたウドン屋の味に、ウドン観の変わったkyohです。</p>
-
-<p>今さら大きな声でいうことでもありませんが、プログラマー界隈では Markdown が
-ドキュメントのデファクトスタンダードとなっています。</p>
-
-<p>そんなMarkdownをリアルタイムで一緒に編集できるサービスはないものかと
-色々探してみたところ、<a href="http://socrates.io/">Socrates</a> (<a href="https://github.com/segmentio/socrates">→GitHubリポジトリ</a>) というサービスが
-そこそこハマったので紹介してみようと思います。</p>
-
-<h3>Socrates のいいところ</h3>
-
-<p>「リアルタイムでMarkdownを編集したい」という要件はほぼ満たしています。
-また、リアルタイムでマークアップした結果のプレビューもしてくれるので、
-微妙な記法におっかなびっくりしながら編集する目にも遭わなくて済みます。</p>
-
-<p>Markdownの記法についても、ヘッダ、罫線、強調、リンク、画像などなど基本的なところは押さえているようです。</p>
-
-<p><a href="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png"><img src="http://blog.wacul.co.jp/images/2014-09-29-collaborative-realtime-markdown/screenshot_full.png" width="440" height="384" alt="Socrates画面キャプチャ" /></a></p>
-
-<p>また、ソースがGithubで公開されているため、cloneして試すことができます。
-最近は、OSSも当たり前になってきましたね。</p>
-
-<h3>Socrates をどう使うのか</h3>
-
-<p>Socrates.io は、リアルタイムの共有とプレビューのみに特化した「エディタ」なので、
-外部に保存したりエクスポートしたりはできません。
-データは LocalStorage に保存されているので、キャッシュクリアなどをすると消えてしまいます。</p>
-
-<p>保存については GitHub なりローカルなり、他を利用するようにして、
-「一緒に編集したい」というシーンに対してここへコピー＆ペーストして使う、
-というのが良い活用方法と言えるでしょう。</p>
-
-<h3>Socrates の残念なところ（2014/09/24時点）</h3>
-
-<p>とはいえ、このサービスにもいくらか改善の余地はありそうです。</p>
-
-<ul>
-<li><p>デフォルトのプレビュースタイルが、若干見にくい。<br/>
-引用の入れ子など、ちょっと発展的なことをするとスタイリッシュじゃない。</p>
-
-<p>Chrome 拡張の <a href="https://chrome.google.com/webstore/detail/stylish/fjnbnpbmkenffdnngjfgmeleoegfcffe?hl=ja">Stylish</a> を使って、
-世に出回っている GitHub css を適用するのがベターでしょう。</p></li>
-<li><p>2年間放置されてる。<br/>
-・・・いつ消えてもおかしくないですね。</p></li>
-<li><p>ビュー専用モード・編集専用モードに入ると、戻るリンクがない。<br/>
-画面上部の「目玉」アイコンや「ペン」アイコンをクリックすると、
-それぞれビュー専用／編集専用モードに入りますが、戻るリンクがない。
-URL直打ちで元のページに戻るしかないのが残念。</p>
-
-<p>こちらも前述のChrome拡張で、目玉アイコン・ペンアイコンを非表示にしちゃってます。</p></li>
-</ul>
-
-
-<h2>まとめ</h2>
-
-<p>Markdown × Webサービスでリアルタイムコラボレーション、イイね！</p>
 ]]></content>
   </entry>
   

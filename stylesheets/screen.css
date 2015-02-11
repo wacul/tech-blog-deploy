@@ -5,7 +5,7 @@
 .group, #main, #content, .sidebar {
   *zoom: 1;
 }
-/* line 38, ../../../../../../../../.rvm/gems/ruby-2.1.0@octopress/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../.rvm/gems/ruby-2.2.0/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .group:after, #main:after, #content:after, .sidebar:after {
   content: "";
   display: table;
@@ -219,7 +219,7 @@ html .gist .gist-file .gist-meta a {
   color: #75878b !important;
   text-decoration: none;
 }
-/* line 4, ../../../../../../../../.rvm/gems/ruby-2.1.0@octopress/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
+/* line 4, ../../../../.rvm/gems/ruby-2.2.0/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
 html .gist .gist-file .gist-meta a:hover {
   text-decoration: underline;
 }
@@ -657,7 +657,7 @@ figure.code .highlight {
   -webkit-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   font-family: "Helvetica Neue", Arial, "Lucida Grande", "Lucida Sans Unicode", Lucida, sans-serif;
-  background: #aaaaaa url('/images/code_bg.png?1411708047') top repeat-x;
+  background: #aaaaaa url('/images/code_bg.png?1413872608') top repeat-x;
   border: 1px solid #565656;
   border-top-color: #cbcbcb;
   border-left-color: #a5a5a5;
@@ -676,7 +676,7 @@ figure.code .highlight {
   text-shadow: #cbcccc 0 1px 0;
   padding-left: 3em;
 }
-/* line 4, ../../../../../../../../.rvm/gems/ruby-2.1.0@octopress/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
+/* line 4, ../../../../.rvm/gems/ruby-2.2.0/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
 .download-source:hover, html .gist .gist-file .gist-meta a[href*=raw]:hover, figure.code figcaption a:hover {
   text-decoration: underline;
 }
@@ -1168,7 +1168,7 @@ select.ontxt:focus {
 .group, #main, #content, .sidebar {
   *zoom: 1;
 }
-/* line 38, ../../../../../../../../.rvm/gems/ruby-2.1.0@octopress/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../.rvm/gems/ruby-2.2.0/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .group:after, #main:after, #content:after, .sidebar:after {
   content: "";
   display: table;
@@ -1382,7 +1382,7 @@ html .gist .gist-file .gist-meta a {
   color: #75878b !important;
   text-decoration: none;
 }
-/* line 4, ../../../../../../../../.rvm/gems/ruby-2.1.0@octopress/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
+/* line 4, ../../../../.rvm/gems/ruby-2.2.0/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
 html .gist .gist-file .gist-meta a:hover {
   text-decoration: underline;
 }
@@ -1820,7 +1820,7 @@ figure.code .highlight {
   -webkit-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   font-family: "Helvetica Neue", Arial, "Lucida Grande", "Lucida Sans Unicode", Lucida, sans-serif;
-  background: #aaaaaa url('/images/code_bg.png?1411708047') top repeat-x;
+  background: #aaaaaa url('/images/code_bg.png?1413872608') top repeat-x;
   border: 1px solid #565656;
   border-top-color: #cbcbcb;
   border-left-color: #a5a5a5;
@@ -1839,7 +1839,7 @@ figure.code .highlight {
   text-shadow: #cbcccc 0 1px 0;
   padding-left: 3em;
 }
-/* line 4, ../../../../../../../../.rvm/gems/ruby-2.1.0@octopress/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
+/* line 4, ../../../../.rvm/gems/ruby-2.2.0/gems/compass-0.12.7/frameworks/compass/stylesheets/compass/typography/links/_hover-link.scss */
 .download-source:hover, html .gist .gist-file .gist-meta a[href*=raw]:hover, figure.code figcaption a:hover {
   text-decoration: underline;
 }

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+
+
+<head prefix="og: http://ogp.me/ns#">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<meta name="keywords" content="">
+
+	<meta property="og:site_name" content="The Wacul Blog">
+
+	<title>Markdownを簡単にリアルタイムに共有するShare!をリリースしました | The Wacul Blog</title>
+	<meta property="og:title" content="Markdownを簡単にリアルタイムに共有するShare!をリリースしました | The Wacul Blog">
+
+
+
+	<meta name="description" content="株式会社ワカルのプログラマブログ">
+	<meta property="og:description" content="株式会社ワカルのプログラマブログ">
+
+
+
+	<meta property="og:image" content="http://blog.wacul.co.jp/images/common/ogp.png">
+	<meta property="og:url" content="http://blog.wacul.co.jp/blog/2015/02/11/share/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css" href="/stylesheets/common.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/layout.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/sp_layout.css" media="only screen and (max-width: 640px)">
+
+	<!--[if IE 7]><link href="/stylesheets/ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+	<!--[if lte IE 8]><link href="/stylesheets/ie8lte.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+	<script type="text/javascript">
+	<!--
+	var br = navigator.userAgent.toLowerCase();
+	if (br.indexOf("iphone") != -1 ) {
+		document.write('<link rel="stylesheet" type="text/css" href="/stylesheets/sp_layout.css">');
+	};
+	//-->
+	</script>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<script type="text/javascript" src="/javascripts/jquery.scrollTo.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.scrollchaser.js"></script>
+	<script type="text/javascript" src="/javascripts/jQueryAutoHeight.js"></script>
+	<script type="text/javascript" src="/javascripts/lodash.compat.min.js"></script>
+	<script type="text/javascript" src="/javascripts/moment.min.js"></script>
+	<script type="text/javascript" src="/javascripts/main.js"></script>
+
+	<script type="text/javascript" src="/javascripts/css_browser_selector.js"></script>
+	<script type="text/javascript" src="/javascripts/common.js"></script>
+</head>
+
+
+<body class="blog">
+  <a name="pagetop" id="pagetop"></a>
+
+  <div class="sp-group sp-header-menu-group">
+	<ul>
+		<li><a href="http://wacul.co.jp">
+			コーポレートサイト
+			<span class="icon arrow-next"></span>
+		</a></li>
+		
+		
+		<li><a href="/category/programmer/">
+			プログラマブログ
+			<span class="icon arrow-next"></span>
+		</a></li>
+		
+		
+	</ul>
+<!-- /sp-header-menu-group -->
+</div>
+
+
+  <div class="wrap-master">
+
+    <header><div class="header-group"><div class="wrap clr">
+	
+	
+	<p class="logo-text">プログラマブログ</p>
+	<p class="logo-bywacul">by wacul</p>
+	
+	
+
+	<ul class="link-group">
+		<li><a href="http://wacul.co.jp">コーポレートサイト</a></li>
+	</ul>
+	<a href="#" class="sp-group menu"><span class="icon sp-menu">menu</span></a>
+<!-- /header-group -->
+</div></div></header>
+
+
+    <div class="body-group">
+      
+
+
+<div class="pankuzu-group">
+  <ul class="wrap clr">
+    <li><a href="/category/programmer/">プログラマ</a></li>
+    <li>Markdownを簡単にリアルタイムに共有するShare!をリリースしました</li>
+  </ul>
+
+</div>
+
+<div class="wrap content-body-group clr">
+
+  <div class="content-main-group"><section>
+    <h1 class="basic">
+      <span class="aside line">2015.02.11</span>Markdownを簡単にリアルタイムに共有するShare!をリリースしました</h1>
+
+    <div class="section-master-group blog-post-group">
+      <h2>はじめに</h2>
+
+<p>最近、株式会社waculでは月に1度に開発合宿と称し、プログラマチームで業務とは別の開発を行っています。
+今回ご紹介させていただく<a href="http://shareapp.wacul.jp">Share!</a>は1月、2月の開発合宿で実装したアプリケーションです。</p>
+
+<h2>Share!とは</h2>
+
+<p>ミーティング中に書いている議事録を参加者全体に共有したいケースがよくありました。
+今までそういったケースではGoogleドライブのドキュメントを作成し、そこで共有していました。
+しかし、ドキュメントでは以下のような問題がありました。</p>
+
+<ul>
+<li>普段使っているエディタを使えない</li>
+<li>スタイルを整えるのが手間</li>
+<li>ドキュメントを作って共有するというステップが面倒</li>
+</ul>
+
+
+<p>そこで我々はこれらを解決するため、ローカルで作成したMarkdown形式のテキストファイルを簡単にリアルタイムに共有するアプリケーションの開発を行いました。</p>
+
+<h2>Share!の動作</h2>
+
+<p>テキストを共有する側は専用のアプリケーションをダウンロードする必要があります。
+アプリケーションを起動すると、以下のような画面が表示されるので、ここにテキストファイルをドラッグアンドドロップします。</p>
+
+<p><img src="/images/2015-02-11-share/dragdrop.png" alt="share drag and drop" /></p>
+
+<p>そうすると、ブラウザが自動的に立ち上がり、ドラッグアンドドロップしたファイルが表示されます。</p>
+
+<p><img src="/images/2015-02-11-share/browser.png" alt="share browser" /></p>
+
+<p>このとき、ユニークなランダムなURLが割り振られるので、このURLを共有したい相手に伝えます。
+共有された側は共同編集を行うことはできませんが、リアルタイムに共有した側の編集状況を見ることができます。</p>
+
+<h2>Download</h2>
+
+<p>アプリケーションは以下からダウンロードできます。</p>
+
+<ul>
+<li>Windows版 <a href="/zip/2015-02-11-share/share-win64.zip">Download</a></li>
+<li>Mac版 <a href="/zip/2015-02-11-share/share-osx64.zip">Download</a></li>
+</ul>
+
+
+      <!-- /section-master-group blog-post -->
+    </div>
+
+    <div class="section-master-group section-blog-aside-master-group">
+      <div class="section-group social-btn-group">
+        <ul>
+          <li class="facebok">
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.0";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+            <div class="fb-like" data-href="http://blog.wacul.co.jp/blog/2015/02/11/share/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
+          </li>
+          <li class="pocket">
+            <a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a>
+            <script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+          </li>
+          <li class="hatena">
+            <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="simple-balloon" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+          </li>
+          <li class="twitter">
+            <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+            </script>
+          </li>
+        </ul>
+        <!-- /social-btn-group -->
+      </div>
+
+      
+  
+
+
+
+  
+    
+  
+    
+  
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+
+<div class="section-group writer-group">
+  <div class="pic-group"><img src="/images/member/enokido.png" width="100" height="100"></div>
+  <h3><span><span class="aside">この記事を書いた人</span><span class="name">enokido</span></span></h3>
+  <div class="text-group">
+    <p>榎戸です。趣味ではゲームを作っています。</p>
+    <ul class="icon-link-group">
+
+      
+      
+      
+      
+    </ul>
+  </div>
+  <!-- /section-group h3 pic-text-group -->
+</div>
+
+
+      
+      
+      <div class="section-group conversion-group">
+        <p class="read">waculでは、プログラマを募集しています。</p>
+        <p class="aside">現在はプロダクトとして、課題発見から改善提案まで自動で行うWeb改善プラットフォーム「<a href="http://wacul.co.jp/services/sure/">Sure!</a>」を開発中です。</p>
+        <p><a href="http://wacul.co.jp/recruiting/" class="btn basic">
+          waculの採用情報へ
+          <span class="icon arrow-btn"></span>
+        </a></p>
+        <!-- /section-master-group -->
+      </div>
+      
+
+      
+      <div class="section-group pager-group">
+        <ul>
+          
+          
+          <li><a class="next" href="/blog/2014/12/17/rubymotion-64bit/"><span class="in-group"><span class="date">2014.12.17</span><br>RubyMotion で 64bit アプリに対応する</span></a></li>
+          
+        </ul>
+        <!-- /section-master-group -->
+      </div>
+      
+      
+      <!-- /section-master-group  -->
+    </div>
+
+    <!-- /content-main-group -->
+  </section></div>
+
+
+  <div class="content-nav-wrap">
+    <div class="content-nav-group">
+      <!-- <p><a href="/contact/" class="btn basic">
+		お問い合わせ
+		<span class="icon arrow-btn"></span>
+</a></p>
+ -->
+
+      
+        
+<!--
+pageCategories = context.environments.first['page']['categories']
+if pageCategories.nil?
+target = context.environments.first['page']['category']
+else
+target = @category || (pageCategories||[]).first
+end
+-->
+
+<ul class="link-group">
+  
+  
+  <li><a href="/blog/2015/02/11/share/">
+    <span class="date">2015.02.11</span>
+    <span class="text">Markdownを簡単にリアルタイムに共有するShare!をリリースしました</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/12/17/rubymotion-64bit/">
+    <span class="date">2014.12.17</span>
+    <span class="text">RubyMotion で 64bit アプリに対応する</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/11/12/angular-plugin-for-sublime-and-atom-users/">
+    <span class="date">2014.11.12</span>
+    <span class="text">Sublime Text, Atomで使えるAngularJSプラグインを作りました</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/10/28/go-rest-api/">
+    <span class="date">2014.10.28</span>
+    <span class="text">JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  <li><a href="/blog/2014/10/07/nexmo/">
+    <span class="date">2014.10.07</span>
+    <span class="text">SMS送信サービスのNexmoを利用する</span>
+    <span class="icon arrow-next"></span>
+  </a></li>
+  
+  
+</ul>
+
+<ul class="link-blog-group">
+  
+  
+  <li><a href="/category/programmer/">プログラマブログ</a></li>
+  
+  
+</ul>
+
+
+
+
+
+      
+
+      <!-- /content-nav-group -->
+    </div>
+    <!-- /content-nav-wrap -->
+  </div>
+  <!-- /content-body-group -->
+</div>
+
+      <!-- /body-group -->
+    </div>
+
+    <div class="sp-group"><nav><div class="wrap clr">
+	<ul class="footer-nav-group">
+		<li class="corporate"><a href="http://wacul.co.jp">コーポレートサイト</a></li>
+		
+		
+		<li class="programmer"><a href="/category/programmer/">プログラマブログ</a></li>
+		
+		
+	</ul>
+</div></nav></div>
+
+<footer><div class="footer-group"><div class="wrap clr">
+	<div class="address-group clr">
+		<a href="http://wacul.co.jp/" class="logo">株式会社wacul</a>
+		<p><a href="mailto:info@wacul.co.jp" class="email">info@wacul.co.jp</a><a href="tel:0338680720" class="tel">03-3868-0720</a><span class="address">〒113-0033 <span class="nowrap">東京都文京区本郷3-40-10 2F</span></span></p>
+	<!-- /address-group -->
+	</div>
+
+	<div class="clr">
+		<ul class="link-group">
+			
+			
+			<li><a href="/category/programmer/">プログラマブログ</a></li>
+			
+			
+		</ul>
+		<p class="copyright">Copyright &copy; WACUL INC. All Rights Reserved.</p>
+	</div>
+<!-- /footer-group -->
+</div></div></footer>
+
+<a href="#pagetop" class="link-pagetop"><span class="icon arrow-pagetop">ページトップへ</span></a>
+
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-WVB25R"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WVB25R');</script>
+<!-- End Google Tag Manager -->
+
+
+    <div class="display-small"><!-- js / check window size --></div>
+    <!-- /wrap-master -->
+  </div>
+</body>
+</html>
