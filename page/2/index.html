@@ -51,6 +51,15 @@
 
 	<script type="text/javascript" src="/javascripts/css_browser_selector.js"></script>
 	<script type="text/javascript" src="/javascripts/common.js"></script>
+
+	<script>
+	$(function(){
+		$(document.links).filter(function() {
+				return this.hostname != window.location.hostname;
+		}).attr('target', '_blank');
+	});
+	</script>
+
 </head>
 
 
