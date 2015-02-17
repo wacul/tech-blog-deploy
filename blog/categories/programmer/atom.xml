@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programmer | The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/blog/categories/programmer/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2015-02-12T10:08:15+09:00</updated>
+  <updated>2015-02-17T15:56:10+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,113 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJSで全てのng-clickに2重クリック防止機能を付ける]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2015/02/17/ngclick_waits_promise/"/>
+    <updated>2015-02-17T00:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2015/02/17/ngclick_waits_promise</id>
+    <content type="html"><![CDATA[<h2>概要</h2>
+
+<p>Angularの標準のdirectiveである<code>ng-click</code>に、返り値がpromiseの場合に解決されるまでクリックを防止する機能を付けてみました
+(<a href="http://embed.plnkr.co/C3vvQdUmTVp3nTXYLdFD/preview">ボタンを押したら1秒間クリックが無効化されるデモ</a>)。
+とても簡単に実装できるのでちょっと紹介してみます。</p>
+
+<h2>実装</h2>
+
+<p>とりあえず元の実装を見てみましょう(<a href="https://github.com/angular/angular.js/blob/e057a9aa398ead209bd6bbf76e22d2d5562904fb/src/ng/directive/ngEventDirs.js#L44-L77">githubのソース</a>)。</p>
+
+<p>```js
+// 以下compile部分のみ抜き出し
+compile: function($element, attr) {
+  // 具体的なdirectiveNameは"ngClick"でng-click=&ldquo;hoge()"のhoge()部分を関数としてパースする
+  var fn = $parse(attr[directiveName], /<em> interceptorFn </em>/ null, /<em> expensiveChecks </em>/ true);
+  return function ngEventHandler(scope, element) {</p>
+
+<pre><code>// 具体的なeventNameは"click"
+element.on(eventName, function(event) {
+  var callback = function() {
+    fn(scope, {$event:event});
+  };
+  // クリックしたら単純に関数を実行してDOMに反映させる
+  if (forceAsyncEvents[eventName] &amp;&amp; $rootScope.$$phase) {
+    scope.$evalAsync(callback);
+  } else {
+    scope.$apply(callback);
+  }
+});
+</code></pre>
+
+<p>  };
+}
+```</p>
+
+<p>元の実装は単純にクリックイベントをハンドリングして登録された関数を実行して、DOMに反映するだけです。
+これを<code>$provide.decorator</code>を使用して実装を置き換えます。</p>
+
+<p>```js
+angular.module(&lsquo;foo&rsquo;, [])
+.config(function($provide) {
+  // directiveを置き換える場合はdirective名の末尾に"Directive"を付ける
+  $provide.decorator(&lsquo;ngClickDirective&rsquo;, function($delegate, $parse, $q) {</p>
+
+<pre><code>// $delegate[0]がdirective本体
+$delegate[0].compile = function($element, attr) {
+  var fn = $parse(attr.ngClick, null, true);
+
+  return function(scope, element) {
+    element.on('click', function(event) {
+      var result, promise, d;
+      // el.disabled==trueのときにはクリック無効(disabledが使えない要素用の保険)
+      if (element[0].disabled) return;
+      result = fn(scope, {$event: event});
+      // promiseの場合は解決を待つ
+      if (result != null &amp;&amp; typeof result.then === 'function') {
+        promise = result;
+      } else {
+        d = $q.defer();
+        d.resolve();
+        promise = d.promise;
+      }
+      // promise解決までクリックを無効化して、解決したら有効化する
+      element[0].disabled = true;
+      function enable() {
+        element[0].disabled = false;
+      }
+      promise.then(enable, enable);
+    });
+  };
+};
+return $delegate;
+</code></pre>
+
+<p>  });
+})
+```</p>
+
+<p>登録された関数の返り値がpromiseの場合は解決するまで要素の<code>disalbed</code>プロパティを<code>true</code>にしておいて、
+解決されたら<code>disabled</code>プロパティを<code>false</code>に戻します。
+関数の返り値がpromiseでなくても解決済みのpromiseとしておくと統一的に扱えて便利です(ついでにDOMへの反映も自動でやってくれる!)。</p>
+
+<p>これで、いままでの<code>ng-click</code>の部分を変更せずにクリック連打を防止することができます
+(もちろん、モジュールを読み込む必要はあります)。</p>
+
+<p><code>js
+angular.moduel('bar', ['foo']).controller('Ctrl', function() {...});
+</code></p>
+
+<h2>まとめ</h2>
+
+<p>ちょっと黒魔術っぽいんですが、<code>ng-click</code>の実装を置き換えてボタン連打防止機能を付けたらとても便利だったので紹介しました。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://angular-tips.com/blog/2013/09/experiment-decorating-directives/">Experiment: decorating directives &ndash; Angular Tips</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Markdownを簡単にリアルタイムに共有するShare!をリリースしました]]></title>
@@ -506,87 +613,6 @@ import (</p>
 静的な型付け言語とコード自動生成の組み合わせは、生成 → コンパイル（型と実装のチェック） → 修正 というサイクルが高速で回せるため、とても強力です。</p>
 
 <p>まだ取り組み始めたばかりなので、これからどんどん改善していきたいと思います！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SMS送信サービスのNexmoを利用する]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/10/07/nexmo/"/>
-    <updated>2014-10-07T12:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/10/07/nexmo</id>
-    <content type="html"><![CDATA[<h2>概要</h2>
-
-<p>ユーザ登録時の本人確認や簡単な情報の通知にSMSを使うケースがあります。<br/>
-今回、SMS送信サービスの<a href="https://jp.nexmo.com/">Nexmo</a>を利用してみたので紹介します。</p>
-
-<h2>SMS送信サービス</h2>
-
-<p><a href="https://www.google.co.jp/search?q=SMS%E9%80%81%E4%BF%A1%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9">SMS送信サービス</a>などでGoogle検索を行うと、様々なサービスが見つかります。<br/>
-送るキャリアによって料金が異なったりしますが、おおよそ１通6円〜10円前後となっています。</p>
-
-<p>今回は、Lineやカカオトークで採用されている<a href="https://jp.nexmo.com/">Nexmo</a>を利用したいと思います。
-値段は2014/10/03現在、どのキャリア宛でも1通、0.0631ドルとなっています。<br/>
-<img src="http://blog.wacul.co.jp/images/2014-10-07-nexmo/price.png" alt="値段" /></p>
-
-<h2>NexmoのSMS送信APIを使用する</h2>
-
-<p>NexmoのSMS送信APIは非常にシンプルです。
-<a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a>
-によると、指定されたURLにパラメータをつけてGETかPOSTをするだけで良さそうです。<br/>
-その際、Nexmoに登録した際に発行されるKEY、SECRET、送信元として使用する電話番号が必要になります。</p>
-
-<p>Node.jsでAPIを使用して送信する場合のサンプルが以下です。</p>
-
-<p>```js
-var request = require(&lsquo;request&rsquo;);</p>
-
-<p>request.post(&lsquo;<a href="https://rest.nexmo.com/sms/json">https://rest.nexmo.com/sms/json</a>&rsquo;, {form: {
-  api_key: &lsquo;xxxxxxx&rsquo;,     //Nexmoで発行されたKEY
-  api_secret: &lsquo;xxxxxxxx&rsquo;, //Nexmoで発行されたSECRET
-  from: &lsquo;xxxxxxxxx&rsquo;,      //Nexmoで購入した電話番号
-  to: &lsquo;81xxxxxxxxxx&rsquo;,     //送信先電話番号。日本の場合は81で始め、先頭の0は取る。例: 09012345678なら819012345678
-  text: &lsquo;テスト送信。日本語もOK&rsquo;,
-  type: &lsquo;unicode&rsquo;         //日本語を送る際は typeを unicode にする必要があります
-}}, function(err, res, body){
-  if(err || res.statusCode != 200){</p>
-
-<pre><code>console.log('error');
-return;
-</code></pre>
-
-<p>  }</p>
-
-<p>  //jsonでレスポンスが返ってくる
-  var msg = JSON.parse(body);
-  for(var i = 0; i &lt; msg[&lsquo;message-count&rsquo;]; i++){</p>
-
-<pre><code>//メッセージのステータスを確認する。パラメータ誤りや送信先誤りの場合、エラーとして検出される
-if(msg.messages[i].status != '0'){
-  console.log("error code:" + msg.messages[i].status);
-  return;
-}
-</code></pre>
-
-<p>  }
-});
-```</p>
-
-<p>日本語を送る際に、送信パラメータの type に unicode を指定しないといけないのが注意です。<br/>
-au、ドコモ、ソフトバンク宛に試したところ、無事届くことが確認できました。</p>
-
-<h2>まとめ</h2>
-
-<p>今回はSMS送信サービスとして、Lineなどで利用実績のあるNexmoを利用しました。<br/>
-Nexmoの提供しているSMS送信APIはシンプルで使いやすいと思います。<br/>
-現在、SMSは1通数円程度かかるため、大量に送信する場合は、コストを考慮する必要があります。</p>
-
-<h2>参考</h2>
-
-<ul>
-<li><a href="https://jp.nexmo.com/">Nexmo</a></li>
-<li><a href="https://docs.nexmo.com/index.php/sms-api/send-message">Nexmo SMS送信APIドキュメント</a></li>
-</ul>
-
 ]]></content>
   </entry>
   
