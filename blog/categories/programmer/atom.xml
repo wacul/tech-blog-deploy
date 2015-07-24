@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programmer | The Wacul Blog]]></title>
   <link href="http://blog.wacul.co.jp/blog/categories/programmer/atom.xml" rel="self"/>
   <link href="http://blog.wacul.co.jp/"/>
-  <updated>2015-02-17T15:56:10+09:00</updated>
+  <updated>2015-07-24T10:20:44+09:00</updated>
   <id>http://blog.wacul.co.jp/</id>
   <author>
     <name><![CDATA[WACUL INC.]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[wacul技術ブログはQiita Organizationに投稿することになりました]]></title>
+    <link href="http://blog.wacul.co.jp/blog/2015/07/24/qiita/"/>
+    <updated>2015-07-24T00:00:00+09:00</updated>
+    <id>http://blog.wacul.co.jp/blog/2015/07/24/qiita</id>
+    <content type="html"><![CDATA[<p>今後、本wacul技術ブログはQiita Organizationに投稿します。<br/>
+技術情報の発信は以下のページより行っていきますので、どうぞよろしくお願い致します。<br/>
+<a href="http://qiita.com/organizations/wacul">株式会社wacul の Qiita Organizationページ</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[AngularJSで全てのng-clickに2重クリック防止機能を付ける]]></title>
@@ -355,264 +366,6 @@ WebStromのLanguage Injection動作例</p>
 <li><a href="https://github.com/ukyo/language-coffee-script">github.com/ukyo/language-coffee-script(Atom)</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JSON Hyper-Schema からAPIドキュメントとGoのコードを自動生成する]]></title>
-    <link href="http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api/"/>
-    <updated>2014-10-28T00:00:00+09:00</updated>
-    <id>http://blog.wacul.co.jp/blog/2014/10/28/go-rest-api</id>
-    <content type="html"><![CDATA[<h2>３行で言うと</h2>
-
-<ul>
-<li>herokuが作ってる <a href="https://github.com/interagent/prmd">prmd</a> を使って、JSON SchemaからAPIドキュメントを出力したよ！</li>
-<li>スキーマ定義から、GoのAPI実装コードも出力するツールを作ったらめっちゃ捗るよ！</li>
-<li>Goの<a href="https://github.com/wcl48/valval">バリデーション用のライブラリ</a>も作ったよ！</li>
-</ul>
-
-
-<h2>今回作ったものの概要とサンプルコード</h2>
-
-<h3>概要</h3>
-
-<p>以前から、APIを開発する上で、以下のようなことが課題となっていました。</p>
-
-<ul>
-<li>そもそもドキュメント書くのがつらい</li>
-<li>それもあって、ドキュメントより先にコードが変わってしまう</li>
-<li>ドキュメントと実装の状況の違いが把握しづらい</li>
-</ul>
-
-
-<p>また、ロジックがそんなに複雑ではないAPIでは、実装の作業は</p>
-
-<ul>
-<li>リクエストデータのバリデーション</li>
-<li>出力データの整形 (フィルタリング)</li>
-</ul>
-
-
-<p>の２つの作業が大きな割合を占めます。</p>
-
-<p>APIの定義ファイルからドキュメントと、バリデーションや出力データ整形のコードを自動生成できれば、大幅に効率が上がると思い実装してみました。</p>
-
-<p>今回実装した仕組みの全体の処理の流れは以下の様になっています。</p>
-
-<ul>
-<li><a href="https://github.com/interagent/prmd">prmd</a> を使って、schema.json (JSON Hyper-Schemaドキュメント) を生成  <code>prmd combine</code></li>
-<li>schema.json から、APIドキュメント (schema.md) を生成 <code>prmd doc</code></li>
-<li>schema.json から、Goのサーバー側実装を生成 (独自実装)</li>
-</ul>
-
-
-<p><img src="/images/2014-10-28-go-rest-api/overview.png" alt="概要" /></p>
-
-<h3>サンプルコード</h3>
-
-<p>今回の記事のサンプルコードは
-<a href="https://github.com/wcl48/go-api-generation-sample">https://github.com/wcl48/go-api-generation-sample</a>
-にあります。</p>
-
-<p>サンプルプロジェクト内のディレクトリ、ファイルは以下の様な構成です</p>
-
-<p>```
-Cakefile            # ビルドタスク定義
-README.md
-bin/                # ビルド用スクリプト
-package.json
-templates/          # 共通 go ファイル(自動生成時にパッケージ名だけ変えてコピーされる)
-test/               # テスト用のスキーマ定義</p>
-
-<pre><code>gen/            # 生成されたGoパッケージの出力先
-meta.yml        # prmd メタ情報
-overview.md     # ドキュメントのトップに挿入されるマークダウン
-schema.json     # prmd で出力される schemaファイル
-schema.md       # prmd で出力されるドキュメント
-schemata/       # prmd で使うスキーマ定義
-</code></pre>
-
-<p>test-build.sh       # ビルド用スクリプト
-```</p>
-
-<h2>APIの定義 : JSON Hyper-Schema</h2>
-
-<p>Rest API を定義するための仕様はいくつか世の中にあって、代表的なものとしては</p>
-
-<ul>
-<li>JSON Hyper-Schema  <a href="http://json-schema.org/">http://json-schema.org/</a></li>
-<li>RAML <a href="http://raml.org/">http://raml.org/</a></li>
-<li>apiblueprint <a href="http://apiblueprint.org/">http://apiblueprint.org/</a></li>
-</ul>
-
-
-<p>を見つけました。</p>
-
-<p>そこそこ世の中に浸透している「JSON Schema」に対する拡張であり、関連ライブラリなども豊富なことから、今回は JSON Hyper-Schema を選択しました。</p>
-
-<h2>ドキュメンテーション: prmd by heroku</h2>
-
-<p><a href="https://www.heroku.com/">heroku</a> が作っている、 <a href="https://github.com/interagent/prmd">prmd</a> というツールがあります。prmd を使うと、APIの定義をファイルを分割して管理でき、JSON Hyper-Schema の生成とバリデーション、ドキュメントの生成が行えます。</p>
-
-<p><a href="https://devcenter.heroku.com/articles/platform-api-reference">herokuのAPIドキュメント</a> もこのツールをベースに生成されているようです。  <a href="https://devcenter.heroku.com/articles/platform-api-reference#schema">元のスキーマ定義</a> も公開されています。</p>
-
-<p>サンプルコードでは、生成されたドキュメントが、 <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/schema.md">test/schema.md</a> にあります。 元のスキーマ定義は、 <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/schemata/hoge.yaml">test/schemata/hoge.yaml</a>  です。</p>
-
-<h2>どんなGoのコードを生成するか</h2>
-
-<p>ドキュメントは無事生成できたので、次にGoのコードの生成について考えます。</p>
-
-<p>要件としては、概ね以下のようなものとしました。</p>
-
-<ul>
-<li>利用するライブラリは、標準ライブラリの net/http と Gorilla</li>
-<li>自動生成するコードは、手書きコードとパッケージレベルで分離する。
-
-<ul>
-<li>つまり、生成したコードは人の手でいじることなく、再生成が任意に実行できるように保つ</li>
-</ul>
-</li>
-<li>対応するURLをあとで変更できる</li>
-<li>リクエスト、レスポンスのオブジェクトに型つきでアクセスできる</li>
-<li>リクエストオブジェクトのバリデーションを行う</li>
-</ul>
-
-
-<h3>リクエスト、レスポンスオブジェクトの定義</h3>
-
-<p>リクエスト、レスポンスオブジェクトは単純に、json schemaのオブジェクト定義を、Goの構造体の定義に変換するだけです。<br/>
-サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/structs.go">test/gen/struct.go</a></p>
-
-<h3>ロジックの注入</h3>
-
-<p>APIロジック部分の実装は、自動生成されたコードにハンドラを登録する形にしました。ハンドラは次のような定義を生成しています。(サンプルでは、<code>POST /hoge</code> というAPIを定義しています)</p>
-
-<p>```go
-type HogePostParamDataHandler func(</p>
-
-<pre><code>vars map[string]string,        // URLに含まれる、idなどのマップ
-param HogePostParam,           // リクエストオブジェクト
-r *http.Request) (Hoge, error) // レスポンスオブジェクトを返す
-</code></pre>
-
-<p>```</p>
-
-<p>実装した関数を登録するには、次の関数を呼び出します。</p>
-
-<p>```go
-func InjectHogePost(</p>
-
-<pre><code>router *mux.Router,                                 // gorilla.mux のルーターオブジェクト
-dh HogePostParamDataHandler,                        // ハンドラの実装
-middleware func(http.HandlerFunc) http.HandlerFunc, // ミドルウェア
-</code></pre>
-
-<p>)
-```</p>
-
-<p>サンプルコード詳細: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/hoge.go">test/gen/hoge.go</a></p>
-
-<h3>リクエストのバリデーション</h3>
-
-<p>JSON Schemaには、オブジェクトのバリデーションを記述する仕様が用意されています。
-( <a href="http://json-schema.org/latest/json-schema-validation.html">http://json-schema.org/latest/json-schema-validation.html</a> )
-こいつら、Goのバリデーションコードを生成します。</p>
-
-<p>オブジェクトをバリデーションするのにちょうどいいライブラリがなかったため、この部分については、バリデーションを定義するためのライブラリを作りました。</p>
-
-<p><a href="https://github.com/wcl48/valval">wcl48/valval</a></p>
-
-<p>特徴として</p>
-
-<ul>
-<li>バリデータの定義を使いまわせる</li>
-<li>ネストしたオブジェクトもバリデーションできる</li>
-<li>バリデータの中身はただの関数 ( <code>func(interface{}) error</code> )</li>
-<li>構造体と、 <code>map[string]interface{}</code> の両方をバリデーションできる</li>
-</ul>
-
-
-<p>を備えています（実装がもうちょっと落ち着いたら別記事であげたいと思います）</p>
-
-<p>バリデータとして、次のような感じで出力します。</p>
-
-<p>```go
-var HogePostValidator = valval.Object(valval.M{</p>
-
-<pre><code>"Name": valval.String(),
-"Code": valval.String(
-    valval.MinLength(8),
-    valval.MaxLength(16),
-    valval.Regexp(regexp.MustCompile(`^[a-z0-9]+$`)),
-),
-"Email": valval.String(
-    validateEmail,
-),
-// ...長いので省略
-</code></pre>
-
-<p>}).Self(</p>
-
-<pre><code>valval.RequiredFields("Email", "Name"),
-</code></pre>
-
-<p>)
-```</p>
-
-<p>サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/validators.go">test/gen/validators.go</a></p>
-
-<p>リクエストの中身(POSTなら r.Bodyに入っているJSON)を構造体に組み立た後、</p>
-
-<p>```go
-if err := HogePostValidator.Validate(&amp;reqData); err != nil {</p>
-
-<pre><code>SendError(w, validateError2APIError(err))
-return
-</code></pre>
-
-<p>}
-```</p>
-
-<p>のようにして、バリデーションしています。<br/>
-サンプルコード: <a href="https://github.com/wcl48/go-api-generation-sample/blob/master/test/gen/hoge.go#L57">test/gen/hoge.go</a></p>
-
-<p>リクエストだけから判断できるエラーについては、自動生成側でバリデーションしてしまうことで、ロジック側のコード量をかなり抑えることができます。</p>
-
-<h2>Goのコードを自動生成する時の細かいTips</h2>
-
-<p>Goのコードを生成するときには幾つかポイントがあります。</p>
-
-<h3>適当に出力して、 go fmt</h3>
-
-<p>構文エラーのチェックと、フォーマットを自動でしてくれます。 改行だけ注意してコードを吐き出せばよしなにやってくれます。</p>
-
-<h3>使わない可能性があるimportは、_に代入しておく</h3>
-
-<p>例えば、 regexp を使う場合と使わない場合があるコードを出力するとき、import して使用していないものがあるとコンパイルエラーになります。
-ちゃんとフラグ立てて出力するか、goimport など使えば綺麗になりますが、</p>
-
-<p>```go
-import (</p>
-
-<pre><code>...
-"regexp"
-...
-</code></pre>
-
-<p>)</p>
-
-<p>var _ = regexp.Compile
-```</p>
-
-<p>のように出力してしまえば良いです。<br/>
-これは、 <a href="https://code.google.com/p/google-api-go-client/source/browse/calendar/v3/calendar-gen.go">Google APIのGoクライアントのコード</a> をみて参考にしました。</p>
-
-<h2>まとめ</h2>
-
-<p>JSON Hyper-Schema から、APIのドキュメンテーション、Goのソースコードを生成することで、かなり効率のよいAPIの開発ができるようになりました。<br/>
-静的な型付け言語とコード自動生成の組み合わせは、生成 → コンパイル（型と実装のチェック） → 修正 というサイクルが高速で回せるため、とても強力です。</p>
-
-<p>まだ取り組み始めたばかりなので、これからどんどん改善していきたいと思います！</p>
 ]]></content>
   </entry>
   
